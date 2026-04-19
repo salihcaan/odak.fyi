@@ -2,7 +2,7 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
     <channel>
         <title>Odak</title>
-        <link>https://salihcaan.github.io/odak-releases/appcast.xml</link>
+        <link>https://odak.fyi/appcast.xml</link>
         <description>Most recent updates to Odak</description>
         <language>en</language>
     </channel>
