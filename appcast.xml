@@ -5,5 +5,30 @@
         <link>https://odak.fyi/appcast.xml</link>
         <description>Most recent updates to Odak</description>
         <language>en</language>
+            <item>
+            <title>Version 0.1.0</title>
+            <pubDate>Sun, 19 Apr 2026 19:46:27 +0000</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.0 — first public preview
+
+Odak is a project finder and window switcher for macOS developers. This is an early preview — core features work, but rough edges remain.
+
+### What's here
+- Global hotkey project finder with instant fuzzy search across your code folders
+- Window switcher with MRU ordering across apps and same-app windows
+- Settings with customizable shortcuts, accent palette, and row density
+- 14-day trial — license activation goes live once Paddle is set up
+
+### Known limits
+- No in-app purchase yet (license server still being stood up)
+- Built for macOS 26+ only
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak-releases/releases/download/v0.1.0/Odak-0.1.0.dmg" length="26540731" type="application/x-apple-diskimage" sparkle:edSignature="8Qhs/L8teNjIVuF8PF7xc7tlWhJrqOpOYlWPwi1X/N2pXP5Q2z48FOi/wbrzCqXipAoGhjMfRi2cFEz4AVFkBg=="/>
+        </item>
     </channel>
 </rss>
