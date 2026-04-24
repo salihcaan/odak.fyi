@@ -364,14 +364,15 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .palette .search-bar{
   display:flex;align-items:center;gap:12px;
   padding:10px 18px;                              /* real app: 18h/10v */
-  min-height:52px;                                /* real app: searchBarHeight */
+  height:56px;                                    /* fixed — don't drift as input content grows */
   border-bottom:1px solid var(--border);
   position:relative;
 }
 .palette .search-bar svg.q{width:22px;height:22px;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0}
 .palette .search-bar .input{
   flex:1;font-size:22px;color:var(--fg);font-weight:400;letter-spacing:-.015em;
-  display:flex;align-items:center;gap:0;min-width:0;line-height:1.2;overflow:hidden;white-space:nowrap;
+  display:flex;align-items:center;gap:0;min-width:0;overflow:hidden;white-space:nowrap;
+  height:28px;line-height:28px;  /* fixed content row — the 22px text lives inside a stable 28px track */
 }
 .palette .search-bar .input .typed{white-space:pre}
 .palette .search-bar .input .ghost{color:var(--mute);opacity:.55;white-space:pre}
