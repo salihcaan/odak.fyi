@@ -323,12 +323,14 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   position:relative;z-index:1;
   transform-style:preserve-3d;
   will-change:transform;
-  /* Must exceed the palette's natural full-5-row height (~396px). If the
-     palette is ever taller than stage-inner, the hero-grid centering math
-     shifts stage-inner the moment the palette shrinks through this floor,
-     which would tug the (absolutely-positioned) search bar down on the
-     very first keystroke. 440 leaves headroom for metrics variance. */
-  min-height:440px;
+  /* Must exceed the palette's natural full-5-row height. Row body
+     inherits body line-height:1.55, so each row is ~65.75px, palette
+     full ≈ 443px. If the palette is ever taller than stage-inner, the
+     hero-grid centering math shifts stage-inner the moment the palette
+     shrinks through this floor, tugging the (absolutely-positioned)
+     search bar down on the first keystroke. 500 leaves a comfortable
+     margin. */
+  min-height:500px;
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
