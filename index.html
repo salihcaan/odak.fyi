@@ -330,18 +330,6 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
     color-mix(in oklch, var(--fg) 4%, transparent) 0%,
     transparent 30%);
 }
-.palette .window-chrome{
-  display:flex;align-items:center;gap:7px;
-  padding:12px 14px;border-bottom:1px solid var(--border);
-}
-.palette .window-chrome i{width:11px;height:11px;border-radius:50%;display:block}
-.palette .window-chrome i:nth-child(1){background:#ff5f57}
-.palette .window-chrome i:nth-child(2){background:#febc2e}
-.palette .window-chrome i:nth-child(3){background:#19c332}
-.palette .window-chrome .title{
-  font-family:var(--mono);font-size:11px;color:var(--mute);margin-left:auto;margin-right:auto;
-  padding-right:40px;
-}
 .palette .search-bar{
   display:flex;align-items:center;gap:12px;
   padding:10px 18px;                              /* real app: 18h/10v */
@@ -370,14 +358,13 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   background:var(--surface);
 }
 .palette .search-bar .top-ide{
-  width:36px;height:36px;border-radius:8px;flex-shrink:0;
+  width:36px;height:36px;border-radius:8px;flex-shrink:0;overflow:hidden;
   display:grid;place-items:center;
-  font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;
-  background:linear-gradient(135deg,#1e1a17,#3a322b);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
   transition:opacity .2s;
 }
-.palette .search-bar .top-ide.tinted{opacity:.4}
+.palette .search-bar .top-ide svg{width:100%;height:100%;display:block}
+.palette .search-bar .top-ide.tinted{opacity:.4;filter:saturate(.3)}
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
 .palette li{
   display:flex;align-items:center;gap:10px;
@@ -432,19 +419,14 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 .palette li .meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .palette li .ide-stack{
-  display:flex;align-items:center;gap:0;padding:2px;
-  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  display:flex;align-items:center;gap:4px;padding:3px;
+  background:var(--surface);border:1px solid var(--border);border-radius:7px;
 }
 .palette li .ide-stack .ide{
-  width:18px;height:18px;display:grid;place-items:center;
-  font-family:var(--mono);font-size:9px;font-weight:700;border-radius:3px;
+  width:18px;height:18px;border-radius:4px;overflow:hidden;flex-shrink:0;
+  display:grid;place-items:center;
 }
-.palette li .ide-stack .ide.cu{background:#1e1a17;color:#f5ede0}
-.palette li .ide-stack .ide.vc{background:#0e639c;color:#fff}
-.palette li .ide-stack .ide.xc{background:#1989e0;color:#fff}
-.palette li .ide-stack .ide.go{background:#3672bd;color:#fff}
-.palette li .ide-stack .ide.it{background:#333;color:#fff}
-[data-theme="light"] .palette li .ide-stack .ide.cu{background:#1a1410;color:#fff}
+.palette li .ide-stack .ide svg{width:100%;height:100%;display:block}
 
 .palette li .chip{
   font-family:var(--mono);font-size:10px;color:var(--dim);
@@ -486,9 +468,11 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   transform:translateZ(60px);
 }
 .float-tag .lbl{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:9px;font-weight:600}
-.float-tag.a{top:-18px;left:-36px;animation:drift-a 7s ease-in-out infinite}
-.float-tag.b{bottom:30%;right:-52px;animation:drift-b 8s ease-in-out infinite}
-.float-tag.c{bottom:-12px;left:10%;animation:drift-c 9s ease-in-out infinite}
+.float-tag{opacity:0;transition:opacity .5s ease}
+.hero-stage.lit .float-tag{opacity:1}
+.float-tag.a{top:-18px;left:-36px;animation:drift-a 7s ease-in-out infinite;transition-delay:.2s}
+.float-tag.b{bottom:30%;right:-52px;animation:drift-b 8s ease-in-out infinite;transition-delay:.4s}
+.float-tag.c{bottom:-12px;left:10%;animation:drift-c 9s ease-in-out infinite;transition-delay:.6s}
 @keyframes drift-a{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes drift-b{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 @keyframes drift-c{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -597,15 +581,11 @@ h2.section-h .mute{color:var(--dim)}
 .tab-demo .win.on{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border)}
 .tab-demo .win.on::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:2px;background:var(--accent);border-radius:2px;box-shadow:0 0 8px var(--accent-glow)}
 .tab-demo .win .app{
-  width:28px;height:28px;border-radius:7px;flex-shrink:0;display:grid;place-items:center;
-  font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;
+  width:28px;height:28px;border-radius:7px;flex-shrink:0;overflow:hidden;
+  display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 1px 2px rgba(0,0,0,.2);
 }
-.tab-demo .win .app.cursor{background:linear-gradient(135deg,#1e1a17,#3a322b)}
-.tab-demo .win .app.vscode{background:linear-gradient(135deg,#0e639c,#1177bb)}
-.tab-demo .win .app.xcode{background:linear-gradient(135deg,#1989e0,#4fb0f0)}
-.tab-demo .win .app.iterm{background:linear-gradient(135deg,#2d2d2d,#444)}
-.tab-demo .win .app.chrome{background:linear-gradient(135deg,#ea4335,#fbbc04)}
-.tab-demo .win .app.goland{background:linear-gradient(135deg,#3672bd,#087cfa)}
+.tab-demo .win .app svg{width:100%;height:100%;display:block}
 .tab-demo .win .body{flex:1;min-width:0}
 .tab-demo .win .title{font-size:13.5px;font-weight:500;letter-spacing:-.005em;color:var(--fg);display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .tab-demo .win .title .proj{color:var(--dim);font-family:var(--mono);font-size:11px;font-weight:400;overflow:hidden;text-overflow:ellipsis;min-width:0}
@@ -833,13 +813,14 @@ footer.site-foot{
   will-change:opacity,transform;
 }
 .palette-fx.shown{opacity:1;transform:none}
-/* hotkey pill flashed before the palette appears */
+/* hotkey pill — permanent label above the palette */
 .hotkey-pill{
   position:absolute;top:-58px;left:50%;transform:translateX(-50%);
   display:flex;align-items:center;gap:8px;z-index:5;
-  opacity:0;transition:opacity .25s ease;pointer-events:none;
+  pointer-events:none;
+  opacity:0;transition:opacity .5s ease .4s;
 }
-.hotkey-pill.shown{opacity:1}
+.hero-stage.lit .hotkey-pill{opacity:1}
 .hotkey-pill .kc{
   font-family:var(--mono);font-size:14px;font-weight:500;color:var(--fg);
   padding:8px 12px;border-radius:10px;min-width:40px;text-align:center;
@@ -854,10 +835,6 @@ footer.site-foot{
   box-shadow:inset 0 2px 4px rgba(0,0,0,.3), 0 0 18px var(--prod-blue-glow);
 }
 .hotkey-pill .plus{color:var(--mute);font-family:var(--mono);font-size:14px}
-.hotkey-pill .label{
-  font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.1em;
-  text-transform:uppercase;margin-left:10px;
-}
 /* open hint pill bottom — "press ⏎" */
 .enter-pill{
   position:absolute;bottom:-46px;left:50%;transform:translateX(-50%);
@@ -897,6 +874,50 @@ footer.site-foot{
 </style>
 </head>
 <body data-theme="dark">
+
+<!-- SVG icon sprite: real-brand-inspired IDE glyphs, referenced via <use> -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+  <defs>
+    <symbol id="ide-cursor" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="#0a0a0a"/>
+      <path d="M11 7 L22 13 L17 16 L22 19 L11 25 L11 16 Z" fill="#fff" opacity=".95"/>
+    </symbol>
+    <symbol id="ide-vscode" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="#0e639c"/>
+      <path d="M9 16 L23 7 L23 25 Z" fill="#fff" opacity=".35"/>
+      <path d="M9 16 L18 10 L18 22 Z" fill="#fff" opacity=".65"/>
+      <rect x="22" y="10" width="3" height="12" fill="#fff" opacity=".9"/>
+    </symbol>
+    <symbol id="ide-xcode" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="#1989E0"/>
+      <circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-width="2" opacity=".9"/>
+      <path d="M16 11 L16 16 L19 19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ide-goland" viewBox="0 0 32 32">
+      <defs><linearGradient id="gl-go" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b84f3"/><stop offset=".5" stop-color="#087cfa"/><stop offset="1" stop-color="#07C3F2"/></linearGradient></defs>
+      <rect width="32" height="32" rx="7" fill="url(#gl-go)"/>
+      <text x="16" y="22" font-family="-apple-system,system-ui" font-size="14" font-weight="800" text-anchor="middle" fill="#fff" letter-spacing="-1">Go</text>
+    </symbol>
+    <symbol id="ide-iterm" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="#1a1a1a"/>
+      <path d="M8 11 L13 16 L8 21" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M16 22 L24 22" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="ide-chrome" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="15" fill="#fff"/>
+      <path d="M16 3 A13 13 0 0 1 27.26 9.5 L19.5 14 A6 6 0 0 0 11 13 Z" fill="#EA4335"/>
+      <path d="M27.26 9.5 A13 13 0 0 1 24.26 26.5 L19.5 18 A6 6 0 0 0 19.5 14 Z" fill="#FBBC04"/>
+      <path d="M24.26 26.5 A13 13 0 0 1 4.74 22.5 L12.5 18 A6 6 0 0 0 19.5 18 Z" fill="#34A853"/>
+      <circle cx="16" cy="16" r="6" fill="#4285F4"/>
+      <circle cx="16" cy="16" r="6" fill="none" stroke="#fff" stroke-width="1.5" opacity=".85"/>
+    </symbol>
+    <!-- generic lang tiles, for palette rows that show no IDE stack -->
+    <symbol id="ide-terminal" viewBox="0 0 32 32">
+      <rect width="32" height="32" rx="7" fill="#2a2a2a"/>
+      <path d="M10 12 L14 16 L10 20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
 
 <div class="aurora"></div>
 <div class="grid-bg"></div>
@@ -963,26 +984,22 @@ footer.site-foot{
       </div>
     </div>
 
-    <div class="hero-stage">
+    <div class="hero-stage" id="hero-stage">
       <div class="stage-glow"></div>
       <div class="stage-inner" id="stage-inner">
-        <!-- Palette mockup (animated) -->
-        <div class="palette palette-fx" id="hero-palette">
+        <!-- Palette mockup (animated, permanently visible) -->
+        <div class="palette palette-fx shown" id="hero-palette">
           <div class="hotkey-pill" id="hero-hotkey">
             <div class="kc" data-key="opt">⌥</div>
             <div class="plus">+</div>
             <div class="kc" data-key="space">Space</div>
-          </div>
-          <div class="window-chrome">
-            <i></i><i></i><i></i>
-            <span class="title">Odak</span>
           </div>
           <div class="search-bar">
             <svg class="q" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
             <div class="input">
               <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
             </div>
-            <div class="top-ide tinted" id="hero-topide">C</div>
+            <div class="top-ide tinted" id="hero-topide"><svg><use href="#ide-cursor"/></svg></div>
           </div>
           <ul id="hero-list">
             <li data-keys="platform-landing platf pl" class="on">
@@ -997,8 +1014,8 @@ footer.site-foot{
               </div>
               <div class="meta">
                 <div class="ide-stack" title="Open windows">
-                  <div class="ide cu" title="Cursor">C</div>
-                  <div class="ide it" title="iTerm">T</div>
+                  <div class="ide" title="Cursor"><svg><use href="#ide-cursor"/></svg></div>
+                  <div class="ide" title="iTerm"><svg><use href="#ide-iterm"/></svg></div>
                 </div>
                 <span class="chip diff">+32 −7</span>
               </div>
@@ -1013,7 +1030,7 @@ footer.site-foot{
                 <div class="path">~/code/work/platform-ios</div>
               </div>
               <div class="meta">
-                <div class="ide-stack"><div class="ide xc">X</div></div>
+                <div class="ide-stack"><div class="ide"><svg><use href="#ide-xcode"/></svg></div></div>
               </div>
             </li>
             <li data-keys="platform-api platf pl">
@@ -1026,7 +1043,7 @@ footer.site-foot{
                 <div class="path">~/code/work/platform-api</div>
               </div>
               <div class="meta">
-                <div class="ide-stack"><div class="ide go">G</div></div>
+                <div class="ide-stack"><div class="ide"><svg><use href="#ide-goland"/></svg></div></div>
               </div>
             </li>
             <li data-keys="platform-etl platf pl">
@@ -1109,11 +1126,10 @@ footer.site-foot{
 
     <div class="f-stage reveal">
       <div class="palette">
-        <div class="window-chrome"><i></i><i></i><i></i><span class="title">Odak</span></div>
         <div class="search-bar">
           <svg class="q" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-          <div class="input"><span>odk</span><span class="caret"></span></div>
-          <span class="kbd-hint">⌥Space</span>
+          <div class="input"><span class="typed">odk</span><span class="caret"></span><span class="ghost">-mac</span><span class="open-hint">— Open</span></div>
+          <div class="top-ide"><svg><use href="#ide-xcode"/></svg></div>
         </div>
         <ul>
           <li class="on">
@@ -1126,7 +1142,7 @@ footer.site-foot{
               </div>
               <div class="path">~/code/odak-mac</div>
             </div>
-            <div class="meta"><div class="ide-stack"><div class="ide xc">X</div></div></div>
+            <div class="meta"><div class="ide-stack"><div class="ide"><svg><use href="#ide-xcode"/></svg></div></div></div>
           </li>
           <li>
             <div class="lang ts">TS</div>
@@ -1136,7 +1152,7 @@ footer.site-foot{
               </div>
               <div class="path">~/code/odak-site</div>
             </div>
-            <div class="meta"><div class="ide-stack"><div class="ide cu">C</div></div></div>
+            <div class="meta"><div class="ide-stack"><div class="ide"><svg><use href="#ide-cursor"/></svg></div></div></div>
           </li>
           <li>
             <div class="lang py">PY</div>
@@ -1181,7 +1197,7 @@ footer.site-foot{
         </div>
         <ul class="win-list">
           <li class="win on">
-            <div class="app cursor">C</div>
+            <div class="app"><svg><use href="#ide-cursor"/></svg></div>
             <div class="body">
               <div class="title">platform-landing <span class="proj">· pricing.tsx</span></div>
               <div class="sub">Cursor · ~/code/work/platform-landing</div>
@@ -1189,7 +1205,7 @@ footer.site-foot{
             <div class="mru">just now</div>
           </li>
           <li class="win">
-            <div class="app iterm">T</div>
+            <div class="app"><svg><use href="#ide-iterm"/></svg></div>
             <div class="body">
               <div class="title">platform-landing <span class="proj">· pnpm dev</span></div>
               <div class="sub">iTerm · zsh</div>
@@ -1197,7 +1213,7 @@ footer.site-foot{
             <div class="mru">2m ago</div>
           </li>
           <li class="win">
-            <div class="app xcode">X</div>
+            <div class="app"><svg><use href="#ide-xcode"/></svg></div>
             <div class="body">
               <div class="title">platform-ios <span class="proj">· AppDelegate.swift</span></div>
               <div class="sub">Xcode 16.2</div>
@@ -1205,7 +1221,7 @@ footer.site-foot{
             <div class="mru">8m</div>
           </li>
           <li class="win">
-            <div class="app goland">G</div>
+            <div class="app"><svg><use href="#ide-goland"/></svg></div>
             <div class="body">
               <div class="title">platform-api <span class="proj">· handler.go</span></div>
               <div class="sub">GoLand</div>
@@ -1213,7 +1229,7 @@ footer.site-foot{
             <div class="mru">14m</div>
           </li>
           <li class="win">
-            <div class="app vscode">V</div>
+            <div class="app"><svg><use href="#ide-vscode"/></svg></div>
             <div class="body">
               <div class="title">platform-etl <span class="proj">· pipeline.py</span></div>
               <div class="sub">VS Code</div>
@@ -1221,7 +1237,7 @@ footer.site-foot{
             <div class="mru">32m</div>
           </li>
           <li class="win">
-            <div class="app chrome">B</div>
+            <div class="app"><svg><use href="#ide-chrome"/></svg></div>
             <div class="body">
               <div class="title">localhost:3000 <span class="proj">· platform-landing</span></div>
               <div class="sub">Chrome · preview</div>
@@ -1558,8 +1574,9 @@ footer.site-foot{
 })();
 
 // ===== Hero palette animation loop =====
-// Recreates the real app flow: hotkey → palette → typing → filter → arrow → enter → dismiss
+// Palette stays visible always; loop demos the product interaction inside it.
 (function(){
+  const stage   = document.getElementById('hero-stage');
   const palette = document.getElementById('hero-palette');
   const hotkey  = document.getElementById('hero-hotkey');
   const enterP  = document.getElementById('hero-enter');
@@ -1568,17 +1585,7 @@ footer.site-foot{
   const openHnt = document.getElementById('hero-open-hint');
   const topIde  = document.getElementById('hero-topide');
   const list    = document.getElementById('hero-list');
-  if(!palette || !list) return;
-
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    // Static fallback
-    palette.classList.add('shown');
-    typed.textContent = 'platf';
-    ghost.textContent = 'orm-landing';
-    openHnt.textContent = '— Open';
-    topIde.classList.remove('tinted');
-    return;
-  }
+  if(!palette || !list || !stage) return;
 
   const QUERY = 'platf';
   const items = Array.from(list.querySelectorAll('li'));
@@ -1594,17 +1601,25 @@ footer.site-foot{
   }
 
   function setGhost(q){
-    // Show remaining characters of top match as ghost precomplete (e.g. "pl" → "atform-landing")
     const visible = items.filter(li => li.getAttribute('data-filtered') === '0');
     if(!visible[0] || q.length === 0){ ghost.textContent = ''; openHnt.textContent=''; return; }
     const keys = (visible[0].dataset.keys || '').split(' ');
     const full = keys[0] || '';
-    if(full.toLowerCase().startsWith(q.toLowerCase())){
-      ghost.textContent = full.slice(q.length);
-    } else {
-      ghost.textContent = '';
-    }
+    ghost.textContent = full.toLowerCase().startsWith(q.toLowerCase()) ? full.slice(q.length) : '';
     openHnt.textContent = '— Open';
+  }
+
+  // Light up the stage (fades in the float-tags + hotkey pill)
+  function lightStage(){ stage.classList.add('lit'); }
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    // Static fallback — final "typed" state, no loop
+    typed.textContent = QUERY;
+    filterList(QUERY);
+    setGhost(QUERY);
+    topIde.classList.remove('tinted');
+    lightStage();
+    return;
   }
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
@@ -1616,28 +1631,15 @@ footer.site-foot{
   }
 
   async function runLoop(){
+    // Kick off with the hotkey press (teaches the chord)
+    lightStage();
+    await wait(900);
+
     while(true){
-      // Reset
-      typed.textContent = '';
-      ghost.textContent = '';
-      openHnt.textContent = '';
-      items.forEach(li => { li.removeAttribute('data-filtered'); li.classList.remove('on'); });
-      items[0].classList.add('on');
-      topIde.classList.add('tinted');
-      palette.classList.remove('shown');
-      enterP.classList.remove('shown');
-      hotkey.classList.add('shown');
-      await wait(900);
-
-      // Press the hotkey
-      await pressKey('opt', 90);
+      // Pulse the hotkey chord
+      await pressKey('opt', 100);
       await pressKey('space', 160);
-      await wait(120);
-      hotkey.classList.remove('shown');
-
-      // Palette appears
-      palette.classList.add('shown');
-      await wait(520);
+      await wait(260);
 
       // Type query
       for(let i = 1; i <= QUERY.length; i++){
@@ -1647,47 +1649,48 @@ footer.site-foot{
         setGhost(q);
         await wait(100 + Math.random() * 60);
       }
+      await wait(480);
 
-      await wait(420);
-
-      // Show "Cursor is open" by un-tinting top IDE icon
+      // Un-tint Cursor to signal "already open"
       topIde.classList.remove('tinted');
-      await wait(340);
+      await wait(360);
 
-      // Arrow down — move selection
+      // Arrow down, then back
       const visible = items.filter(li => li.getAttribute('data-filtered') === '0');
       if(visible.length > 1){
         items.forEach(li => li.classList.remove('on'));
         visible[1].classList.add('on');
-        await wait(520);
+        await wait(560);
         items.forEach(li => li.classList.remove('on'));
         visible[0].classList.add('on');
-        await wait(360);
+        await wait(380);
       }
 
       // "Press ↵"
       enterP.classList.add('shown');
-      await wait(700);
-
-      // Dismiss
+      await wait(900);
       enterP.classList.remove('shown');
-      palette.classList.remove('shown');
+
+      // Reset smoothly back to empty query for next iteration
+      await wait(600);
+      topIde.classList.add('tinted');
+      typed.textContent = '';
+      ghost.textContent = '';
+      openHnt.textContent = '';
+      filterList('');
+      items.forEach(li => li.classList.remove('on'));
+      items[0].classList.add('on');
       await wait(700);
     }
   }
 
-  // Only run when the hero is visible; pause otherwise
-  let running = false;
-  let promise = null;
-  function start(){ if(!running){ running = true; promise = runLoop(); } }
-
+  // Start only when visible; also kick off immediately since hero is above the fold.
+  let started = false;
+  function start(){ if(!started){ started = true; runLoop(); } }
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if(e.isIntersecting) start();
-    });
-  }, { threshold: 0.25 });
+    entries.forEach(e => { if(e.isIntersecting) start(); });
+  }, { threshold: 0.15 });
   io.observe(palette);
-  // Also kick it off immediately since the hero is above the fold
   start();
 })();
 
