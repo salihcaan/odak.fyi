@@ -394,6 +394,10 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain}
 .palette .search-bar .top-ide.tinted{opacity:.4;filter:saturate(.3)}
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
+/* Pin the hero list height so the search bar + footer + float-tag badges
+   don't move when rows prune out. Survivors stack at the top; empty
+   slots below stay neutral. */
+#hero-list{min-height:292px;justify-content:flex-start}
 .palette li{
   display:flex;align-items:center;gap:10px;
   padding:12px 12px;border-radius:17px;      /* real app: resultSelectionCornerRadius */
@@ -505,9 +509,9 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .float-tag .lbl{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:9px;font-weight:600}
 .float-tag{opacity:0;transition:opacity .5s ease}
 .hero-stage.lit .float-tag{opacity:1}
-.float-tag.a{top:-18px;left:-36px;animation:drift-a 7s ease-in-out infinite;transition-delay:.2s}
-.float-tag.b{bottom:30%;right:-52px;animation:drift-b 8s ease-in-out infinite;transition-delay:.4s}
-.float-tag.c{bottom:-12px;left:10%;animation:drift-c 9s ease-in-out infinite;transition-delay:.6s}
+.float-tag.a{top:-28px;left:-42px;animation:drift-a 7s ease-in-out infinite;transition-delay:.2s}
+.float-tag.b{top:82px;right:-62px;animation:drift-b 8s ease-in-out infinite;transition-delay:.4s}   /* aligns with first row */
+.float-tag.c{bottom:-28px;left:18%;animation:drift-c 9s ease-in-out infinite;transition-delay:.6s}  /* below footer, clear of it */
 @keyframes drift-a{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes drift-b{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 @keyframes drift-c{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
