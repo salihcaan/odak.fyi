@@ -355,6 +355,10 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   max-width:580px;margin:0 auto;  /* real app width */
   backdrop-filter:blur(40px) saturate(160%);
   -webkit-backdrop-filter:blur(40px) saturate(160%);
+  /* reserve 56px at the top for the absolutely-positioned search bar — it
+     is removed from the flow so nothing below (row collapse, etc.) can
+     nudge its Y. */
+  padding-top:56px;
 }
 [data-theme="light"] .palette{
   background:linear-gradient(180deg,#ffffff 0%, #f7f4ef 100%);
@@ -371,7 +375,11 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   padding:10px 18px;                              /* real app: 18h/10v */
   height:56px;                                    /* fixed — don't drift as input content grows */
   border-bottom:1px solid var(--border);
-  position:relative;
+  /* Pin to the palette's top edge; absolutely positioned so it is out
+     of the flow and cannot be nudged by anything inside the list. */
+  position:absolute;
+  top:0;left:0;right:0;
+  z-index:2;
 }
 .palette .search-bar svg.q{width:22px;height:22px;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0}
 .palette .search-bar .input{
