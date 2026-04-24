@@ -276,6 +276,33 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 .hero-fine .dot{width:4px;height:4px;border-radius:50%;background:var(--faint)}
 
+/* Feature pills — the three onboarding pillars, surfaced on the hero */
+.feature-pills{
+  display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 28px;
+}
+.feature-pills .fp{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px 6px 6px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--border-2);
+  font-size:13px;font-weight:500;color:var(--fg-2);letter-spacing:-.005em;
+  transition:background .15s, color .15s, border-color .15s, transform .15s;
+}
+.feature-pills .fp:hover{background:var(--surface-2);color:var(--fg);border-color:color-mix(in oklch, var(--accent) 40%, var(--border-2));transform:translateY(-1px)}
+.feature-pills .fp kbd{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:4px 8px;border-radius:999px;min-width:22px;text-align:center;
+  background:color-mix(in oklch, var(--bg-2) 90%, transparent);
+  border:1px solid var(--border);
+  color:var(--fg);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  white-space:nowrap;
+}
+.feature-pills .fp.primary kbd{
+  background:linear-gradient(180deg, var(--prod-blue), var(--prod-blue-2));
+  color:#fff;border-color:color-mix(in oklch, var(--prod-blue) 80%, black 15%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 0 14px var(--prod-blue-glow);
+}
+
 /* ==========================================================
    HERO STAGE — the palette mockup framing
    ========================================================== */
@@ -950,6 +977,11 @@ footer.site-foot{
         Any project.<br/>
         <span class="accent">Two keys.</span>
       </h1>
+      <div class="feature-pills">
+        <div class="fp primary"><kbd>⌥ Space</kbd><span>Search projects</span></div>
+        <div class="fp"><kbd>⌥ Tab</kbd><span>Switch windows</span></div>
+        <div class="fp"><kbd>⌘ .</kbd><span>Project actions</span></div>
+      </div>
       <p class="hero-sub">
         A keyboard-driven project launcher for developers who juggle dozens of repos across every editor on macOS. Press a hotkey, type a few letters, land in the right window.
       </p>
@@ -988,7 +1020,7 @@ footer.site-foot{
             <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
           </div>
           <ul id="hero-list">
-            <li data-keys="platform-landing platf pl" class="on">
+            <li data-keys="platform-landing" class="on">
               <div class="lang ts">TS</div>
               <div class="body">
                 <div class="title-row">platform-landing</div>
@@ -1008,26 +1040,12 @@ footer.site-foot{
                 </div>
               </div>
             </li>
-            <li data-keys="platform-ios platf pl">
-              <div class="lang sw">SW</div>
-              <div class="body">
-                <div class="title-row">platform-ios</div>
-                <div class="path">
-                  <span>~/code/work/platform-ios</span>
-                  <span class="sep">·</span>
-                  <span class="branch">main</span>
-                </div>
-              </div>
-              <div class="meta">
-                <div class="ide-stack"><div class="ide"><img src="assets/ide/xcode.png" alt="Xcode"></div></div>
-              </div>
-            </li>
-            <li data-keys="platform-api platf pl">
+            <li data-keys="plexo-cli">
               <div class="lang go">GO</div>
               <div class="body">
-                <div class="title-row">platform-api</div>
+                <div class="title-row">plexo-cli</div>
                 <div class="path">
-                  <span>~/code/work/platform-api</span>
+                  <span>~/code/side/plexo-cli</span>
                   <span class="sep">·</span>
                   <span class="branch">main</span>
                 </div>
@@ -1036,26 +1054,42 @@ footer.site-foot{
                 <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
               </div>
             </li>
-            <li data-keys="platform-etl platf pl">
-              <div class="lang py">PY</div>
+            <li data-keys="api-gateway">
+              <div class="lang go">GO</div>
               <div class="body">
-                <div class="title-row">platform-etl</div>
+                <div class="title-row">api-gateway</div>
                 <div class="path">
-                  <span>~/code/work/platform-etl</span>
+                  <span>~/code/work/api-gateway</span>
                   <span class="sep">·</span>
                   <span class="branch">main</span>
-                  <span class="sep">·</span>
-                  <span class="dirty"><span class="dot"></span>2</span>
                 </div>
               </div>
-              <div class="meta"></div>
+              <div class="meta">
+                <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
+              </div>
             </li>
-            <li data-keys="platform-legacy platf pl">
+            <li data-keys="react-dashboard">
+              <div class="lang ts">TS</div>
+              <div class="body">
+                <div class="title-row">react-dashboard</div>
+                <div class="path">
+                  <span>~/code/work/react-dashboard</span>
+                  <span class="sep">·</span>
+                  <span class="branch">feat/onboarding</span>
+                  <span class="sep">·</span>
+                  <span class="dirty"><span class="dot"></span>3</span>
+                </div>
+              </div>
+              <div class="meta">
+                <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div>
+              </div>
+            </li>
+            <li data-keys="notion-clone">
               <div class="lang rb">RB</div>
               <div class="body">
-                <div class="title-row">platform-legacy</div>
+                <div class="title-row">notion-clone</div>
                 <div class="path">
-                  <span>~/code/archive/platform-legacy</span>
+                  <span>~/code/side/notion-clone</span>
                   <span class="sep">·</span>
                   <span class="branch">main</span>
                 </div>
@@ -1075,7 +1109,7 @@ footer.site-foot{
         </div>
 
         <div class="float-tag a">
-          <div><div class="lbl">fuzzy match</div>"platf" → platform-*</div>
+          <div><div class="lbl">fuzzy match</div>"platf" → platform-landing</div>
         </div>
         <div class="float-tag b">
           <div><div class="lbl">inline git</div>feat/pricing · 7 modified</div>
@@ -1634,7 +1668,6 @@ footer.site-foot{
   }
 
   async function runLoop(){
-    // Kick off with the hotkey press (teaches the chord)
     lightStage();
     await wait(900);
 
@@ -1644,37 +1677,47 @@ footer.site-foot{
       await pressKey('space', 160);
       await wait(260);
 
-      // Type query
-      for(let i = 1; i <= QUERY.length; i++){
+      // Type "p" → "pl": list prunes from 5 → 3 → 2
+      for(let i = 1; i <= 2; i++){
         const q = QUERY.slice(0, i);
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(100 + Math.random() * 60);
+        await wait(150 + Math.random() * 70);
       }
-      await wait(480);
+      await wait(520);
 
-      // Un-tint Cursor to signal "already open"
-      topIde.classList.remove('tinted');
-      await wait(360);
-
-      // Arrow down, then back
-      const visible = items.filter(li => li.getAttribute('data-filtered') === '0');
+      // With 2 candidates visible, show arrow-nav moving the selection
+      let visible = items.filter(li => li.getAttribute('data-filtered') === '0');
       if(visible.length > 1){
         items.forEach(li => li.classList.remove('on'));
         visible[1].classList.add('on');
         await wait(560);
         items.forEach(li => li.classList.remove('on'));
         visible[0].classList.add('on');
-        await wait(380);
+        await wait(360);
       }
+
+      // Finish typing "pla" → "plat" → "platf": list collapses to 1
+      for(let i = 3; i <= QUERY.length; i++){
+        const q = QUERY.slice(0, i);
+        typed.textContent = q;
+        filterList(q);
+        setGhost(q);
+        await wait(110 + Math.random() * 60);
+      }
+      await wait(480);
+
+      // Un-tint Cursor to signal "already open"
+      topIde.classList.remove('tinted');
+      await wait(440);
 
       // "Press ↵"
       enterP.classList.add('shown');
       await wait(900);
       enterP.classList.remove('shown');
 
-      // Reset smoothly back to empty query for next iteration
+      // Reset for next iteration
       await wait(600);
       topIde.classList.add('tinted');
       typed.textContent = '';
