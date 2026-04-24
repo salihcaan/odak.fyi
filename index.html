@@ -323,10 +323,15 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   position:relative;z-index:1;
   transform-style:preserve-3d;
   will-change:transform;
-  /* Stable outer frame so the palette can shrink cleanly inside without
-     moving the search bar Y or dragging the bottom-anchored float-tag
-     (ALREADY OPEN) upward. 380px fits the full 5-row palette. */
+  /* Stable outer frame: palette pinned to the top edge via flex so the
+     search bar's Y doesn't move when rows collapse underneath.
+     align-items defaults to stretch (palette fills cross-axis, capped
+     by its own max-width + centered by its own margin:auto). Float-tags
+     remain absolutely positioned relative to this frame. */
   min-height:380px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
 }
 
 /* ==========================================================
