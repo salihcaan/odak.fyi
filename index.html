@@ -363,7 +363,8 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
   transition:opacity .2s;
 }
-.palette .search-bar .top-ide svg{width:100%;height:100%;display:block}
+.palette .search-bar .top-ide svg,
+.palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain}
 .palette .search-bar .top-ide.tinted{opacity:.4;filter:saturate(.3)}
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
 .palette li{
@@ -423,10 +424,11 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   background:var(--surface);border:1px solid var(--border);border-radius:7px;
 }
 .palette li .ide-stack .ide{
-  width:18px;height:18px;border-radius:4px;overflow:hidden;flex-shrink:0;
+  width:20px;height:20px;border-radius:5px;overflow:hidden;flex-shrink:0;
   display:grid;place-items:center;
 }
-.palette li .ide-stack .ide svg{width:100%;height:100%;display:block}
+.palette li .ide-stack .ide svg,
+.palette li .ide-stack .ide img{width:100%;height:100%;display:block;object-fit:contain}
 
 .palette li .chip{
   font-family:var(--mono);font-size:10px;color:var(--dim);
@@ -585,7 +587,8 @@ h2.section-h .mute{color:var(--dim)}
   display:grid;place-items:center;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 1px 2px rgba(0,0,0,.2);
 }
-.tab-demo .win .app svg{width:100%;height:100%;display:block}
+.tab-demo .win .app svg,
+.tab-demo .win .app img{width:100%;height:100%;display:block;object-fit:contain}
 .tab-demo .win .body{flex:1;min-width:0}
 .tab-demo .win .title{font-size:13.5px;font-weight:500;letter-spacing:-.005em;color:var(--fg);display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .tab-demo .win .title .proj{color:var(--dim);font-family:var(--mono);font-size:11px;font-weight:400;overflow:hidden;text-overflow:ellipsis;min-width:0}
@@ -875,29 +878,11 @@ footer.site-foot{
 </head>
 <body data-theme="dark">
 
-<!-- SVG icon sprite: real-brand-inspired IDE glyphs, referenced via <use> -->
+<!-- SVG icon sprite: non-IDE glyphs (terminal + browser) that ship as inline SVG.
+     The 4 real IDE icons (Cursor, VS Code, Xcode, IntelliJ) are PNGs in assets/ide/ —
+     identical to the ones the macOS app ships in its onboarding. -->
 <svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
   <defs>
-    <symbol id="ide-cursor" viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="7" fill="#0a0a0a"/>
-      <path d="M11 7 L22 13 L17 16 L22 19 L11 25 L11 16 Z" fill="#fff" opacity=".95"/>
-    </symbol>
-    <symbol id="ide-vscode" viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="7" fill="#0e639c"/>
-      <path d="M9 16 L23 7 L23 25 Z" fill="#fff" opacity=".35"/>
-      <path d="M9 16 L18 10 L18 22 Z" fill="#fff" opacity=".65"/>
-      <rect x="22" y="10" width="3" height="12" fill="#fff" opacity=".9"/>
-    </symbol>
-    <symbol id="ide-xcode" viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="7" fill="#1989E0"/>
-      <circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-width="2" opacity=".9"/>
-      <path d="M16 11 L16 16 L19 19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="ide-goland" viewBox="0 0 32 32">
-      <defs><linearGradient id="gl-go" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b84f3"/><stop offset=".5" stop-color="#087cfa"/><stop offset="1" stop-color="#07C3F2"/></linearGradient></defs>
-      <rect width="32" height="32" rx="7" fill="url(#gl-go)"/>
-      <text x="16" y="22" font-family="-apple-system,system-ui" font-size="14" font-weight="800" text-anchor="middle" fill="#fff" letter-spacing="-1">Go</text>
-    </symbol>
     <symbol id="ide-iterm" viewBox="0 0 32 32">
       <rect width="32" height="32" rx="7" fill="#1a1a1a"/>
       <path d="M8 11 L13 16 L8 21" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -910,11 +895,6 @@ footer.site-foot{
       <path d="M24.26 26.5 A13 13 0 0 1 4.74 22.5 L12.5 18 A6 6 0 0 0 19.5 18 Z" fill="#34A853"/>
       <circle cx="16" cy="16" r="6" fill="#4285F4"/>
       <circle cx="16" cy="16" r="6" fill="none" stroke="#fff" stroke-width="1.5" opacity=".85"/>
-    </symbol>
-    <!-- generic lang tiles, for palette rows that show no IDE stack -->
-    <symbol id="ide-terminal" viewBox="0 0 32 32">
-      <rect width="32" height="32" rx="7" fill="#2a2a2a"/>
-      <path d="M10 12 L14 16 L10 20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
   </defs>
 </svg>
@@ -999,7 +979,7 @@ footer.site-foot{
             <div class="input">
               <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
             </div>
-            <div class="top-ide tinted" id="hero-topide"><svg><use href="#ide-cursor"/></svg></div>
+            <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
           </div>
           <ul id="hero-list">
             <li data-keys="platform-landing platf pl" class="on">
@@ -1014,7 +994,7 @@ footer.site-foot{
               </div>
               <div class="meta">
                 <div class="ide-stack" title="Open windows">
-                  <div class="ide" title="Cursor"><svg><use href="#ide-cursor"/></svg></div>
+                  <div class="ide" title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
                   <div class="ide" title="iTerm"><svg><use href="#ide-iterm"/></svg></div>
                 </div>
                 <span class="chip diff">+32 −7</span>
@@ -1030,7 +1010,7 @@ footer.site-foot{
                 <div class="path">~/code/work/platform-ios</div>
               </div>
               <div class="meta">
-                <div class="ide-stack"><div class="ide"><svg><use href="#ide-xcode"/></svg></div></div>
+                <div class="ide-stack"><div class="ide"><img src="assets/ide/xcode.png" alt="Xcode"></div></div>
               </div>
             </li>
             <li data-keys="platform-api platf pl">
@@ -1043,7 +1023,7 @@ footer.site-foot{
                 <div class="path">~/code/work/platform-api</div>
               </div>
               <div class="meta">
-                <div class="ide-stack"><div class="ide"><svg><use href="#ide-goland"/></svg></div></div>
+                <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
               </div>
             </li>
             <li data-keys="platform-etl platf pl">
@@ -1129,7 +1109,7 @@ footer.site-foot{
         <div class="search-bar">
           <svg class="q" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
           <div class="input"><span class="typed">odk</span><span class="caret"></span><span class="ghost">-mac</span><span class="open-hint">— Open</span></div>
-          <div class="top-ide"><svg><use href="#ide-xcode"/></svg></div>
+          <div class="top-ide"><img src="assets/ide/xcode.png" alt="Xcode"></div>
         </div>
         <ul>
           <li class="on">
@@ -1142,7 +1122,7 @@ footer.site-foot{
               </div>
               <div class="path">~/code/odak-mac</div>
             </div>
-            <div class="meta"><div class="ide-stack"><div class="ide"><svg><use href="#ide-xcode"/></svg></div></div></div>
+            <div class="meta"><div class="ide-stack"><div class="ide"><img src="assets/ide/xcode.png" alt="Xcode"></div></div></div>
           </li>
           <li>
             <div class="lang ts">TS</div>
@@ -1152,7 +1132,7 @@ footer.site-foot{
               </div>
               <div class="path">~/code/odak-site</div>
             </div>
-            <div class="meta"><div class="ide-stack"><div class="ide"><svg><use href="#ide-cursor"/></svg></div></div></div>
+            <div class="meta"><div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div></div>
           </li>
           <li>
             <div class="lang py">PY</div>
@@ -1197,7 +1177,7 @@ footer.site-foot{
         </div>
         <ul class="win-list">
           <li class="win on">
-            <div class="app"><svg><use href="#ide-cursor"/></svg></div>
+            <div class="app"><img src="assets/ide/cursor.png" alt="Cursor"></div>
             <div class="body">
               <div class="title">platform-landing <span class="proj">· pricing.tsx</span></div>
               <div class="sub">Cursor · ~/code/work/platform-landing</div>
@@ -1213,7 +1193,7 @@ footer.site-foot{
             <div class="mru">2m ago</div>
           </li>
           <li class="win">
-            <div class="app"><svg><use href="#ide-xcode"/></svg></div>
+            <div class="app"><img src="assets/ide/xcode.png" alt="Xcode"></div>
             <div class="body">
               <div class="title">platform-ios <span class="proj">· AppDelegate.swift</span></div>
               <div class="sub">Xcode 16.2</div>
@@ -1221,15 +1201,15 @@ footer.site-foot{
             <div class="mru">8m</div>
           </li>
           <li class="win">
-            <div class="app"><svg><use href="#ide-goland"/></svg></div>
+            <div class="app"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
             <div class="body">
               <div class="title">platform-api <span class="proj">· handler.go</span></div>
-              <div class="sub">GoLand</div>
+              <div class="sub">IntelliJ IDEA</div>
             </div>
             <div class="mru">14m</div>
           </li>
           <li class="win">
-            <div class="app"><svg><use href="#ide-vscode"/></svg></div>
+            <div class="app"><img src="assets/ide/vscode.png" alt="VS Code"></div>
             <div class="body">
               <div class="title">platform-etl <span class="proj">· pipeline.py</span></div>
               <div class="sub">VS Code</div>
