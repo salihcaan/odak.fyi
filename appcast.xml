@@ -28,7 +28,7 @@ Odak is a project finder and window switcher for macOS developers. This is an ea
 
 Feedback welcome at support@odak.fyi.
             ]]></description>
-            <enclosure url="https://github.com/salihcaan/odak-releases/releases/download/v0.1.0/Odak-0.1.0.dmg" length="26540731" type="application/x-apple-diskimage" sparkle:edSignature="8Qhs/L8teNjIVuF8PF7xc7tlWhJrqOpOYlWPwi1X/N2pXP5Q2z48FOi/wbrzCqXipAoGhjMfRi2cFEz4AVFkBg=="/>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.0/Odak-0.1.0.dmg" length="26540731" type="application/x-apple-diskimage" sparkle:edSignature="8Qhs/L8teNjIVuF8PF7xc7tlWhJrqOpOYlWPwi1X/N2pXP5Q2z48FOi/wbrzCqXipAoGhjMfRi2cFEz4AVFkBg=="/>
         </item>
     </channel>
 </rss>
