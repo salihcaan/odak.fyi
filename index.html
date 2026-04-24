@@ -390,13 +390,36 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 .palette .search-bar .top-ide{
   width:36px;height:36px;border-radius:8px;flex-shrink:0;overflow:hidden;
-  display:grid;place-items:center;
+  display:grid;place-items:center;position:relative;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-  transition:opacity .2s;
+  transition:opacity .24s ease, filter .24s ease, transform .22s cubic-bezier(.35,1.8,.55,1);
 }
 .palette .search-bar .top-ide svg,
-.palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain}
+.palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain;transition:opacity .18s ease}
 .palette .search-bar .top-ide.tinted{opacity:.4;filter:saturate(.3)}
+/* Tab-press bump: subtle depress + icon crossfade */
+.palette .search-bar .top-ide.switching{transform:scale(.88)}
+.palette .search-bar .top-ide.switching img{opacity:.35}
+
+/* Small "⇥ Switch editor" pill, shown during the Tab-cycle phase */
+.tab-pill{
+  position:absolute;top:10px;right:62px;z-index:6;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 9px;border-radius:7px;
+  background:color-mix(in oklch, var(--bg-2) 90%, transparent);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid var(--border-2);
+  font-family:var(--mono);font-size:10.5px;color:var(--fg-2);letter-spacing:.02em;
+  opacity:0;transform:translateY(-2px);
+  transition:opacity .28s ease, transform .28s ease;
+  pointer-events:none;
+}
+.tab-pill.shown{opacity:1;transform:none}
+.tab-pill kbd{
+  font-family:var(--mono);font-size:10px;color:var(--fg);
+  padding:1px 5px;background:var(--surface);border:1px solid var(--border);border-radius:4px;
+}
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
 .palette li{
   display:flex;align-items:center;gap:10px;
@@ -831,12 +854,12 @@ footer.site-foot{
    ========================================================== */
 /* rows collapse smoothly when filtered out */
 .palette li{
-  transition:background .18s cubic-bezier(.2,.8,.2,1),
-             opacity .26s cubic-bezier(.2,.8,.2,1),
-             transform .26s cubic-bezier(.2,.8,.2,1),
-             max-height .3s cubic-bezier(.2,.8,.2,1),
-             padding .3s cubic-bezier(.2,.8,.2,1),
-             margin .3s cubic-bezier(.2,.8,.2,1);
+  transition:background .2s cubic-bezier(.2,.8,.2,1),
+             opacity .45s cubic-bezier(.2,.8,.2,1),
+             transform .45s cubic-bezier(.2,.8,.2,1),
+             max-height .55s cubic-bezier(.2,.8,.2,1),
+             padding .55s cubic-bezier(.2,.8,.2,1),
+             margin .55s cubic-bezier(.2,.8,.2,1);
   max-height:80px;overflow:hidden;
   transform-origin:top;
 }
@@ -1021,6 +1044,7 @@ footer.site-foot{
             <div class="input">
               <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
             </div>
+            <div class="tab-pill" id="hero-tab-pill"><kbd>⇥</kbd><span>Switch editor</span></div>
             <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
           </div>
           <ul id="hero-list">
@@ -1625,8 +1649,27 @@ footer.site-foot{
   const ghost   = document.getElementById('hero-ghost');
   const openHnt = document.getElementById('hero-open-hint');
   const topIde  = document.getElementById('hero-topide');
+  const tabPill = document.getElementById('hero-tab-pill');
   const list    = document.getElementById('hero-list');
   if(!palette || !list || !stage) return;
+
+  // Tab cycles through the editors open on the selected project. Matches
+  // OnboardingSearchAnimation's "Tab to pick an editor" beat.
+  const EDITORS = [
+    { src: 'assets/ide/cursor.png',   alt: 'Cursor',   name: 'Cursor'   },
+    { src: 'assets/ide/vscode.png',   alt: 'VS Code',  name: 'VS Code'  },
+    { src: 'assets/ide/intellij.png', alt: 'IntelliJ', name: 'IntelliJ' },
+  ];
+  async function tabSwap(editor){
+    topIde.classList.add('switching');
+    await wait(140);
+    const img = topIde.querySelector('img');
+    img.src = editor.src;
+    img.alt = editor.alt;
+    openHnt.textContent = '— Open in ' + editor.name;
+    await wait(40);
+    topIde.classList.remove('switching');
+  }
 
   const QUERY = 'platf';
   const items = Array.from(list.querySelectorAll('li'));
@@ -1659,6 +1702,7 @@ footer.site-foot{
     filterList(QUERY);
     setGhost(QUERY);
     topIde.classList.remove('tinted');
+    openHnt.textContent = '— Open in Cursor';
     lightStage();
     return;
   }
@@ -1673,13 +1717,13 @@ footer.site-foot{
 
   async function runLoop(){
     lightStage();
-    await wait(900);
+    await wait(1100);
 
     while(true){
       // Pulse the hotkey chord
-      await pressKey('opt', 100);
-      await pressKey('space', 160);
-      await wait(260);
+      await pressKey('opt', 140);
+      await pressKey('space', 220);
+      await wait(420);
 
       // Type "p" → "pl": list prunes from 5 → 3 → 2
       for(let i = 1; i <= 2; i++){
@@ -1687,19 +1731,19 @@ footer.site-foot{
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(150 + Math.random() * 70);
+        await wait(280 + Math.random() * 90);
       }
-      await wait(520);
+      await wait(850);
 
       // With 2 candidates visible, show arrow-nav moving the selection
       let visible = items.filter(li => li.getAttribute('data-filtered') === '0');
       if(visible.length > 1){
         items.forEach(li => li.classList.remove('on'));
         visible[1].classList.add('on');
-        await wait(560);
+        await wait(800);
         items.forEach(li => li.classList.remove('on'));
         visible[0].classList.add('on');
-        await wait(360);
+        await wait(560);
       }
 
       // Finish typing "pla" → "plat" → "platf": list collapses to 1
@@ -1708,21 +1752,35 @@ footer.site-foot{
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(110 + Math.random() * 60);
+        await wait(240 + Math.random() * 90);
       }
-      await wait(480);
+      await wait(800);
 
       // Un-tint Cursor to signal "already open"
       topIde.classList.remove('tinted');
-      await wait(440);
+      openHnt.textContent = '— Open in Cursor';
+      await wait(640);
+
+      // Tab cycle: show the "⇥ Switch editor" hint, then walk through
+      // the 3 editors open on this project (VS Code → IntelliJ → back to Cursor)
+      tabPill.classList.add('shown');
+      await wait(540);
+      await tabSwap(EDITORS[1]); // VS Code
+      await wait(800);
+      await tabSwap(EDITORS[2]); // IntelliJ
+      await wait(800);
+      await tabSwap(EDITORS[0]); // Cursor (land on the default)
+      await wait(540);
+      tabPill.classList.remove('shown');
+      await wait(340);
 
       // "Press ↵"
       enterP.classList.add('shown');
-      await wait(900);
+      await wait(1200);
       enterP.classList.remove('shown');
 
       // Reset for next iteration
-      await wait(600);
+      await wait(800);
       topIde.classList.add('tinted');
       typed.textContent = '';
       ghost.textContent = '';
@@ -1730,7 +1788,7 @@ footer.site-foot{
       filterList('');
       items.forEach(li => li.classList.remove('on'));
       items[0].classList.add('on');
-      await wait(700);
+      await wait(1000);
     }
   }
 
