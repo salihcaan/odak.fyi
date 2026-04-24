@@ -323,6 +323,10 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   position:relative;z-index:1;
   transform-style:preserve-3d;
   will-change:transform;
+  /* Stable outer frame so the palette can shrink cleanly inside without
+     moving the search bar Y or dragging the bottom-anchored float-tag
+     (ALREADY OPEN) upward. 380px fits the full 5-row palette. */
+  min-height:380px;
 }
 
 /* ==========================================================
@@ -394,10 +398,6 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain}
 .palette .search-bar .top-ide.tinted{opacity:.4;filter:saturate(.3)}
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
-/* Pin the hero list height so the search bar + footer + float-tag badges
-   don't move when rows prune out. Survivors stack at the top; empty
-   slots below stay neutral. */
-#hero-list{min-height:292px;justify-content:flex-start}
 .palette li{
   display:flex;align-items:center;gap:10px;
   padding:12px 12px;border-radius:17px;      /* real app: resultSelectionCornerRadius */
