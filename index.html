@@ -361,6 +361,12 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
      is removed from the flow so nothing below (row collapse, etc.) can
      nudge its Y. */
   padding-top:56px;
+  transition:opacity .45s ease, transform .55s ease, filter .45s ease;
+}
+.palette.dimmed{
+  opacity:.35;
+  transform:scale(.97);
+  filter:blur(2px);
 }
 [data-theme="light"] .palette{
   background:linear-gradient(180deg,#ffffff 0%, #f7f4ef 100%);
@@ -417,8 +423,10 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .palette .search-bar .top-ide.switching{transform:scale(.88)}
 .palette .search-bar .top-ide.switching img{opacity:.35}
 
-/* Small "⇥ Switch editor" pill, shown during the Tab-cycle phase */
-.tab-pill{
+/* In-palette hint pill. Rotates content in sync with the demo animation
+   phases — fuzzy match → already open → switch editor → press ↵.
+   Positioned inside the search bar, to the left of the top-IDE icon. */
+.hint-pill{
   position:absolute;top:10px;right:62px;z-index:6;
   display:inline-flex;align-items:center;gap:6px;
   padding:4px 9px;border-radius:7px;
@@ -428,13 +436,27 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   border:1px solid var(--border-2);
   font-family:var(--mono);font-size:10.5px;color:var(--fg-2);letter-spacing:.02em;
   opacity:0;transform:translateY(-2px);
-  transition:opacity .28s ease, transform .28s ease;
-  pointer-events:none;
+  transition:opacity .22s ease, transform .22s ease;
+  pointer-events:none;white-space:nowrap;
 }
-.tab-pill.shown{opacity:1;transform:none}
-.tab-pill kbd{
+.hint-pill.shown{opacity:1;transform:none}
+.hint-pill kbd{
   font-family:var(--mono);font-size:10px;color:var(--fg);
   padding:1px 5px;background:var(--surface);border:1px solid var(--border);border-radius:4px;
+}
+.hint-pill .ico{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;font-size:11px;line-height:1;
+  color:var(--accent);
+}
+.hint-pill .dot-live{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 6px var(--accent-glow);
+  animation:hint-pulse 1.6s ease-in-out infinite;
+}
+@keyframes hint-pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.55;transform:scale(.85)}
 }
 .palette ul{list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:2px}
 .palette li{
@@ -514,7 +536,7 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 .palette li .chip.diff{color:var(--accent);border-color:color-mix(in oklch, var(--accent) 30%, transparent);background:color-mix(in oklch, var(--accent) 8%, transparent)}
 .palette .footer{
-  display:flex;align-items:center;gap:20px;
+  display:flex;align-items:center;justify-content:center;gap:20px;
   padding:11px 16px;border-top:1px solid var(--border);
   font-family:var(--mono);font-size:10.5px;color:var(--mute);
   letter-spacing:.02em;
@@ -532,29 +554,6 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 
 /* floating badges on the palette */
-.float-tag{
-  position:absolute;z-index:4;
-  padding:8px 12px;border-radius:10px;
-  background:color-mix(in oklch, var(--bg-2) 85%, transparent);
-  backdrop-filter:blur(14px) saturate(160%);
-  -webkit-backdrop-filter:blur(14px) saturate(160%);
-  border:1px solid var(--border-2);
-  box-shadow:0 12px 32px -8px rgba(0,0,0,.3);
-  font-family:var(--mono);font-size:10.5px;color:var(--fg-2);
-  display:flex;align-items:center;gap:8px;
-  letter-spacing:.02em;
-  transform:translateZ(60px);
-}
-.float-tag .lbl{color:var(--accent);text-transform:uppercase;letter-spacing:.14em;font-size:9px;font-weight:600}
-.float-tag{opacity:0;transition:opacity .5s ease}
-.hero-stage.lit .float-tag{opacity:1}
-.float-tag.a{top:-28px;left:-42px;animation:drift-a 7s ease-in-out infinite;transition-delay:.2s}
-.float-tag.b{top:82px;right:-62px;animation:drift-b 8s ease-in-out infinite;transition-delay:.4s}   /* aligns with first row */
-.float-tag.c{bottom:-28px;left:18%;animation:drift-c 9s ease-in-out infinite;transition-delay:.6s}  /* below footer, clear of it */
-@keyframes drift-a{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes drift-b{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
-@keyframes drift-c{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@media (max-width:900px){.float-tag{display:none}}
 
 /* ==========================================================
    SECTION scaffolding
@@ -929,13 +928,69 @@ footer.site-foot{
 }
 
 /* ==========================================================
+   CHOSEN WINDOW — miniature editor that "rises" when ↵ is pressed.
+   Mirrors OnboardingSwitcherAnimation's SwitcherChosenWindow, minus
+   Swift-specific bits. Positioned over the palette inside stage-inner.
+   ========================================================== */
+.chosen-window{
+  position:absolute;top:50%;left:50%;
+  width:360px;
+  z-index:50;opacity:0;pointer-events:none;
+  transform:translate(-50%, -44%) scale(.84);
+  transition:opacity .48s ease, transform .55s cubic-bezier(.3,1.6,.55,1);
+  border-radius:12px;
+  background:color-mix(in oklch, var(--bg-2) 96%, transparent);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid color-mix(in oklch, var(--prod-blue) 45%, var(--border-2));
+  box-shadow:
+    0 24px 60px -12px rgba(0,0,0,.55),
+    0 0 36px color-mix(in oklch, var(--prod-blue) 45%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  overflow:hidden;
+}
+.chosen-window.shown{
+  opacity:1;
+  transform:translate(-50%, -50%) scale(1);
+}
+.chosen-window .titlebar{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 12px;
+  border-bottom:1px solid var(--border);
+  background:color-mix(in oklch, var(--prod-blue) 18%, transparent);
+  font-family:var(--mono);font-size:10.5px;color:var(--mute);
+}
+.chosen-window .titlebar .tl-dot{width:9px;height:9px;border-radius:50%}
+.chosen-window .titlebar .tl-r{background:#ff5f57}
+.chosen-window .titlebar .tl-y{background:#febc2e}
+.chosen-window .titlebar .tl-g{background:#28c840}
+.chosen-window .titlebar .ide-mark{
+  margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+  color:var(--fg-2);
+}
+.chosen-window .titlebar .ide-mark img{width:14px;height:14px;display:block}
+.chosen-window .body{
+  padding:14px 16px 18px;
+  display:flex;flex-direction:column;gap:8px;
+  min-height:140px;
+}
+.chosen-window .line{display:flex;gap:6px;align-items:center}
+.chosen-window .line span{
+  height:5px;border-radius:2px;
+  background:color-mix(in oklch, var(--fg) 22%, transparent);
+}
+.chosen-window .line span.hl{
+  background:color-mix(in oklch, var(--prod-blue) 60%, transparent);
+}
+
+/* ==========================================================
    REVEAL — scroll-linked animation
    ========================================================== */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
 .reveal.in{opacity:1;transform:translateY(0)}
 
 @media (prefers-reduced-motion: reduce){
-  .aurora::before,.aurora::after,.float-tag.a,.float-tag.b,.float-tag.c,.palette .search-bar .input .caret{animation:none !important}
+  .aurora::before,.aurora::after,.palette .search-bar .input .caret,.hint-pill .dot-live{animation:none !important}
   .reveal{opacity:1;transform:none;transition:none}
   html{scroll-behavior:auto}
 }
@@ -1060,7 +1115,7 @@ footer.site-foot{
             <div class="input">
               <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
             </div>
-            <div class="tab-pill" id="hero-tab-pill"><kbd>⇥</kbd><span>Switch editor</span></div>
+            <div class="hint-pill" id="hero-hint"></div>
             <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
           </div>
           <ul id="hero-list">
@@ -1142,25 +1197,36 @@ footer.site-foot{
             </li>
           </ul>
           <div class="footer">
-            <div class="row"><kbd>↵</kbd> Open</div>
-            <div class="row"><kbd>⌘</kbd><kbd>↵</kbd> New window</div>
-            <div class="row"><kbd>⌘</kbd><kbd>T</kbd> Terminal</div>
-            <div class="row"><kbd>⌘</kbd><kbd>.</kbd> Actions</div>
-            <div class="sp"></div>
-            <div class="row" style="color:var(--accent)">● ready</div>
+            <div class="row"><kbd>⌥K</kbd><kbd>⌥J</kbd> Navigate</div>
+            <div class="row"><kbd>⌘K</kbd> Actions</div>
           </div>
           <div class="enter-pill" id="hero-enter"><span>Press</span><kbd>↵</kbd><span>to open</span></div>
         </div>
 
-        <div class="float-tag a">
-          <div><div class="lbl">fuzzy match</div>"platf" → platform-landing</div>
+        <!-- Editor window that "rises" when ↵ is pressed. Mirrors the
+             onboarding's SwitcherChosenWindow — title bar + Cursor mark +
+             faux code. Hidden until runLoop reveals it. -->
+        <div class="chosen-window" id="hero-chosen" aria-hidden="true">
+          <div class="titlebar">
+            <span class="tl-dot tl-r"></span>
+            <span class="tl-dot tl-y"></span>
+            <span class="tl-dot tl-g"></span>
+            <span>platform-landing — pricing.tsx</span>
+            <span class="ide-mark">
+              <img src="assets/ide/cursor.png" alt="">
+              <span>Cursor</span>
+            </span>
+          </div>
+          <div class="body">
+            <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
+            <div class="line"><span style="width:96px"></span><span style="width:24px"></span><span class="hl" style="width:58px"></span></div>
+            <div class="line"><span style="width:140px"></span></div>
+            <div class="line"><span style="width:62px"></span><span style="width:36px"></span><span style="width:88px"></span></div>
+            <div class="line"><span class="hl" style="width:44px"></span><span style="width:112px"></span></div>
+            <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
+          </div>
         </div>
-        <div class="float-tag b">
-          <div><div class="lbl">inline git</div>feat/pricing · 7 modified</div>
-        </div>
-        <div class="float-tag c">
-          <div><div class="lbl">already open</div>VS Code · Cursor · IntelliJ</div>
-        </div>
+
       </div>
     </div>
   </div>
@@ -1172,23 +1238,27 @@ footer.site-foot{
 <section class="block" id="features">
   <div class="f-split">
     <div class="f-copy reveal">
-      <div class="eyebrow">⌥ Space</div>
+      <div class="feature-pills">
+        <div class="fp primary"><kbd>⌥ Space</kbd><span>Search</span></div>
+        <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
+        <div class="fp"><kbd>⌘ .</kbd><span>Actions</span></div>
+      </div>
       <h3>Find any project. <span class="accent">Five letters or less.</span></h3>
       <p class="lead">
-        Odak indexes every git repo on your Mac — no folder picker, no config. Fuzzy-match on folder name, typos forgiven. Most-used projects rise to the top automatically.
+        Every trip through Finder is a broken thought. Every dock-bounce is a thread lost. Hit ⌥ Space, type three letters, land in the right repo — your focus stays on the problem, not on hunting for the folder.
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg></div>
-          <div class="txt"><b>Fuzzy, forgiving</b><span>"pl-lnd" finds platform-landing. "adak" finds odak. No command syntax to memorize.</span></div>
+          <div class="txt"><b>No syntax to remember</b><span>"pl-lnd" finds platform-landing. "adak" finds odak. Typos forgiven. Muscle memory beats careful typing — every time.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg></div>
-          <div class="txt"><b>Learns your habits</b><span>The projects you open most this week sit at the top. The ones you never open fall off.</span></div>
+          <div class="txt"><b>Learns your week</b><span>The repos you actually touch rise to the top. The dead ones fall off. Less scanning, fewer decisions, more doing.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 3v10l5-3 5 3V3z"/></svg></div>
-          <div class="txt"><b>Zero setup</b><span>It finds ~/code, ~/src, ~/dev, GitHub Desktop, fork checkouts — whatever you use.</span></div>
+          <div class="txt"><b>Zero setup, zero config</b><span>No folder picker, no YAML, no sidebar to curate. Install it; every git repo on your Mac is already findable.</span></div>
         </li>
       </ul>
     </div>
@@ -1253,10 +1323,8 @@ footer.site-foot{
           </li>
         </ul>
         <div class="footer">
-          <div class="row"><kbd>↵</kbd> Open</div>
-          <div class="row"><kbd>⌘</kbd><kbd>↵</kbd> New window</div>
-          <div class="sp"></div>
-          <div class="row" style="color:var(--accent)">4 matches</div>
+          <div class="row"><kbd>⌥K</kbd><kbd>⌥J</kbd> Navigate</div>
+          <div class="row"><kbd>⌘K</kbd> Actions</div>
         </div>
       </div>
     </div>
@@ -1330,23 +1398,27 @@ footer.site-foot{
     </div>
 
     <div class="f-copy reveal">
-      <div class="eyebrow">⌥ Tab</div>
+      <div class="feature-pills">
+        <div class="fp"><kbd>⌥ Space</kbd><span>Search</span></div>
+        <div class="fp primary"><kbd>⌥ Tab</kbd><span>Switch</span></div>
+        <div class="fp"><kbd>⌘ .</kbd><span>Actions</span></div>
+      </div>
       <h3>Every editor window. <span class="accent">One list.</span></h3>
       <p class="lead">
-        Cmd+Tab is fine at four apps. At ten IDE windows all wearing the same icon, it's a lottery. Odak shows every window across every editor in one vertical list — grouped by project, most-recently-used first.
+        Cmd+Tab groups by app — useless when ten Cursor windows share one icon. Odak shows every window as a labelled row, grouped by project, most-recent first. Land on the right window the first time — no mis-click, no re-orient, no lost train of thought.
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6"/></svg></div>
-          <div class="txt"><b>Cursor, VS Code, Xcode, IntelliJ</b><span>Plus GoLand, RubyMine, Zed, Sublime, terminals, and Chrome tabs tied to a localhost preview.</span></div>
+          <div class="txt"><b>One list, not six</b><span>Cursor, VS Code, Xcode, IntelliJ, GoLand, RubyMine, Zed, Sublime, terminals, and Chrome tabs tied to a localhost preview — all in one place.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 8h10M8 3v10"/></svg></div>
-          <div class="txt"><b>MRU, not alphabetical</b><span>The window you were just in comes first. No scrolling to find what you already had open.</span></div>
+          <div class="txt"><b>MRU, not alphabetical</b><span>The window you just left is row one. No scrolling, no guessing — flow stays intact.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg></div>
-          <div class="txt"><b>No polling lag</b><span>Subscribes to Accessibility APIs — the list is correct the instant the palette appears.</span></div>
+          <div class="txt"><b>Zero latency</b><span>Subscribes to Accessibility APIs. The list is correct the instant the palette opens — no stutter to break your rhythm.</span></div>
         </li>
       </ul>
     </div>
@@ -1359,23 +1431,27 @@ footer.site-foot{
 <section class="block">
   <div class="f-split">
     <div class="f-copy reveal">
-      <div class="eyebrow">.odak</div>
+      <div class="feature-pills">
+        <div class="fp"><kbd>⌥ Space</kbd><span>Search</span></div>
+        <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
+        <div class="fp primary"><kbd>⌘ .</kbd><span>Actions</span></div>
+      </div>
       <h3>Per-project shortcuts, <span class="accent">checked into the repo.</span></h3>
       <p class="lead">
-        Drop a <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file in any repo. Bind keys to actions: open the remote on GitHub, tail Kibana logs, run deploy, hit the staging URL. Teammates get the same bindings the moment they clone.
+        Every repo has rituals — open the PR, tail the logs, hit staging, kick a preview deploy. Drop a <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file and they collapse into one keypress. No bookmarks to hunt, no scripts to remember, no teammate asking "what's the staging URL again?"
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 5l3 3-3 3M9 11h4"/></svg></div>
-          <div class="txt"><b>Lives with the project</b><span>Not a global config, not a cloud sync. A plain file in the repo root — version it like anything else.</span></div>
+          <div class="txt"><b>Lives with the project</b><span>Not a global config, not a cloud sync. A plain file in the repo root — version it, review it, forget it. New teammates get the same bindings the moment they clone.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M4 4l4 4 4-4M4 10l4 4 4-4"/></svg></div>
-          <div class="txt"><b>Variables, too</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> once, reference it in every action.</span></div>
+          <div class="txt"><b>Variables, too</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> once, reference it everywhere. Change it once when it moves — nothing else to update.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg></div>
-          <div class="txt"><b>Prefer an editor?</b><span>Pin an IDE per-project. platform-ios always opens in Xcode — even if you usually live in Cursor.</span></div>
+          <div class="txt"><b>The right editor, every time</b><span>Pin an IDE per-project. platform-ios always opens in Xcode — even if you usually live in Cursor. No more "wrong app" muscle-memory slip.</span></div>
         </li>
       </ul>
     </div>
@@ -1665,7 +1741,8 @@ footer.site-foot{
   const ghost   = document.getElementById('hero-ghost');
   const openHnt = document.getElementById('hero-open-hint');
   const topIde  = document.getElementById('hero-topide');
-  const tabPill = document.getElementById('hero-tab-pill');
+  const hintPill = document.getElementById('hero-hint');
+  const chosen  = document.getElementById('hero-chosen');
   const list    = document.getElementById('hero-list');
   if(!palette || !list || !stage) return;
 
@@ -1709,8 +1786,28 @@ footer.site-foot{
     openHnt.textContent = '— Open';
   }
 
-  // Light up the stage (fades in the float-tags + hotkey pill)
+  // Light up the stage (fades in the hotkey pill)
   function lightStage(){ stage.classList.add('lit'); }
+
+  // Swap the hint pill content with a brief fade so the new label reads
+  // as a crisp replacement rather than a morph. Each demo phase owns a
+  // hint: fuzzy match → already open → switch editor → press ↵.
+  async function setHint(html){
+    if(hintPill.classList.contains('shown')){
+      hintPill.classList.remove('shown');
+      await wait(220);
+    }
+    hintPill.innerHTML = html;
+    hintPill.classList.add('shown');
+  }
+  function hideHint(){ hintPill.classList.remove('shown'); }
+
+  const HINT = {
+    fuzzy:    '<span class="ico">⚡</span><span>Fuzzy match</span>',
+    alreadyOpen: '<span class="dot-live"></span><span>Already open · 3 editors</span>',
+    tab:      '<kbd>⇥</kbd><span>Switch editor</span>',
+    enter:    '<kbd>↵</kbd><span>Focuses open window</span>',
+  };
 
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     // Static fallback — final "typed" state, no loop
@@ -1719,6 +1816,8 @@ footer.site-foot{
     setGhost(QUERY);
     topIde.classList.remove('tinted');
     openHnt.textContent = '— Open in Cursor';
+    hintPill.innerHTML = '<span class="dot-live"></span><span>Already open · 3 editors</span>';
+    hintPill.classList.add('shown');
     lightStage();
     return;
   }
@@ -1740,6 +1839,9 @@ footer.site-foot{
       await pressKey('opt', 140);
       await pressKey('space', 220);
       await wait(420);
+
+      // First keystroke → fuzzy-match hint appears
+      setHint(HINT.fuzzy);
 
       // Type "p" → "pl": list prunes from 5 → 3 → 2
       for(let i = 1; i <= 2; i++){
@@ -1772,31 +1874,40 @@ footer.site-foot{
       }
       await wait(800);
 
-      // Un-tint Cursor to signal "already open"
+      // Un-tint Cursor to signal "already open" + swap hint
       topIde.classList.remove('tinted');
       openHnt.textContent = '— Open in Cursor';
-      await wait(640);
+      setHint(HINT.alreadyOpen);
+      await wait(1100);
 
-      // Tab cycle: show the "⇥ Switch editor" hint, then walk through
+      // Tab cycle: swap hint to "⇥ Switch editor", then walk through
       // the 3 editors open on this project (VS Code → IntelliJ → back to Cursor)
-      tabPill.classList.add('shown');
-      await wait(540);
+      await setHint(HINT.tab);
+      await wait(380);
       await tabSwap(EDITORS[1]); // VS Code
-      await wait(800);
+      await wait(760);
       await tabSwap(EDITORS[2]); // IntelliJ
-      await wait(800);
+      await wait(760);
       await tabSwap(EDITORS[0]); // Cursor (land on the default)
-      await wait(540);
-      tabPill.classList.remove('shown');
-      await wait(340);
+      await wait(460);
 
-      // "Press ↵"
+      // "Press ↵" — swap hint to reinforce what Enter does
+      await setHint(HINT.enter);
       enterP.classList.add('shown');
-      await wait(1200);
-      enterP.classList.remove('shown');
+      await wait(900);
 
-      // Reset for next iteration
-      await wait(800);
+      // Window rises — mirrors onboarding's chosen-window "rushes forward"
+      // beat. Palette dims slightly so the new window reads as the hero.
+      chosen.classList.add('shown');
+      palette.classList.add('dimmed');
+      enterP.classList.remove('shown');
+      hideHint();
+      await wait(1600);
+
+      // Settle back down for the next iteration
+      chosen.classList.remove('shown');
+      palette.classList.remove('dimmed');
+      await wait(700);
       topIde.classList.add('tinted');
       typed.textContent = '';
       ghost.textContent = '';
