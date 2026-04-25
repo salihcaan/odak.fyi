@@ -924,15 +924,16 @@ footer.site-foot{
 /* ==========================================================
    PALETTE ANIMATION — scripted loop on the real-product mockup
    ========================================================== */
-/* rows collapse smoothly when filtered out — single duration/easing across
-   all properties so opacity, transform, and height all land together. */
+/* rows collapse smoothly when filtered out — non-overshooting ease-out
+   on size/transform so the row can't wobble past 0/full. Background
+   keeps the snappy spring, since selection highlight wants the bounce. */
 .palette li{
   transition:background var(--dur-snappy) var(--ease-snappy),
-             opacity var(--dur-snappy) var(--ease-snappy),
-             transform var(--dur-snappy) var(--ease-snappy),
-             max-height var(--dur-snappy) var(--ease-snappy),
-             padding var(--dur-snappy) var(--ease-snappy),
-             margin var(--dur-snappy) var(--ease-snappy);
+             opacity var(--dur-snappy) var(--ease-out),
+             transform var(--dur-snappy) var(--ease-out),
+             max-height var(--dur-snappy) var(--ease-out),
+             padding var(--dur-snappy) var(--ease-out),
+             margin var(--dur-snappy) var(--ease-out);
   max-height:80px;overflow:hidden;
   transform-origin:top;
 }
