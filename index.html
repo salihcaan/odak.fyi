@@ -202,14 +202,14 @@ button{font-family:inherit}
   .hero-grid{grid-template-columns:1fr;gap:32px;padding-top:40px}
   .hero{padding:48px var(--gutter) 32px}
   .hero-stage{width:100%}
-  .hero-stage .stage-inner{padding:0 16px;box-sizing:border-box;min-height:auto}
-  .palette{width:100%;max-width:calc(100vw - 32px);margin:70px auto 0}
+  .hero-stage .stage-inner{padding:0;box-sizing:border-box;min-height:380px}
+  .palette{width:100%;max-width:calc(100vw - var(--gutter) * 2);margin:70px auto 0}
   .palette .search-bar{left:0;right:0}
   .palette li .title-row{font-size:13px}
   .palette li .path{font-size:10px}
   .palette li .ide-stack .ide{width:22px;height:22px;padding:2px}
   #hero-list li:nth-child(n+4){display:none}
-  .chosen-window{width:calc(100vw - 32px) !important}
+  .chosen-window{width:calc(100vw - var(--gutter) * 2) !important}
 }
 
 /* ==========================================================
