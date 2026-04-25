@@ -1180,7 +1180,11 @@ footer.site-foot{
 .f-stage .mb-palette-wrap .palette .search-bar{height:38px;padding:7px 12px;gap:8px}
 .f-stage .mb-palette-wrap .palette .search-bar .input{font-size:14px;height:20px;line-height:20px}
 .f-stage .mb-palette-wrap .palette .search-bar .input .caret{height:16px}
-.f-stage .mb-palette-wrap .palette li{max-height:46px;padding:6px 8px}
+/* F1's row is 46px tall — keep the hero's 21% radius:height ratio so
+   the rounded corners don't eat the selected row's visible fill. */
+.f-stage .mb-palette-wrap .palette li{max-height:46px;padding:6px 8px;border-radius:9px}
+.f-stage .mb-palette-wrap .palette li .lang{width:20px;height:20px;font-size:8.5px;border-radius:5px}
+.f-stage .mb-palette-wrap .palette li .ide-stack .ide{width:18px;height:18px;border-radius:4px}
 .f-stage .mb-palette-wrap .palette ul li:nth-child(n+4){display:none}
 .f-stage .mb-palette-wrap .palette .footer{display:none}
 
