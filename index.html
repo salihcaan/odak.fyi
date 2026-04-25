@@ -1054,14 +1054,29 @@ footer.site-foot{
   .palette{width:100%;max-width:100%;margin:70px auto 0}
   .palette .search-bar{left:0;right:0}
   .palette li .title-row{font-size:13px}
-  .palette li .path{font-size:10px}
+  .palette li .path{font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .palette li .path > span{display:inline}
+  .palette li .path .sep{margin:0 4px}
   .palette li .ide-stack .ide{width:20px;height:20px;padding:2px}
   .palette li .ide-stack{gap:3px}
-  .palette li .meta{flex-shrink:1;min-width:0;overflow:hidden}
+  /* Keep IDE icons fully visible — let the path truncate, not the meta. */
+  .palette li .meta{flex-shrink:0;overflow:visible}
   .palette li{gap:6px;padding:10px 10px}
   #hero-list li:nth-child(n+4){display:none}
   .chosen-window{width:100% !important;transform:translate(-50%, -50%) scale(0.82)}
   .chosen-window.shown{transform:translate(-50%, -50%) scale(0.82)}
+}
+
+/* Very narrow iPhones (mini / SE) — drop branch+dirty, shrink IDE icons,
+   so the project title and the 3 open-IDE icons both fit on one row. */
+@media (max-width:420px){
+  .palette li{padding:9px 8px;gap:5px}
+  .palette li .lang{width:24px;height:24px;font-size:9px}
+  .palette li .ide-stack .ide{width:18px;height:18px;padding:1.5px}
+  .palette li .ide-stack{gap:2px}
+  .palette li .path .branch,
+  .palette li .path .dirty,
+  .palette li .path .sep{display:none}
 }
 </style>
 </head>
