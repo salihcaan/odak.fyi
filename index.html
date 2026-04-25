@@ -1228,23 +1228,33 @@ footer.site-foot{
   .mb-section{padding-top:48px}
   .mb-section .section-head{margin-bottom:36px}
   .mb-menubar{font-size:9px;padding:0 10px 0 46px;height:18px;gap:8px}
-  .mb-keys{gap:8px}
-  .mb-keys .fk{font-size:13px;padding:8px 12px;min-width:36px;border-radius:9px}
-  .mb-keys .plus{font-size:13px}
-  .mb-palette-wrap{width:84%;top:58%}
-  .mb-palette-wrap .palette{padding-top:36px}
-  .mb-palette-wrap .palette .search-bar{height:36px;padding:6px 10px;gap:6px}
-  .mb-palette-wrap .palette .search-bar .input{font-size:13px;height:18px;line-height:18px}
-  .mb-palette-wrap .palette .search-bar .input .caret{height:14px}
-  .mb-palette-wrap .palette .search-bar .top-ide{width:22px;height:22px}
-  .mb-palette-wrap .palette li{padding:5px 6px;max-height:42px;border-radius:8px}
-  .mb-palette-wrap .palette li .lang{width:18px;height:18px;font-size:8px;border-radius:4px}
-  .mb-palette-wrap .palette li .title-row{font-size:10px}
-  .mb-palette-wrap .palette li .path{font-size:8px}
-  .mb-palette-wrap .palette li .ide-stack .ide{width:14px;height:14px;padding:1px;border-radius:3px}
+  .mb-keys{gap:6px}
+  .mb-keys .fk{font-size:11px;padding:6px 9px;min-width:30px;border-radius:8px}
+  .mb-keys .plus{font-size:11px}
+  /* Palette must fit inside the on-screen rect of the MacBook PNG.
+     Available height on a phone is ~170px — drop the kbd footer and
+     the 4th project so search-bar + 3 items fit cleanly. */
+  .mb-palette-wrap{width:86%;top:56%}
+  .mb-palette-wrap.shown{transform:translate(-50%,-50%) scale(.95)}
+  .mb-palette-wrap .palette{padding-top:24px}
+  .mb-palette-wrap .palette .search-bar{height:32px;padding:5px 9px;gap:6px}
+  .mb-palette-wrap .palette .search-bar svg.q{width:13px;height:13px}
+  .mb-palette-wrap .palette .search-bar .input{font-size:12px;height:16px;line-height:16px}
+  .mb-palette-wrap .palette .search-bar .input .caret{height:12px}
+  .mb-palette-wrap .palette .search-bar .top-ide{width:20px;height:20px}
+  .mb-palette-wrap .palette ul{padding:3px;gap:1px}
+  .mb-palette-wrap .palette li{padding:4px 6px;max-height:34px;border-radius:7px}
+  .mb-palette-wrap .palette li .lang{width:16px;height:16px;font-size:7px;border-radius:4px}
+  .mb-palette-wrap .palette li .title-row{font-size:9.5px}
+  .mb-palette-wrap .palette li .path{font-size:7.5px}
+  .mb-palette-wrap .palette li .ide-stack .ide{width:13px;height:13px;padding:1px;border-radius:3px}
   .mb-palette-wrap .palette li .ide-stack{gap:2px}
-  .mb-palette-wrap .palette .footer{padding:5px 8px;font-size:8px;gap:10px}
-  .mb-palette-wrap .palette .footer kbd{font-size:7.5px;padding:1px 3px}
+  .mb-palette-wrap .palette ul li:nth-child(n+4){display:none}
+  .mb-palette-wrap .palette .footer{display:none}
+}
+@media (max-width:420px){
+  .mb-palette-wrap{width:90%}
+  .mb-palette-wrap.shown{transform:translate(-50%,-50%) scale(.88)}
 }
 
 /* Very narrow iPhones (mini / SE) — drop branch+dirty, shrink IDE icons,
