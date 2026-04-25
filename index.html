@@ -59,6 +59,16 @@
   /* grid */
   --maxw: 1200px;
   --gutter: 32px;
+
+  /* motion — mirrors AppAnimation.swift (smooth/snappy/bouncy) used in
+     Odak's onboarding. One vocabulary across the whole page. */
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);     /* iOS-style ease-out */
+  --ease-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);  /* mild overshoot, ~10% */
+  --ease-bouncy: cubic-bezier(0.5, 1.6, 0.4, 1);     /* heavier bounce */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);     /* sharp ease-out, hovers */
+  --dur-fast:    180ms;  /* hovers, key press */
+  --dur-snappy:  380ms;  /* selection, focus rings */
+  --dur-smooth:  600ms;  /* panel summon, modal rise */
 }
 
 [data-theme="light"]{
@@ -242,7 +252,7 @@ a.hero-bar:focus-visible{
 .hero-bar .arrow{
   display:inline-flex;align-items:center;justify-content:center;
   margin-left:2px;color:var(--mute);
-  transition:transform .25s cubic-bezier(.2,.8,.2,1), color .2s ease;
+  transition:transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .hero-bar .arrow svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
@@ -284,7 +294,7 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .hero-cta .btn-link .arrow{
   display:inline-flex;align-items:center;justify-content:center;
   color:var(--mute);
-  transition:transform .25s cubic-bezier(.2,.8,.2,1), color .2s ease;
+  transition:transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .hero-cta .btn-link .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .hero-cta .btn-link:hover .arrow{transform:translateY(2px);color:var(--accent)}
@@ -380,12 +390,12 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
      is removed from the flow so nothing below (row collapse, etc.) can
      nudge its Y. */
   padding-top:56px;
-  transition:opacity .45s ease, transform .55s ease, filter .45s ease;
+  transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-smooth), filter var(--dur-smooth) var(--ease-smooth);
 }
 .palette.dimmed{
-  opacity:.35;
-  transform:scale(.97);
-  filter:blur(2px);
+  opacity:.25;
+  transform:scale(.96);
+  filter:blur(3px);
 }
 [data-theme="light"] .palette{
   background:linear-gradient(180deg,#ffffff 0%, #f7f4ef 100%);
@@ -433,7 +443,7 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   width:36px;height:36px;border-radius:8px;flex-shrink:0;overflow:hidden;
   display:grid;place-items:center;position:relative;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-  transition:opacity .24s ease, filter .24s ease, transform .22s cubic-bezier(.35,1.8,.55,1);
+  transition:opacity var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out), transform var(--dur-snappy) var(--ease-snappy);
 }
 .palette .search-bar .top-ide svg,
 .palette .search-bar .top-ide img{width:100%;height:100%;display:block;object-fit:contain;transition:opacity .18s ease}
@@ -483,7 +493,6 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   padding:12px 12px;border-radius:17px;      /* real app: resultSelectionCornerRadius */
   cursor:pointer;
   position:relative;
-  transition:background .18s cubic-bezier(.2,.8,.2,1);
 }
 .palette li.on{
   background:linear-gradient(180deg,
@@ -680,13 +689,31 @@ h2.section-h .mute{color:var(--dim)}
 .tab-demo .tab-chrome .dot-accent{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
 .tab-demo .tab-chrome .spacer{flex:1}
 .tab-demo .tab-chrome kbd{font-family:var(--mono);font-size:10px;padding:2px 6px;border:1px solid var(--border-2);border-radius:4px;background:var(--surface-2);color:var(--fg-2);letter-spacing:0;text-transform:none}
-.tab-demo ul.win-list{list-style:none;padding:8px;margin:0}
+.tab-demo ul.win-list{list-style:none;padding:8px;margin:0;position:relative}
 .tab-demo .win{
   display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:8px;
   position:relative;cursor:pointer;
+  transition:background var(--dur-snappy) var(--ease-snappy),
+             box-shadow var(--dur-snappy) var(--ease-snappy);
 }
 .tab-demo .win.on{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border)}
 .tab-demo .win.on::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:2px;background:var(--accent);border-radius:2px;box-shadow:0 0 8px var(--accent-glow)}
+/* JS upgrades the static ::before bar into a single rail that slides
+   between rows. When .live is set, hide the per-row pseudo and show the
+   moving rail instead. */
+.tab-demo.live .win.on::before{display:none}
+.tab-demo .win-rail{
+  position:absolute;left:0;width:2px;
+  background:var(--accent);border-radius:2px;
+  box-shadow:0 0 8px var(--accent-glow);
+  top:0;height:0;opacity:0;
+  transition:transform var(--dur-snappy) var(--ease-snappy),
+             height var(--dur-snappy) var(--ease-snappy),
+             opacity var(--dur-fast) var(--ease-out);
+  will-change:transform,height;
+  pointer-events:none;z-index:2;
+}
+.tab-demo.live .win-rail{opacity:1}
 .tab-demo .win .app{
   width:28px;height:28px;border-radius:7px;flex-shrink:0;overflow:hidden;
   display:grid;place-items:center;
@@ -897,14 +924,15 @@ footer.site-foot{
 /* ==========================================================
    PALETTE ANIMATION — scripted loop on the real-product mockup
    ========================================================== */
-/* rows collapse smoothly when filtered out */
+/* rows collapse smoothly when filtered out — single duration/easing across
+   all properties so opacity, transform, and height all land together. */
 .palette li{
-  transition:background .2s cubic-bezier(.2,.8,.2,1),
-             opacity .45s cubic-bezier(.2,.8,.2,1),
-             transform .45s cubic-bezier(.2,.8,.2,1),
-             max-height .55s cubic-bezier(.2,.8,.2,1),
-             padding .55s cubic-bezier(.2,.8,.2,1),
-             margin .55s cubic-bezier(.2,.8,.2,1);
+  transition:background var(--dur-snappy) var(--ease-snappy),
+             opacity var(--dur-snappy) var(--ease-snappy),
+             transform var(--dur-snappy) var(--ease-snappy),
+             max-height var(--dur-snappy) var(--ease-snappy),
+             padding var(--dur-snappy) var(--ease-snappy),
+             margin var(--dur-snappy) var(--ease-snappy);
   max-height:80px;overflow:hidden;
   transform-origin:top;
 }
@@ -916,8 +944,8 @@ footer.site-foot{
 }
 /* entry/exit on the whole palette frame */
 .palette-fx{
-  opacity:0;transform:translateY(18px) scale(.985);
-  transition:opacity .42s cubic-bezier(.22,1.2,.3,1), transform .42s cubic-bezier(.22,1.2,.3,1);
+  opacity:0;transform:translateY(24px) scale(.94);
+  transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-snappy);
   will-change:opacity,transform;
 }
 .palette-fx.shown{opacity:1;transform:none}
@@ -966,8 +994,8 @@ footer.site-foot{
   position:absolute;top:50%;left:50%;
   width:480px;
   z-index:50;opacity:0;pointer-events:none;
-  transform:translate(-50%, -44%) scale(.84);
-  transition:opacity .48s ease, transform .55s cubic-bezier(.3,1.6,.55,1);
+  transform:translate(-50%, -44%) scale(.86);
+  transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-snappy);
 }
 .chosen-window.shown{
   opacity:1;
@@ -1042,7 +1070,7 @@ footer.site-foot{
   transform-style:preserve-3d;
 }
 .mb-stage.reveal{opacity:0;transform:translateY(80px) scale(.94)}
-.mb-stage.reveal.in{opacity:1;transform:none;transition:opacity 1s ease, transform 1.1s cubic-bezier(.2,.85,.2,1)}
+.mb-stage.reveal.in{opacity:1;transform:none;transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-snappy)}
 .mb-stage .glow{
   position:absolute;inset:-8% -4% -10%;z-index:-1;pointer-events:none;
   background:
@@ -1215,7 +1243,7 @@ footer.site-foot{
 /* ==========================================================
    REVEAL — scroll-linked animation
    ========================================================== */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-snappy)}
 .reveal.in{opacity:1;transform:translateY(0)}
 
 @media (prefers-reduced-motion: reduce){
@@ -2348,7 +2376,7 @@ footer.site-foot{
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(260 + Math.random() * 90);
+        await wait(160 + Math.random() * 80);
       }
       await wait(800);
 
@@ -2470,7 +2498,7 @@ footer.site-foot{
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(280 + Math.random() * 80);
+        await wait(160 + Math.random() * 80);
       }
 
       // Settle: un-tint editor icon to signal "ready to open"
@@ -2511,7 +2539,7 @@ footer.site-foot{
       await wait(900);
       for(let i = 1; i <= QUERY.length; i++){
         typed.textContent = QUERY.slice(0, i);
-        await wait(130 + Math.random() * 70);
+        await wait(160 + Math.random() * 80);
       }
       await wait(2400);
     }
@@ -2523,21 +2551,46 @@ footer.site-foot{
   io.observe(palette);
 })();
 
-// ===== Feature 2 (⌥Tab) switcher: MRU pulse + selection rotate =====
+// ===== Feature 2 (⌥Tab) switcher: selection slides between rows =====
 (function(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const demo = document.querySelector('.tab-demo');
   if(!demo) return;
+  const list = demo.querySelector('.win-list');
   const rows = Array.from(demo.querySelectorAll('.win'));
-  if(rows.length < 2) return;
+  if(!list || rows.length < 2) return;
+
+  // Inject the moving rail once. Hide the static ::before bar via .live.
+  const rail = document.createElement('div');
+  rail.className = 'win-rail';
+  list.appendChild(rail);
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+  function positionRail(idx){
+    const r = rows[idx];
+    if(!r) return;
+    rail.style.transform = `translateY(${r.offsetTop + 9}px)`;
+    rail.style.height = `${r.offsetHeight - 18}px`;
+  }
+  function setSelected(idx){
+    rows.forEach(r => r.classList.remove('on'));
+    rows[idx].classList.add('on');
+    positionRail(idx);
+  }
+
+  // Position the rail on row 0 before flipping to .live, so it doesn't
+  // animate from (0,0) into place on first paint.
+  positionRail(0);
+  requestAnimationFrame(() => demo.classList.add('live'));
+  window.addEventListener('resize', () => {
+    const idx = rows.findIndex(r => r.classList.contains('on'));
+    if(idx >= 0) positionRail(idx);
+  });
 
   async function loop(){
     let i = 0;
     while(true){
-      rows.forEach(r => r.classList.remove('on'));
-      rows[i].classList.add('on');
+      setSelected(i);
       i = (i + 1) % Math.min(rows.length, 4);
       await wait(1600);
     }
