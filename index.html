@@ -82,7 +82,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:hidden}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -201,14 +201,15 @@ button{font-family:inherit}
   .nav-links{display:none}
   .hero-grid{grid-template-columns:1fr;gap:32px;padding-top:40px}
   .hero{padding:48px var(--gutter) 32px}
-  .hero-stage{width:100%;overflow:visible}
+  .hero-stage{width:100%;overflow:hidden}
   .hero-stage .stage-inner{padding:0 16px;box-sizing:border-box}
-  .palette{width:calc(100vw - 32px);margin:0 auto}
+  .palette{width:100%;max-width:calc(100vw - 32px);margin:0 auto}
   .palette .search-bar{left:0;right:0}
   .palette li .title-row{font-size:13px}
   .palette li .path{font-size:10px}
   .palette li .ide-stack .ide{width:22px;height:22px;padding:2px}
   #hero-list li:nth-child(n+4){display:none}
+  .chosen-window{width:calc(100vw - 32px) !important}
 }
 
 /* ==========================================================
