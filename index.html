@@ -221,15 +221,25 @@ button{font-family:inherit}
 .hero-grid{
   display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;
 }
-.hero-bar{
+a.hero-bar{
   display:inline-flex;align-items:center;gap:10px;
-  padding:5px 10px 5px 6px;margin-bottom:28px;
+  padding:5px 14px 5px 6px;margin-bottom:28px;
   background:var(--surface);border:1px solid var(--border);
   border-radius:999px;
   font-family:var(--mono);font-size:11px;letter-spacing:.01em;
-  color:var(--dim);
-  white-space:nowrap;
-  max-width:100%;
+  color:var(--dim);text-decoration:none;
+  white-space:nowrap;max-width:100%;
+  transition:border-color .2s ease, background .2s ease, transform .2s ease,
+             box-shadow .2s ease, color .2s ease;
+}
+a.hero-bar:hover{
+  border-color:color-mix(in oklch, var(--accent) 38%, var(--border));
+  background:color-mix(in oklch, var(--accent) 6%, var(--surface));
+  color:var(--fg-2);
+  box-shadow:0 4px 16px -8px color-mix(in oklch, var(--accent) 60%, transparent);
+}
+a.hero-bar:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;
 }
 .hero-bar > *{white-space:nowrap;flex-shrink:0}
 .hero-bar .tag{
@@ -240,6 +250,13 @@ button{font-family:inherit}
   font-size:10px;letter-spacing:.05em;text-transform:uppercase;
 }
 .hero-bar .sep{color:var(--faint)}
+.hero-bar .arrow{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-left:2px;color:var(--mute);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), color .2s ease;
+}
+.hero-bar .arrow svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
 
 h1.hero-h{
   font-family:var(--display);
@@ -490,6 +507,15 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   background:rgba(255,255,255,.15) !important;
   border-color:rgba(255,255,255,.22) !important;
 }
+/* Focused IDE in the selected row — mirrors SearchOpenIDEIcon's
+   isFocused state (white-18% fill, white-40% border, 1.1× scale). */
+.palette li.on .ide-stack .ide.focused{
+  background:rgba(255,255,255,.32) !important;
+  border-color:rgba(255,255,255,.55) !important;
+  transform:scale(1.1);
+  box-shadow:0 0 0 1px rgba(255,255,255,.18), 0 4px 10px rgba(0,0,0,.18);
+}
+.palette li .ide-stack .ide{transition:background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease}
 .palette li .lang{
   width:28px;height:28px;border-radius:7px;
   display:grid;place-items:center;flex-shrink:0;
@@ -945,11 +971,18 @@ footer.site-foot{
    ========================================================== */
 .chosen-window{
   position:absolute;top:50%;left:50%;
-  width:360px;
+  width:480px;
   z-index:50;opacity:0;pointer-events:none;
   transform:translate(-50%, -44%) scale(.84);
   transition:opacity .48s ease, transform .55s cubic-bezier(.3,1.6,.55,1);
-  border-radius:12px;
+}
+.chosen-window.shown{
+  opacity:1;
+  transform:translate(-50%, -50%) scale(1);
+}
+.chosen-window .frame{
+  position:relative;
+  border-radius:14px;
   background:color-mix(in oklch, var(--bg-2) 96%, transparent);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
@@ -960,30 +993,36 @@ footer.site-foot{
     inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
   overflow:hidden;
 }
-.chosen-window.shown{
-  opacity:1;
-  transform:translate(-50%, -50%) scale(1);
-}
 .chosen-window .titlebar{
   display:flex;align-items:center;gap:6px;
-  padding:9px 12px;
+  padding:10px 14px;
+  padding-right:64px; /* leave room for the corner-overhang IDE icon */
   border-bottom:1px solid var(--border);
   background:color-mix(in oklch, var(--prod-blue) 18%, transparent);
   font-family:var(--mono);font-size:10.5px;color:var(--mute);
+}
+.chosen-window .titlebar > span:nth-of-type(4){
+  min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .chosen-window .titlebar .tl-dot{width:9px;height:9px;border-radius:50%}
 .chosen-window .titlebar .tl-r{background:#ff5f57}
 .chosen-window .titlebar .tl-y{background:#febc2e}
 .chosen-window .titlebar .tl-g{background:#28c840}
-.chosen-window .titlebar .ide-mark{
-  margin-left:auto;display:inline-flex;align-items:center;gap:6px;
-  color:var(--fg-2);
+.chosen-window .app-mark{
+  /* Mirrors OnboardingSwitcherAnimation's SwitcherMiniWindow:
+     oversized IDE icon overlaid on the window's top-right corner,
+     ~28% poking outside. Brand-hero placement. */
+  position:absolute;top:0;right:0;
+  width:54px;height:54px;
+  transform:translate(28%, -28%);
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.45));
+  pointer-events:none;
 }
-.chosen-window .titlebar .ide-mark img{width:14px;height:14px;display:block}
+.chosen-window .app-mark img{width:100%;height:100%;display:block}
 .chosen-window .body{
-  padding:14px 16px 18px;
-  display:flex;flex-direction:column;gap:8px;
-  min-height:140px;
+  padding:16px 18px 20px;
+  display:flex;flex-direction:column;gap:9px;
+  min-height:170px;
 }
 .chosen-window .line{display:flex;gap:6px;align-items:center}
 .chosen-window .line span{
@@ -1076,12 +1115,13 @@ footer.site-foot{
 <section class="hero" id="hero">
   <div class="hero-grid">
     <div class="hero-text">
-      <div class="hero-bar">
+      <a class="hero-bar" href="https://github.com/salihcaan/odak.fyi/releases">
         <span class="tag">preview</span>
-        <span>Built for macOS 26 Tahoe</span>
+        <span>v0.1 — built for macOS 26 Tahoe</span>
         <span class="sep">·</span>
-        <span>v0.1</span>
-      </div>
+        <span>Read the changelog</span>
+        <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg></span>
+      </a>
       <h1 class="hero-h">
         Any project.<br/>
         <span class="accent">Two keys.</span>
@@ -1144,9 +1184,9 @@ footer.site-foot{
               </div>
               <div class="meta">
                 <div class="ide-stack" title="Open windows">
-                  <div class="ide" title="VS Code"><img src="assets/ide/vscode.png" alt="VS Code"></div>
-                  <div class="ide" title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-                  <div class="ide" title="IntelliJ IDEA"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
+                  <div class="ide" data-ide="cursor"   title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+                  <div class="ide" data-ide="vscode"   title="VS Code"><img src="assets/ide/vscode.png" alt="VS Code"></div>
+                  <div class="ide" data-ide="intellij" title="IntelliJ IDEA"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
                 </div>
               </div>
             </li>
@@ -1218,24 +1258,23 @@ footer.site-foot{
              onboarding's SwitcherChosenWindow — title bar + Cursor mark +
              faux code. Hidden until runLoop reveals it. -->
         <div class="chosen-window" id="hero-chosen" aria-hidden="true">
-          <div class="titlebar">
-            <span class="tl-dot tl-r"></span>
-            <span class="tl-dot tl-y"></span>
-            <span class="tl-dot tl-g"></span>
-            <span>platform-landing — pricing.tsx</span>
-            <span class="ide-mark">
-              <img src="assets/ide/cursor.png" alt="">
-              <span>Cursor</span>
-            </span>
+          <div class="frame">
+            <div class="titlebar">
+              <span class="tl-dot tl-r"></span>
+              <span class="tl-dot tl-y"></span>
+              <span class="tl-dot tl-g"></span>
+              <span>platform-landing — pricing.tsx</span>
+            </div>
+            <div class="body">
+              <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
+              <div class="line"><span style="width:96px"></span><span style="width:24px"></span><span class="hl" style="width:58px"></span></div>
+              <div class="line"><span style="width:140px"></span></div>
+              <div class="line"><span style="width:62px"></span><span style="width:36px"></span><span style="width:88px"></span></div>
+              <div class="line"><span class="hl" style="width:44px"></span><span style="width:112px"></span></div>
+              <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
+            </div>
           </div>
-          <div class="body">
-            <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
-            <div class="line"><span style="width:96px"></span><span style="width:24px"></span><span class="hl" style="width:58px"></span></div>
-            <div class="line"><span style="width:140px"></span></div>
-            <div class="line"><span style="width:62px"></span><span style="width:36px"></span><span style="width:88px"></span></div>
-            <div class="line"><span class="hl" style="width:44px"></span><span style="width:112px"></span></div>
-            <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
-          </div>
+          <span class="app-mark"><img src="assets/ide/cursor.png" alt=""></span>
         </div>
 
       </div>
@@ -1760,10 +1799,22 @@ footer.site-foot{
   // Tab cycles through the editors open on the selected project. Matches
   // OnboardingSearchAnimation's "Tab to pick an editor" beat.
   const EDITORS = [
-    { src: 'assets/ide/cursor.png',   alt: 'Cursor',   name: 'Cursor'   },
-    { src: 'assets/ide/vscode.png',   alt: 'VS Code',  name: 'VS Code'  },
-    { src: 'assets/ide/intellij.png', alt: 'IntelliJ', name: 'IntelliJ' },
+    { key: 'cursor',   src: 'assets/ide/cursor.png',   alt: 'Cursor',   name: 'Cursor'   },
+    { key: 'vscode',   src: 'assets/ide/vscode.png',   alt: 'VS Code',  name: 'VS Code'  },
+    { key: 'intellij', src: 'assets/ide/intellij.png', alt: 'IntelliJ', name: 'IntelliJ' },
   ];
+  // Highlight the matching IDE inside the currently-selected row's
+  // ide-stack — mirrors OnboardingSearchAnimation's focusedIDE ring.
+  function setFocusedIde(key){
+    const row = list.querySelector('li.on');
+    if(!row) return;
+    row.querySelectorAll('.ide-stack .ide').forEach(el => {
+      el.classList.toggle('focused', !!key && el.dataset.ide === key);
+    });
+  }
+  function clearFocusedIde(){
+    list.querySelectorAll('.ide-stack .ide.focused').forEach(el => el.classList.remove('focused'));
+  }
   async function tabSwap(editor){
     topIde.classList.add('switching');
     await wait(140);
@@ -1771,6 +1822,7 @@ footer.site-foot{
     img.src = editor.src;
     img.alt = editor.alt;
     openHnt.textContent = '— Open in ' + editor.name;
+    setFocusedIde(editor.key);
     await wait(40);
     topIde.classList.remove('switching');
   }
@@ -1827,6 +1879,7 @@ footer.site-foot{
     setGhost(QUERY);
     topIde.classList.remove('tinted');
     openHnt.textContent = '— Open in Cursor';
+    setFocusedIde('cursor');
     hintPill.innerHTML = '<span class="dot-live"></span><span>Already open · 3 editors</span>';
     hintPill.classList.add('shown');
     lightStage();
@@ -1854,40 +1907,23 @@ footer.site-foot{
       // First keystroke → fuzzy-match hint appears
       setHint(HINT.fuzzy);
 
-      // Type "p" → "pl": list prunes from 5 → 3 → 2
-      for(let i = 1; i <= 2; i++){
+      // Type the full query letter-by-letter. The list narrows naturally
+      // until only platform-landing (item 2) remains — fuzzy filtering
+      // alone lands the selection, no ↑/↓ needed.
+      for(let i = 1; i <= QUERY.length; i++){
         const q = QUERY.slice(0, i);
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(280 + Math.random() * 90);
-      }
-      await wait(850);
-
-      // With 2 candidates visible, show arrow-nav moving the selection
-      let visible = items.filter(li => li.getAttribute('data-filtered') === '0');
-      if(visible.length > 1){
-        items.forEach(li => li.classList.remove('on'));
-        visible[1].classList.add('on');
-        await wait(800);
-        items.forEach(li => li.classList.remove('on'));
-        visible[0].classList.add('on');
-        await wait(560);
-      }
-
-      // Finish typing "pla" → "plat" → "platf": list collapses to 1
-      for(let i = 3; i <= QUERY.length; i++){
-        const q = QUERY.slice(0, i);
-        typed.textContent = q;
-        filterList(q);
-        setGhost(q);
-        await wait(240 + Math.random() * 90);
+        await wait(260 + Math.random() * 90);
       }
       await wait(800);
 
-      // Un-tint Cursor to signal "already open" + swap hint
+      // Un-tint Cursor to signal "already open" + highlight Cursor inside
+      // the selected row's IDE stack (matches OpenIDEIconsView's focus ring).
       topIde.classList.remove('tinted');
       openHnt.textContent = '— Open in Cursor';
+      setFocusedIde('cursor');
       setHint(HINT.alreadyOpen);
       await wait(1100);
 
@@ -1924,6 +1960,7 @@ footer.site-foot{
       ghost.textContent = '';
       openHnt.textContent = '';
       filterList('');
+      clearFocusedIde();
       items.forEach(li => li.classList.remove('on'));
       items[0].classList.add('on');
       await wait(1000);
