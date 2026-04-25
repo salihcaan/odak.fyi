@@ -46,7 +46,7 @@
   --prod-blue-glow: rgba(61,112,196,.55);
 
   /* density */
-  --space-section: 96px;
+  --space-section: 128px;
   --space-block: 28px;
   --radius: 14px;
   --radius-lg: 26px;  /* real app panelCornerRadius */
@@ -272,18 +272,22 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
   padding:2px 6px;background:color-mix(in oklch, var(--bg) 30%, transparent);
   border-radius:4px;margin-left:4px;
 }
-.hero-cta .btn-secondary{
-  padding:12px 18px;border-radius:10px;font-size:14px;font-weight:500;
-  background:var(--surface);border:1px solid var(--border-2);color:var(--fg);
-  display:inline-flex;align-items:center;gap:10px;
-  cursor:pointer;transition:background .15s;
+.hero-cta .btn-link{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 4px;font-size:14px;font-weight:500;
+  color:var(--fg-2);background:transparent;border:0;cursor:pointer;
+  letter-spacing:-.005em;
+  transition:color .15s ease;
   white-space:nowrap;
 }
-.hero-cta .btn-secondary:hover{background:var(--surface-2)}
-.hero-cta .btn-secondary .k{
-  font-family:var(--mono);font-size:11px;color:var(--dim);
-  border:1px solid var(--border);border-radius:4px;padding:1px 6px;
+.hero-cta .btn-link:hover{color:var(--fg)}
+.hero-cta .btn-link .arrow{
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--mute);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), color .2s ease;
 }
+.hero-cta .btn-link .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero-cta .btn-link:hover .arrow{transform:translateY(2px);color:var(--accent)}
 
 .hero-fine{
   display:flex;align-items:center;gap:14px;flex-wrap:wrap;
@@ -612,7 +616,7 @@ h2.section-h .mute{color:var(--dim)}
 .section-sub{
   font-size:18px;line-height:1.5;color:var(--fg-2);max-width:56ch;margin:0;letter-spacing:-.008em;
 }
-.section-head{margin-bottom:56px;max-width:800px}
+.section-head{margin-bottom:80px;max-width:800px}
 
 /* ==========================================================
    FEATURE — sticky product + text column
@@ -1407,8 +1411,9 @@ footer.site-foot{
         <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary">
           Download for Mac <span class="k">⌘ + D</span>
         </a>
-        <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
-          See how it works <span class="k">↓</span>
+        <button class="btn-link" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+          See how it works
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M6 3v6m-3-3l3 3 3-3"/></svg></span>
         </button>
       </div>
       <div class="hero-fine">
