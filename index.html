@@ -200,14 +200,17 @@ button{font-family:inherit}
 @media (max-width:760px){
   .nav-links{display:none}
   .hero-grid{grid-template-columns:1fr;gap:32px;padding-top:40px}
-  .hero{padding:48px var(--gutter) 32px}
+  .hero{padding:48px var(--gutter) 32px;overflow:clip}
   .hero-stage{width:100%;max-width:100%}
   .hero-stage .stage-inner{padding:0;box-sizing:border-box;min-height:380px}
   .palette{width:100%;max-width:100%;margin:70px auto 0}
   .palette .search-bar{left:0;right:0}
   .palette li .title-row{font-size:13px}
   .palette li .path{font-size:10px}
-  .palette li .ide-stack .ide{width:22px;height:22px;padding:2px}
+  .palette li .ide-stack .ide{width:20px;height:20px;padding:2px}
+  .palette li .ide-stack{gap:3px}
+  .palette li .meta{flex-shrink:1;min-width:0;overflow:hidden}
+  .palette li{gap:6px;padding:10px 10px}
   #hero-list li:nth-child(n+4){display:none}
   .chosen-window{width:100% !important}
 }
@@ -1172,12 +1175,12 @@ footer.site-foot{
             <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
           </div>
           <ul id="hero-list">
-            <li data-keys="platform-landing" class="on">
+            <li data-keys="web-app" class="on">
               <div class="lang ts">TS</div>
               <div class="body">
-                <div class="title-row">platform-landing</div>
+                <div class="title-row">web-app</div>
                 <div class="path">
-                  <span>~/code/work/platform-landing</span>
+                  <span>~/code/web-app</span>
                   <span class="sep">·</span>
                   <span class="branch">feat/pricing</span>
                   <span class="sep">·</span>
@@ -1265,7 +1268,7 @@ footer.site-foot{
               <span class="tl-dot tl-r"></span>
               <span class="tl-dot tl-y"></span>
               <span class="tl-dot tl-g"></span>
-              <span>platform-landing — pricing.tsx</span>
+              <span>web-app — pricing.tsx</span>
             </div>
             <div class="body">
               <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
@@ -1302,7 +1305,7 @@ footer.site-foot{
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg></div>
-          <div class="txt"><b>No syntax to remember</b><span>"pl-lnd" finds platform-landing. "adak" finds odak. Typos forgiven. Muscle memory beats careful typing — every time.</span></div>
+          <div class="txt"><b>No syntax to remember</b><span>"wba" finds web-app. "adak" finds odak. Typos forgiven. Muscle memory beats careful typing — every time.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg></div>
@@ -1400,15 +1403,15 @@ footer.site-foot{
           <li class="win on">
             <div class="app"><img src="assets/ide/cursor.png" alt="Cursor"></div>
             <div class="body">
-              <div class="title">platform-landing <span class="proj">· pricing.tsx</span></div>
-              <div class="sub">Cursor · ~/code/work/platform-landing</div>
+              <div class="title">web-app <span class="proj">· pricing.tsx</span></div>
+              <div class="sub">Cursor · ~/code/work/web-app</div>
             </div>
             <div class="mru">just now</div>
           </li>
           <li class="win">
             <div class="app"><svg><use href="#ide-iterm"/></svg></div>
             <div class="body">
-              <div class="title">platform-landing <span class="proj">· pnpm dev</span></div>
+              <div class="title">web-app <span class="proj">· pnpm dev</span></div>
               <div class="sub">iTerm · zsh</div>
             </div>
             <div class="mru">2m ago</div>
@@ -1440,7 +1443,7 @@ footer.site-foot{
           <li class="win">
             <div class="app"><svg><use href="#ide-chrome"/></svg></div>
             <div class="body">
-              <div class="title">localhost:3000 <span class="proj">· platform-landing</span></div>
+              <div class="title">localhost:3000 <span class="proj">· web-app</span></div>
               <div class="sub">Chrome · preview</div>
             </div>
             <div class="mru">1h</div>
@@ -1516,7 +1519,7 @@ footer.site-foot{
             <span class="file-name">.odak</span>
             <span style="color:var(--mute);margin-left:auto">TOML</span>
           </div>
-<pre><span class="c"># platform-landing</span>
+<pre><span class="c"># web-app</span>
 <span class="k">ide</span> = <span class="s">"cursor"</span>
 
 <span class="c">[env]</span>
@@ -1539,7 +1542,7 @@ footer.site-foot{
         <div class="odak-actions">
           <div class="head">
             <span class="dot-accent" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)"></span>
-            <span>Actions · platform-landing</span>
+            <span>Actions · web-app</span>
           </div>
           <ul>
             <li>
@@ -1829,7 +1832,7 @@ footer.site-foot{
     topIde.classList.remove('switching');
   }
 
-  const QUERY = 'platf';
+  const QUERY = 'web';
   const items = Array.from(list.querySelectorAll('li'));
 
   function filterList(q){
@@ -1910,7 +1913,7 @@ footer.site-foot{
       setHint(HINT.fuzzy);
 
       // Type the full query letter-by-letter. The list narrows naturally
-      // until only platform-landing (item 2) remains — fuzzy filtering
+      // until only web-app (item 2) remains — fuzzy filtering
       // alone lands the selection, no ↑/↓ needed.
       for(let i = 1; i <= QUERY.length; i++){
         const q = QUERY.slice(0, i);
