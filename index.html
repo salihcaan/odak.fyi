@@ -92,7 +92,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:hidden}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:hidden;scroll-padding-top:64px}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -1154,40 +1154,47 @@ footer.site-foot{
 
 /* macOS Tahoe-style menu bar — translucent, system font, with the
    classic left cluster (Apple, app name, menus) and right cluster
-   (status icons + date/time). Heights are scaled to the screen rect. */
-.mb-menubar{
-  position:absolute;top:0;left:0;right:0;
+   (status icons + date/time). Lives inside the macbook screen
+   (.mb-menubar). */
+.menubar{
   height:24px;
   display:flex;align-items:center;
   padding:0 10px;
-  background:rgba(0,0,0,.32);
+  background:rgba(0,0,0,.55);
   backdrop-filter:blur(22px) saturate(180%);
   -webkit-backdrop-filter:blur(22px) saturate(180%);
   font-family:-apple-system, system-ui, 'Inter', sans-serif;
   font-size:11.5px;color:#fff;letter-spacing:-.005em;
-  z-index:5;
   box-shadow:0 1px 0 rgba(255,255,255,.04);
 }
-.mb-menubar .left{display:flex;align-items:center;gap:14px;flex-shrink:0}
-.mb-menubar .right{display:flex;align-items:center;gap:11px;margin-left:auto;flex-shrink:0}
-.mb-menubar .apple{
+.menubar .left{display:flex;align-items:center;gap:14px;flex-shrink:0;min-width:0;overflow:hidden}
+.menubar .right{display:flex;align-items:center;gap:11px;margin-left:auto;flex-shrink:0}
+.menubar .apple{
   display:inline-flex;align-items:center;justify-content:center;
   width:14px;height:14px;color:#fff;
 }
-.mb-menubar .apple svg{width:13px;height:14px;display:block}
-.mb-menubar .app{font-weight:600;letter-spacing:-.01em}
-.mb-menubar .item{font-weight:400;color:rgba(255,255,255,.92)}
-.mb-menubar .ico{
+.menubar .apple svg{width:13px;height:14px;display:block}
+.menubar .app{font-weight:600;letter-spacing:-.01em}
+.menubar .item{font-weight:400;color:rgba(255,255,255,.92)}
+.menubar .ico{
   display:inline-flex;align-items:center;justify-content:center;
   height:18px;color:#fff;opacity:.95;
 }
-.mb-menubar .ico svg{display:block;height:13px;width:auto}
-.mb-menubar .ico.battery svg{height:10px}
-.mb-menubar .ico.cc svg{height:14px}
-.mb-menubar .clock{
+.menubar .ico svg{display:block;height:13px;width:auto}
+.menubar .ico.battery svg{height:10px}
+.menubar .ico.cc svg{height:14px}
+.menubar .clock{
   font-variant-numeric:tabular-nums;font-weight:400;
   letter-spacing:0;color:#fff;
   margin-left:2px;
+}
+
+/* Macbook-screen menubar: absolute inside the screen rect, slightly
+   less opaque so the wallpaper bleeds through. */
+.mb-menubar{
+  position:absolute;top:0;left:0;right:0;
+  z-index:5;
+  background:rgba(0,0,0,.32);
 }
 
 /* ==========================================================
@@ -1201,11 +1208,6 @@ footer.site-foot{
   z-index:1;
   pointer-events:none;
   contain:layout paint style;
-  transition:filter .55s var(--ease-smooth), opacity .55s var(--ease-smooth);
-}
-.mb-windows.dimmed{
-  filter:blur(1.8px) saturate(.7) brightness(.55);
-  opacity:.7;
 }
 .mb-window{
   position:absolute;
@@ -1227,13 +1229,35 @@ footer.site-foot{
   /* Initial entrance state — fade up from below with mild rotation */
   opacity:0;
   transform:rotate(var(--r, 0deg)) translateY(10px) scale(.97);
+  /* Per-window dimming + focus pop, in addition to the entrance pulse. */
   transition:
     opacity .5s var(--ease-smooth) var(--d, 0ms),
-    transform .65s var(--ease-snappy) var(--d, 0ms);
+    transform .55s var(--ease-snappy),
+    filter .5s var(--ease-smooth),
+    box-shadow .35s var(--ease-out);
 }
 .mb-windows.shown .mb-window{
   opacity:1;
   transform:rotate(var(--r, 0deg)) translateY(0) scale(1);
+}
+/* Dim/blur is per-child so a single .focused window can opt out (CSS
+   filters on a parent can't be undone by descendants). */
+.mb-windows.dimmed .mb-window{
+  filter:blur(1.8px) saturate(.7) brightness(.55);
+  opacity:.7;
+}
+/* The "found" window — palette settles, this one wakes up. Straightens
+   its rotation, lifts above the chaos, gains an accent ring. */
+.mb-windows.dimmed .mb-window.focused,
+.mb-window.focused{
+  filter:none;
+  opacity:1;
+  z-index:50;
+  transform:rotate(0deg) translateY(-3px) scale(1.08);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.55),
+    0 0 0 1.5px var(--accent),
+    0 0 22px var(--accent-glow);
 }
 .mb-window .titlebar{
   display:flex;align-items:center;gap:5px;
@@ -1242,6 +1266,8 @@ footer.site-foot{
   white-space:nowrap;overflow:hidden;
   font-family:-apple-system, system-ui, var(--sans);
   font-weight:500;
+  /* Reserve room so the title text doesn't run under the corner badge. */
+  padding-right:18px;
 }
 .mb-window .traffic{display:flex;gap:3px;flex-shrink:0;align-items:center}
 .mb-window .traffic span{width:5px;height:5px;border-radius:50%}
@@ -1254,6 +1280,33 @@ footer.site-foot{
   margin-left:2px;
 }
 .mb-window .ico img,.mb-window .ico svg{width:100%;height:100%;object-fit:contain;display:block}
+/* Top-right IDE badge — clearer "what app is this" cue than the tiny
+   titlebar icon at chaos-window scale. Gets a halo on .focused. */
+.mb-window .app-badge{
+  position:absolute;
+  top:5px;right:6px;
+  width:14px;height:14px;
+  border-radius:3.5px;
+  overflow:hidden;
+  display:grid;place-items:center;
+  background:rgba(0,0,0,.35);
+  box-shadow:
+    0 1px 3px rgba(0,0,0,.5),
+    inset 0 0 0 .5px rgba(255,255,255,.18);
+  z-index:2;
+  transition:transform .35s var(--ease-snappy), box-shadow .3s var(--ease-out);
+}
+.mb-window .app-badge img,
+.mb-window .app-badge svg{
+  width:100%;height:100%;object-fit:contain;display:block;
+}
+.mb-window.focused .app-badge{
+  transform:scale(1.15);
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.55),
+    inset 0 0 0 .5px rgba(255,255,255,.22),
+    0 0 10px var(--accent-glow);
+}
 .mb-window .title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .mb-window .body{
   flex:1;display:flex;flex-direction:column;gap:3px;
@@ -1585,7 +1638,7 @@ footer.site-foot{
     <!-- macOS menu-bar status icons. White, kept simple so the bar reads
          like the real translucent strip on macOS Tahoe. -->
     <symbol id="mb-apple" viewBox="0 0 14 17">
-      <path fill="currentColor" d="M11.6 13.3c-.2.5-.5 1-.8 1.4-.4.6-.8 1-1.1 1.2-.4.4-.9.6-1.4.6-.4 0-.8-.1-1.4-.3-.5-.2-1-.3-1.5-.3-.5 0-1 .1-1.5.3-.5.2-1 .3-1.4.3-.5 0-1-.2-1.4-.6-.3-.2-.7-.6-1.1-1.2C.8 13.7.4 12.9.1 12-.1 11.1-.2 10.3-.2 9.5c0-.9.2-1.7.6-2.4C.7 6.5 1.2 6 1.8 5.7c.6-.3 1.2-.5 1.9-.5.4 0 .9.1 1.5.3.6.2 1 .4 1.2.4.1 0 .6-.1 1.4-.4.7-.3 1.3-.4 1.8-.4 1.3.1 2.3.6 2.9 1.5-1.2.7-1.8 1.7-1.8 3 0 1 .4 1.8 1.1 2.5.3.3.7.5 1.1.7l-.3.5zM9 .3c0 .7-.3 1.3-.8 1.9-.6.7-1.4 1.1-2.2 1-.1-.7.2-1.4.6-1.9.5-.6 1.2-.9 2-1 .3.1.4.1.4 0z"/>
+      <path fill="currentColor" d="M11.182 8.91c-.018-2.022 1.65-2.992 1.725-3.038-.94-1.376-2.404-1.564-2.925-1.586-1.247-.126-2.434.733-3.067.733-.633 0-1.61-.715-2.65-.696-1.363.02-2.62.793-3.32 2.013-1.416 2.456-.363 6.094 1.018 8.087.674.974 1.477 2.073 2.53 2.034 1.014-.04 1.397-.658 2.624-.658 1.226 0 1.572.658 2.65.638 1.094-.02 1.787-.997 2.456-1.974.774-1.13 1.093-2.224 1.112-2.28-.024-.012-2.135-.82-2.153-3.273zM9.176 2.985C9.737 2.31 10.114 1.371 10.011.434c-.806.033-1.78.537-2.36 1.21-.52.598-.974 1.553-.851 2.473.898.07 1.815-.456 2.376-1.132z"/>
     </symbol>
     <symbol id="mb-battery" viewBox="0 0 25 12">
       <rect x=".5" y=".5" width="21" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".6"/>
@@ -1620,6 +1673,7 @@ footer.site-foot{
 <div class="aurora"></div>
 <div class="grid-bg"></div>
 
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
@@ -1653,27 +1707,27 @@ footer.site-foot{
   <div class="hero-grid">
     <div class="hero-text">
       <a class="hero-bar" href="https://github.com/salihcaan/odak.fyi/releases">
-        <span class="tag">preview</span>
-        <span>v0.1 — built for macOS 26 Tahoe</span>
+        <span class="tag">v0.1</span>
+        <span>Built for macOS 26 Tahoe</span>
         <span class="sep">·</span>
         <span>Read the changelog</span>
         <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg></span>
       </a>
       <h1 class="hero-h">
-        Any project.<br/>
+        Any repo.<br/>
         <span class="accent">Two keys.</span>
       </h1>
       <div class="feature-pills">
         <div class="fp primary"><kbd>⌥ Space</kbd><span>Search projects</span></div>
         <div class="fp"><kbd>⌥ Tab</kbd><span>Switch windows</span></div>
-        <div class="fp"><kbd>⌘ .</kbd><span>Project actions</span></div>
+        <div class="fp"><kbd>⌘ K</kbd><span>Project actions</span></div>
       </div>
       <p class="hero-sub">
-        A keyboard-driven project launcher for developers who juggle dozens of repos across every editor on macOS. Press a hotkey, type a few letters, land in the right window.
+        A keyboard launcher for developers who juggle dozens of repos across Cursor, VS Code, IntelliJ, Xcode, and every terminal in between. Press a hotkey, type three letters, land in the right window.
       </p>
       <div class="hero-cta">
         <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary">
-          Download for Mac <span class="k">⌘ + D</span>
+          Try free for 14 days <span class="k">⌘ + D</span>
         </a>
         <button class="btn-link" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
           See how it works
@@ -1681,11 +1735,13 @@ footer.site-foot{
         </button>
       </div>
       <div class="hero-fine">
+        <span>14-day trial · no card</span>
+        <span class="dot"></span>
         <span>macOS 26+ Tahoe</span>
         <span class="dot"></span>
         <span>Apple Silicon + Intel</span>
         <span class="dot"></span>
-        <span>No account · no telemetry</span>
+        <span>No telemetry</span>
       </div>
     </div>
 
@@ -1825,7 +1881,7 @@ footer.site-foot{
      ========================================================== -->
 <section class="block mb-section">
   <div class="section-head reveal">
-    <div class="eyebrow">In situ</div>
+    <div class="eyebrow">On your desktop</div>
     <h2 class="section-h">Lives on your desktop. <span class="mute">Two keys away.</span></h2>
     <p class="section-sub">No window to find. No app to alt-tab to. The palette appears wherever you are.</p>
   </div>
@@ -1837,15 +1893,13 @@ footer.site-foot{
       <div class="notch" aria-hidden="true"></div>
       <div class="screen">
           <div class="mb-desk">
-            <div class="mb-menubar">
+            <div class="menubar mb-menubar">
               <div class="left">
                 <span class="apple" aria-hidden="true"><svg viewBox="0 0 14 17"><use href="#mb-apple"/></svg></span>
-                <span class="app">Cursor</span>
+                <span class="app">Odak</span>
                 <span class="item">File</span>
                 <span class="item">Edit</span>
-                <span class="item">Selection</span>
                 <span class="item">View</span>
-                <span class="item">Go</span>
                 <span class="item">Window</span>
                 <span class="item">Help</span>
               </div>
@@ -1854,7 +1908,7 @@ footer.site-foot{
                 <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 12"><use href="#mb-wifi"/></svg></span>
                 <span class="ico cc" aria-hidden="true"><svg viewBox="0 0 14 14"><use href="#mb-cc"/></svg></span>
                 <span class="ico" aria-hidden="true"><svg viewBox="0 0 14 14"><use href="#mb-spotlight"/></svg></span>
-                <span class="clock">Sat 25 Apr  23:33</span>
+                <span class="clock" data-live-clock>Sat 25 Apr  23:33</span>
               </div>
             </div>
 
@@ -1862,43 +1916,53 @@ footer.site-foot{
                  behind the palette. They fade in first to dramatize the
                  "before"; once the palette materializes they dim away. -->
             <div class="mb-windows" id="mb-windows">
-              <div class="mb-window" style="--x:2%;--y:4%;--w:18%;--h:24%;--r:-3deg;--z:2;--d:80ms">
+              <div class="mb-window" data-project="web-app" style="--x:2%;--y:4%;--w:18%;--h:24%;--r:-3deg;--z:2;--d:80ms">
+                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">web-app · page.tsx</span></div>
                 <div class="body"><div class="ln" style="--lw:65%"></div><div class="ln hl" style="--lw:42%"></div><div class="ln" style="--lw:78%"></div><div class="ln" style="--lw:50%"></div></div>
               </div>
-              <div class="mb-window" style="--x:79%;--y:5%;--w:19%;--h:26%;--r:3deg;--z:2;--d:160ms">
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.png" alt=""></span><span class="title">react-dashboard</span></div>
+              <div class="mb-window" data-project="react-dashboard" style="--x:79%;--y:5%;--w:19%;--h:26%;--r:3deg;--z:2;--d:160ms">
+                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">react-dashboard</span></div>
                 <div class="body"><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:38%"></div><div class="ln b" style="--lw:60%"></div><div class="ln" style="--lw:82%"></div></div>
               </div>
-              <div class="mb-window" style="--x:2%;--y:31%;--w:16%;--h:30%;--r:-1deg;--z:3;--d:240ms">
+              <div class="mb-window" data-project="api-gateway" style="--x:2%;--y:31%;--w:16%;--h:30%;--r:-1deg;--z:3;--d:240ms">
+                <div class="app-badge"><img src="assets/ide/intellij.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.png" alt=""></span><span class="title">api-gateway</span></div>
                 <div class="body"><div class="ln" style="--lw:55%"></div><div class="ln" style="--lw:80%"></div><div class="ln hl" style="--lw:45%"></div><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:38%"></div></div>
               </div>
-              <div class="mb-window" style="--x:82%;--y:33%;--w:16%;--h:28%;--r:2deg;--z:3;--d:320ms">
+              <div class="mb-window" data-project="platform-ios" style="--x:82%;--y:33%;--w:16%;--h:28%;--r:2deg;--z:3;--d:320ms">
+                <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">platform-ios</span></div>
                 <div class="body"><div class="ln" style="--lw:60%"></div><div class="ln" style="--lw:48%"></div><div class="ln b" style="--lw:72%"></div><div class="ln" style="--lw:55%"></div></div>
               </div>
-              <div class="mb-window" style="--x:14%;--y:50%;--w:18%;--h:22%;--r:2deg;--z:1;--d:400ms">
+              <div class="mb-window" data-project="terminal" style="--x:14%;--y:50%;--w:18%;--h:22%;--r:2deg;--z:1;--d:400ms">
+                <div class="app-badge"><svg viewBox="0 0 32 32"><use href="#ide-iterm"/></svg></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><svg viewBox="0 0 32 32"><use href="#ide-iterm"/></svg></span><span class="title">~ pnpm dev</span></div>
                 <div class="body"><div class="ln" style="--lw:42%"></div><div class="ln" style="--lw:65%"></div><div class="ln" style="--lw:30%"></div><div class="ln hl" style="--lw:55%"></div></div>
               </div>
-              <div class="mb-window" style="--x:67%;--y:48%;--w:18%;--h:22%;--r:-2deg;--z:1;--d:480ms">
+              <div class="mb-window" data-project="browser" style="--x:67%;--y:48%;--w:18%;--h:22%;--r:-2deg;--z:1;--d:480ms">
+                <div class="app-badge"><svg viewBox="0 0 32 32"><use href="#ide-chrome"/></svg></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><svg viewBox="0 0 32 32"><use href="#ide-chrome"/></svg></span><span class="title">localhost:3000</span></div>
                 <div class="body"><div class="ln" style="--lw:80%"></div><div class="ln" style="--lw:55%"></div><div class="ln b" style="--lw:38%"></div></div>
               </div>
-              <div class="mb-window" style="--x:4%;--y:65%;--w:22%;--h:31%;--r:-2deg;--z:4;--d:560ms">
+              <div class="mb-window" data-project="admin-panel" style="--x:4%;--y:65%;--w:22%;--h:31%;--r:-2deg;--z:4;--d:560ms">
+                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">admin-panel</span></div>
                 <div class="body"><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:45%"></div><div class="ln" style="--lw:60%"></div><div class="ln hl" style="--lw:78%"></div><div class="ln" style="--lw:40%"></div></div>
               </div>
-              <div class="mb-window" style="--x:28%;--y:68%;--w:22%;--h:28%;--r:1deg;--z:5;--d:640ms">
+              <div class="mb-window" data-project="etl-pipeline" style="--x:28%;--y:68%;--w:22%;--h:28%;--r:1deg;--z:5;--d:640ms">
+                <div class="app-badge"><img src="assets/ide/vscode.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.png" alt=""></span><span class="title">etl-pipeline.py</span></div>
                 <div class="body"><div class="ln" style="--lw:65%"></div><div class="ln b" style="--lw:50%"></div><div class="ln" style="--lw:78%"></div><div class="ln" style="--lw:42%"></div></div>
               </div>
-              <div class="mb-window" style="--x:52%;--y:66%;--w:22%;--h:30%;--r:-1deg;--z:6;--d:720ms">
+              <div class="mb-window" data-project="odak-mac" style="--x:52%;--y:66%;--w:22%;--h:30%;--r:-1deg;--z:6;--d:720ms">
+                <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">odak-mac</span></div>
                 <div class="body"><div class="ln" style="--lw:55%"></div><div class="ln" style="--lw:72%"></div><div class="ln hl" style="--lw:38%"></div><div class="ln" style="--lw:65%"></div><div class="ln" style="--lw:48%"></div></div>
               </div>
-              <div class="mb-window" style="--x:76%;--y:69%;--w:22%;--h:28%;--r:2deg;--z:5;--d:800ms">
+              <div class="mb-window" data-project="plexo-cli" style="--x:76%;--y:69%;--w:22%;--h:28%;--r:2deg;--z:5;--d:800ms">
+                <div class="app-badge"><img src="assets/ide/intellij.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.png" alt=""></span><span class="title">plexo-cli · main.go</span></div>
                 <div class="body"><div class="ln" style="--lw:72%"></div><div class="ln" style="--lw:48%"></div><div class="ln" style="--lw:60%"></div><div class="ln b" style="--lw:35%"></div></div>
               </div>
@@ -1994,24 +2058,24 @@ footer.site-foot{
       <div class="feature-pills">
         <div class="fp primary"><kbd>⌥ Space</kbd><span>Search</span></div>
         <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
-        <div class="fp"><kbd>⌘ .</kbd><span>Actions</span></div>
+        <div class="fp"><kbd>⌘ K</kbd><span>Actions</span></div>
       </div>
-      <h3>Find any project. <span class="accent">Five letters or less.</span></h3>
+      <h3>Find any repo. <span class="accent">In three letters.</span></h3>
       <p class="lead">
-        Every trip through Finder is a broken thought. Every dock-bounce is a thread lost. Hit ⌥ Space, type three letters, land in the right repo — your focus stays on the problem, not on hunting for the folder.
+        Hit ⌥ Space, type three letters, land in the right repo.
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg></div>
-          <div class="txt"><b>No syntax to remember</b><span>"wba" finds web-app. "adak" finds odak. Typos forgiven. Muscle memory beats careful typing — every time.</span></div>
+          <div class="txt"><b>No syntax to remember</b><span>"wba" finds web-app. "adak" finds odak. Typos forgiven.</span></div>
         </li>
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg></div>
-          <div class="txt"><b>Learns your week</b><span>The repos you actually touch rise to the top. The dead ones fall off. Less scanning, fewer decisions, more doing.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M2 12l4-4 3 3 5-6"/><path d="M9 5h4v4"/></svg></div>
+          <div class="txt"><b>Frecency, not alphabetical</b><span>Recent + frequent rises to the top. The repos you live in hit on the first letter.</span></div>
         </li>
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 3v10l5-3 5 3V3z"/></svg></div>
-          <div class="txt"><b>Zero setup, zero config</b><span>No folder picker, no YAML, no sidebar to curate. Install it; every git repo on your Mac is already findable.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2"/></svg></div>
+          <div class="txt"><b>Dirty-state badges</b><span>A red dot on repos with uncommitted work — never lose track of what you started.</span></div>
         </li>
       </ul>
     </div>
@@ -2154,24 +2218,24 @@ footer.site-foot{
       <div class="feature-pills">
         <div class="fp"><kbd>⌥ Space</kbd><span>Search</span></div>
         <div class="fp primary"><kbd>⌥ Tab</kbd><span>Switch</span></div>
-        <div class="fp"><kbd>⌘ .</kbd><span>Actions</span></div>
+        <div class="fp"><kbd>⌘ K</kbd><span>Actions</span></div>
       </div>
       <h3>Every editor window. <span class="accent">One list.</span></h3>
       <p class="lead">
-        Cmd+Tab groups by app — useless when ten Cursor windows share one icon. Odak shows every window as a labelled row, grouped by project, most-recent first. Land on the right window the first time — no mis-click, no re-orient, no lost train of thought.
+        Cmd+Tab groups by app — useless when ten Cursor windows share one icon. Odak shows every window as a labelled row, grouped by project, most-recent first.
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6"/></svg></div>
-          <div class="txt"><b>One list, not six</b><span>Cursor, VS Code, Xcode, IntelliJ, GoLand, RubyMine, Zed, Sublime, terminals, and Chrome tabs tied to a localhost preview — all in one place.</span></div>
+          <div class="txt"><b>One list, not six</b><span>Every editor, every terminal, every localhost tab — one place.</span></div>
         </li>
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 8h10M8 3v10"/></svg></div>
-          <div class="txt"><b>MRU, not alphabetical</b><span>The window you just left is row one. No scrolling, no guessing — flow stays intact.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 8l3-3 3 3-3 3z"/><path d="M9 4l3 3-3 3"/></svg></div>
+          <div class="txt"><b>Most recent, first</b><span>The window you just left sits at the top — the keystroke you reach for is always the right one.</span></div>
         </li>
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg></div>
-          <div class="txt"><b>Zero latency</b><span>Subscribes to Accessibility APIs. The list is correct the instant the palette opens — no stutter to break your rhythm.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><path d="M3 8a5 5 0 0 1 10 0M5 11a4 4 0 0 0 6 0"/></svg></div>
+          <div class="txt"><b>Event-driven, not polled</b><span>Wired into the macOS Accessibility API. No CPU spin, no lag — opens instantly.</span></div>
         </li>
       </ul>
     </div>
@@ -2187,24 +2251,24 @@ footer.site-foot{
       <div class="feature-pills">
         <div class="fp"><kbd>⌥ Space</kbd><span>Search</span></div>
         <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
-        <div class="fp primary"><kbd>⌘ .</kbd><span>Actions</span></div>
+        <div class="fp primary"><kbd>⌘ K</kbd><span>Actions</span></div>
       </div>
-      <h3>Per-project shortcuts, <span class="accent">checked into the repo.</span></h3>
+      <h3>Per-project shortcuts, <span class="accent">shipped with the repo.</span></h3>
       <p class="lead">
-        Every repo has rituals — open the PR, tail the logs, hit staging, kick a preview deploy. Drop a <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file and they collapse into one keypress. No bookmarks to hunt, no scripts to remember, no teammate asking "what's the staging URL again?"
+        Every repo has rituals — open the PR, tail the logs, hit staging, deploy a preview. Drop a <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file and they collapse into one keypress.
       </p>
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 5l3 3-3 3M9 11h4"/></svg></div>
-          <div class="txt"><b>Lives with the project</b><span>Not a global config, not a cloud sync. A plain file in the repo root — version it, review it, forget it. New teammates get the same bindings the moment they clone.</span></div>
+          <div class="txt"><b>Lives with the project</b><span>A plain file in the repo root. Teammates get the same bindings the moment they clone.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M4 4l4 4 4-4M4 10l4 4 4-4"/></svg></div>
-          <div class="txt"><b>Variables, too</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> once, reference it everywhere. Change it once when it moves — nothing else to update.</span></div>
+          <div class="txt"><b>Variables, too</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> once, reference it everywhere.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg></div>
-          <div class="txt"><b>The right editor, every time</b><span>Pin an IDE per-project. platform-ios always opens in Xcode — even if you usually live in Cursor. No more "wrong app" muscle-memory slip.</span></div>
+          <div class="txt"><b>The right editor, every time</b><span>Pin an IDE per-project. platform-ios always opens in Xcode — even when you live in Cursor.</span></div>
         </li>
       </ul>
     </div>
@@ -2286,7 +2350,7 @@ footer.site-foot{
 <section class="block" id="positioning">
   <div class="section-head reveal">
     <div class="eyebrow">Positioning</div>
-    <h2 class="section-h">Not a launcher. <span class="mute">Not a window switcher.</span></h2>
+    <h2 class="section-h">Why not just <span class="accent">use Raycast?</span></h2>
     <p class="section-sub">Three tools, three jobs. Odak knows what a <em style="color:var(--accent);font-style:normal">project</em> is — which makes the difference.</p>
   </div>
 
@@ -2332,7 +2396,7 @@ footer.site-foot{
 <section class="block" id="pricing">
   <div class="section-head reveal">
     <div class="eyebrow">Pricing</div>
-    <h2 class="section-h">One price. <span class="accent">Yours.</span></h2>
+    <h2 class="section-h">$15. Once. <span class="accent">Yours.</span></h2>
     <p class="section-sub">No seats, no subscription, no usage tiers. Buy it once, use it forever. Upgrades are free for two years.</p>
   </div>
 
@@ -2446,6 +2510,25 @@ footer.site-foot{
         : '<path d="M8 2v1m0 10v1m6-6h-1M3 8H2m10.2-4.2l-.7.7M4.5 11.5l-.7.7m8.4 0l-.7-.7M4.5 4.5l-.7-.7"/><circle cx="8" cy="8" r="3"/>';
     }
   }
+})();
+
+// ===== Live clock for menubars =====
+// Both the page-level menubar and the macbook's internal menubar carry a
+// [data-live-clock] span. Update them every 30s in macOS format ("Sat 26 Apr  14:07").
+(function(){
+  const els = document.querySelectorAll('[data-live-clock]');
+  if(!els.length) return;
+  const fmt = () => {
+    const d = new Date();
+    const wd = d.toLocaleDateString('en-GB', {weekday:'short'});
+    const mo = d.toLocaleDateString('en-GB', {month:'short'});
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    return `${wd} ${d.getDate()} ${mo}  ${hh}:${mm}`;
+  };
+  const tick = () => { const s = fmt(); els.forEach(el => el.textContent = s); };
+  tick();
+  setInterval(tick, 30_000);
 })();
 
 // ===== Parallax on hero stage =====
@@ -2730,6 +2813,22 @@ footer.site-foot{
     ghost.textContent = full.toLowerCase().startsWith(q.toLowerCase()) ? full.slice(q.length) : '';
     openHnt.textContent = '— Open';
   }
+  // Pop the matching chaos window out of the blur — visual confirmation
+  // that "search → open" lands on a real window.
+  const winEls = Array.from(wins.querySelectorAll('.mb-window'));
+  function focusWindow(key){
+    if(!key) return;
+    const target = winEls.find(w => w.dataset.project === key);
+    winEls.forEach(w => { if(w !== target) w.classList.remove('focused'); });
+    if(target) target.classList.add('focused');
+  }
+  function clearFocus(){
+    winEls.forEach(w => w.classList.remove('focused'));
+  }
+  function topVisibleKey(){
+    const visible = items.filter(li => li.getAttribute('data-filtered') === '0');
+    return visible[0] ? (visible[0].dataset.keys || '').split(' ')[0] : '';
+  }
 
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     // Static end-state for reduced-motion users
@@ -2740,6 +2839,7 @@ footer.site-foot{
     setGhost(QUERY);
     topIde.classList.remove('tinted');
     openHnt.textContent = '— Open in Cursor';
+    focusWindow(topVisibleKey());
     return;
   }
 
@@ -2760,6 +2860,7 @@ footer.site-foot{
       filterList('');
       items.forEach(li => li.classList.remove('on'));
       if(items[0]) items[0].classList.add('on');
+      clearFocus();
 
       // Beat 1 — let the chaos breathe.
       await wait(900);
@@ -2782,12 +2883,18 @@ footer.site-foot{
       await wait(800);
       topIde.classList.remove('tinted');
       openHnt.textContent = '— Open in Cursor';
-      await wait(2200);
 
-      // Beat 5 — fade palette out, brighten windows, hold the chaos
-      // briefly so the loop reads as a real cycle (not a re-mount).
+      // Beat 5 — short beat, then the matching chaos window wakes up.
+      // Read as: search → open → THIS one. Hold so the eye lands on it.
+      await wait(550);
+      focusWindow(topVisibleKey());
+      await wait(1700);
+
+      // Beat 6 — fade palette out, brighten windows, drop focus, hold the
+      // chaos briefly so the loop reads as a real cycle (not a re-mount).
       wrap.classList.remove('shown');
       wins.classList.remove('dimmed');
+      clearFocus();
       await wait(900);
     }
   }
