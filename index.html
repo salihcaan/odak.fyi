@@ -2149,9 +2149,11 @@ footer.site-foot{
               </div>
             </div>
 
-            <!-- Desktop chaos: 10 mock IDE/terminal/browser windows scattered
-                 behind the palette. They fade in first to dramatize the
-                 "before"; once the palette materializes they dim away. -->
+            <!-- Desktop chaos: 8 mock IDE windows scattered behind the
+                 palette. They fade in first to dramatize the "before";
+                 once the palette materializes they dim away. Odak only
+                 tracks editor windows, so no terminal/browser windows
+                 here — what shows up is what we can actually open. -->
             <div class="mb-windows" id="mb-windows">
               <div class="mb-window" data-project="web-app" style="--x:2%;--y:4%;--w:18%;--h:24%;--r:-3deg;--z:2;--d:80ms">
                 <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
@@ -2172,16 +2174,6 @@ footer.site-foot{
                 <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
                 <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">platform-ios</span></div>
                 <div class="body"><div class="ln" style="--lw:60%"></div><div class="ln" style="--lw:48%"></div><div class="ln b" style="--lw:72%"></div><div class="ln" style="--lw:55%"></div></div>
-              </div>
-              <div class="mb-window" data-project="terminal" style="--x:14%;--y:50%;--w:18%;--h:22%;--r:2deg;--z:1;--d:400ms">
-                <div class="app-badge"><svg viewBox="0 0 32 32"><use href="#ide-iterm"/></svg></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><svg viewBox="0 0 32 32"><use href="#ide-iterm"/></svg></span><span class="title">~ pnpm dev</span></div>
-                <div class="body"><div class="ln" style="--lw:42%"></div><div class="ln" style="--lw:65%"></div><div class="ln" style="--lw:30%"></div><div class="ln hl" style="--lw:55%"></div></div>
-              </div>
-              <div class="mb-window" data-project="browser" style="--x:67%;--y:48%;--w:18%;--h:22%;--r:-2deg;--z:1;--d:480ms">
-                <div class="app-badge"><svg viewBox="0 0 32 32"><use href="#ide-chrome"/></svg></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><svg viewBox="0 0 32 32"><use href="#ide-chrome"/></svg></span><span class="title">localhost:3000</span></div>
-                <div class="body"><div class="ln" style="--lw:80%"></div><div class="ln" style="--lw:55%"></div><div class="ln b" style="--lw:38%"></div></div>
               </div>
               <div class="mb-window" data-project="admin-panel" style="--x:4%;--y:65%;--w:22%;--h:31%;--r:-2deg;--z:4;--d:560ms">
                 <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
@@ -3120,6 +3112,26 @@ footer.site-foot{
   // the screen: scaled to ~72% of the screen height and translated so its
   // center lands on the screen center, regardless of its starting position.
   const winEls = Array.from(wins.querySelectorAll('.mb-window'));
+
+  // Capture each window's original slot (position/size/rotation/z/delay)
+  // so we can reshuffle assignments on every loop restart. The first
+  // chaos beat reads as a fresh desktop each cycle instead of the same
+  // memorized layout.
+  const SLOT_VARS = ['--x', '--y', '--w', '--h', '--r', '--z', '--d'];
+  const slots = winEls.map(w => SLOT_VARS.map(v => w.style.getPropertyValue(v)));
+  function shuffleSlots(){
+    // Fisher-Yates over a copy of the original slot list, then assign
+    // each window the i-th slot. Windows keep their data-project (so
+    // 'da' still focuses react-dashboard) but appear in new positions.
+    const order = slots.slice();
+    for(let i = order.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    winEls.forEach((w, i) => {
+      SLOT_VARS.forEach((v, k) => w.style.setProperty(v, order[i][k]));
+    });
+  }
   function focusWindow(key){
     if(!key) return;
     const target = winEls.find(w => w.dataset.project === key);
@@ -3182,6 +3194,12 @@ footer.site-foot{
       // Brief beat so the previous cycle's fade-out reads cleanly before
       // the new chaos staggers back in.
       await wait(400);
+
+      // Reshuffle which window lands in which slot before the next
+      // chaos reveal — each cycle reads as a fresh desktop, not a
+      // replay of the same layout. Done while .shown is off so users
+      // never see the windows jump positions.
+      shuffleSlots();
 
       // Chaos reveal — fades in via the .shown class on .mb-windows
       // (per-window stagger via --d on each window). Wait for the last
