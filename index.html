@@ -1277,9 +1277,9 @@ footer.site-foot{
   /* Per-window dimming + focus pop, in addition to the entrance pulse. */
   transition:
     opacity .5s var(--ease-smooth) var(--d, 0ms),
-    transform .55s var(--ease-snappy),
+    transform .72s var(--ease-snappy),
     filter .5s var(--ease-smooth),
-    box-shadow .35s var(--ease-out);
+    box-shadow .45s var(--ease-out);
 }
 .mb-windows.shown .mb-window{
   opacity:1;
@@ -1291,18 +1291,20 @@ footer.site-foot{
   filter:blur(1.8px) saturate(.7) brightness(.55);
   opacity:.7;
 }
-/* The "found" window — palette settles, this one wakes up. Straightens
-   its rotation, lifts above the chaos, gains an accent ring. */
+/* The "found" window — palette settles, this window grows into the screen.
+   --cx/--cy translate it to the screen's center; --focus-scale grows it to
+   ~70% of the screen height. JS computes both so any window — small or
+   large, top-left or bottom-right — lands centered at the same final size. */
 .mb-windows.dimmed .mb-window.focused,
 .mb-window.focused{
   filter:none;
   opacity:1;
   z-index:50;
-  transform:rotate(0deg) translateY(-3px) scale(1.08);
+  transform:translate(var(--cx, 0px), var(--cy, 0px)) rotate(0deg) scale(var(--focus-scale, 1.08));
   box-shadow:
-    0 18px 40px rgba(0,0,0,.55),
-    0 0 0 1.5px var(--accent),
-    0 0 22px var(--accent-glow);
+    0 32px 80px rgba(0,0,0,.7),
+    0 0 0 2px var(--accent),
+    0 0 48px var(--accent-glow);
 }
 .mb-window .titlebar{
   display:flex;align-items:center;gap:5px;
@@ -2920,16 +2922,34 @@ footer.site-foot{
     openHnt.textContent = '— Open';
   }
   // Pop the matching chaos window out of the blur — visual confirmation
-  // that "search → open" lands on a real window.
+  // that "search → open" lands on a real window. The window grows into
+  // the screen: scaled to ~72% of the screen height and translated so its
+  // center lands on the screen center, regardless of its starting position.
   const winEls = Array.from(wins.querySelectorAll('.mb-window'));
   function focusWindow(key){
     if(!key) return;
     const target = winEls.find(w => w.dataset.project === key);
-    winEls.forEach(w => { if(w !== target) w.classList.remove('focused'); });
-    if(target) target.classList.add('focused');
+    winEls.forEach(w => { if(w !== target){ w.classList.remove('focused'); w.style.removeProperty('--cx'); w.style.removeProperty('--cy'); w.style.removeProperty('--focus-scale'); } });
+    if(!target) return;
+    const winsRect = wins.getBoundingClientRect();
+    const tRect = target.getBoundingClientRect();
+    const dx = (winsRect.left + winsRect.width / 2) - (tRect.left + tRect.width / 2);
+    const dy = (winsRect.top + winsRect.height / 2) - (tRect.top + tRect.height / 2);
+    // Scale to fill ~72% of the screen height; cap so wider windows don't
+    // overshoot the screen sideways.
+    const scale = Math.min(3.6, (winsRect.height * 0.72) / Math.max(tRect.height, 1));
+    target.style.setProperty('--cx', `${dx.toFixed(1)}px`);
+    target.style.setProperty('--cy', `${dy.toFixed(1)}px`);
+    target.style.setProperty('--focus-scale', scale.toFixed(2));
+    target.classList.add('focused');
   }
   function clearFocus(){
-    winEls.forEach(w => w.classList.remove('focused'));
+    winEls.forEach(w => {
+      w.classList.remove('focused');
+      w.style.removeProperty('--cx');
+      w.style.removeProperty('--cy');
+      w.style.removeProperty('--focus-scale');
+    });
   }
   function topVisibleKey(){
     const visible = items.filter(li => li.getAttribute('data-filtered') === '0');
