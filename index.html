@@ -305,6 +305,20 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 }
 .hero-fine .dot{width:4px;height:4px;border-radius:50%;background:var(--faint)}
 
+/* Trust seals near the hero CTA — removes "is this DMG safe?" friction
+   at the moment the user is hovering the download button. */
+.hero-trust{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.hero-trust .trust-seal{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim);
+  padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
+}
+.hero-trust .trust-seal::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:color-mix(in oklch, var(--accent) 80%, transparent);
+}
+
 /* Feature pills — the three onboarding pillars, surfaced on the hero */
 .feature-pills{
   display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 28px;
@@ -892,15 +906,46 @@ h2.section-h .mute{color:var(--dim)}
 .price-card .buy:hover{transform:translateY(-1px)}
 .price-card .buy .k{font-family:var(--mono);font-size:11px;opacity:.75;margin-left:4px}
 .price-fine{font-family:var(--mono);font-size:10.5px;color:var(--mute);letter-spacing:.02em;margin-top:14px;position:relative;z-index:1}
+.price-fine a{color:var(--fg-2);border-bottom:1px solid var(--border-2);padding-bottom:1px;transition:color .15s, border-color .15s}
+.price-fine a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 
 .price-aside h3{font-family:var(--display);font-size:34px;font-weight:700;letter-spacing:-.03em;margin:0 0 16px;line-height:1.04}
 .price-aside h3 .accent{color:var(--accent)}
 .price-aside p{color:var(--fg-2);line-height:1.55;margin:0 0 16px;font-size:15.5px;letter-spacing:-.005em}
+.price-aside p.lead{font-size:17.5px;color:var(--fg);margin-bottom:20px}
 .price-aside .seals{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .price-aside .seal{
   font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--dim);
   padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
 }
+
+/* ==========================================================
+   FAQ
+   ========================================================== */
+.faq-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:28px 56px;
+  max-width:1000px;margin:0 auto;
+}
+.faq-item{
+  border-top:1px solid var(--border);
+  padding-top:20px;
+}
+.faq-item h3{
+  font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:-.015em;
+  margin:0 0 10px;color:var(--fg);line-height:1.3;
+}
+.faq-item p{
+  margin:0;color:var(--fg-2);font-size:14.5px;line-height:1.55;letter-spacing:-.005em;
+}
+.faq-item p a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in oklch, var(--accent) 50%, transparent)}
+.faq-item p a:hover{border-bottom-color:var(--accent)}
+.faq-item code{
+  font-family:var(--mono);font-size:.88em;
+  padding:1px 6px;border-radius:4px;
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--fg-2);
+}
+.faq-item h3 code{font-size:.92em;background:transparent;border:none;padding:0;color:var(--accent)}
 
 /* ==========================================================
    FOOTER
@@ -1343,10 +1388,15 @@ footer.site-foot{
   transition:opacity .35s var(--ease-out);
 }
 #mb-palette-wrap.shown{opacity:1}
-/* Compact palette inside the macbook screen */
+/* Compact palette inside the macbook screen.
+   Pull the panel radius back from the hero's 26px — the palette here is
+   smaller than the standalone hero, so 26px reads disproportionately puffy.
+   Matches the convention used by .mb-tab-wrap .tab-demo and
+   .mb-odak-wrap .odak-actions (~14–18px inside the MacBook frame). */
 .mb-palette-wrap .palette{
   margin:0;max-width:100%;
   padding-top:44px;
+  border-radius:18px;
 }
 .mb-palette-wrap .palette .search-bar{
   height:44px;padding:8px 14px;gap:10px;
@@ -1507,6 +1557,7 @@ footer.site-foot{
   .f-copy{position:static}
   .pos-diagram{grid-template-columns:1fr}
   .pricing{grid-template-columns:1fr}
+  .faq-grid{grid-template-columns:1fr;gap:24px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
   .odak-demo{grid-template-columns:1fr}
 }
@@ -1523,7 +1574,9 @@ footer.site-foot{
   .hero-stage .stage-inner{padding:0;box-sizing:border-box;min-height:380px}
   /* Let hero-bar wrap on mobile — keeps it from forcing column width */
   a.hero-bar{white-space:normal;flex-wrap:wrap}
-  .palette{width:100%;max-width:100%;margin:70px auto 0}
+  /* Hero palette goes full-bleed on mobile — pull the panel radius back so
+     26px on a ~280px box doesn't read as 10% of width (vs ~4.5% on desktop). */
+  .palette{width:100%;max-width:100%;margin:70px auto 0;border-radius:18px}
   .palette .search-bar{left:0;right:0}
   .palette li .title-row{font-size:13px}
   .palette li .path{font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1535,7 +1588,17 @@ footer.site-foot{
   .palette li .meta{flex-shrink:0;overflow:visible}
   .palette li{gap:6px;padding:10px 10px}
   #hero-list li:nth-child(n+4){display:none}
-  .chosen-window{width:100% !important;transform:translate(-50%, -50%) scale(0.82)}
+  /* Other surfaces are tuned at desktop widths but go single-column on
+     mobile, so their fixed radii read as ~2× too round proportionally.
+     Pull the corners back to keep roughly the same panel-to-corner ratio. */
+  .odak-file, .odak-actions{border-radius:16px}
+  .price-card{border-radius:18px}
+  .pos-card{border-radius:14px}
+  .pos-card.us::before{border-radius:14px}
+  /* Cap the chosen-window at ~0.82× on mobile so it doesn't bleed past the
+     hero, but keep the rise+grow delta so the entrance still animates
+     (desktop goes .86→1 + -44%→-50%). */
+  .chosen-window{width:100% !important;transform:translate(-50%, -44%) scale(0.78)}
   .chosen-window.shown{transform:translate(-50%, -50%) scale(0.82)}
 }
 
@@ -1691,6 +1754,7 @@ footer.site-foot{
       <a href="#features">Features</a>
       <a href="#positioning">Positioning</a>
       <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
       <a href="https://github.com/salihcaan/odak.fyi/releases" style="opacity:.7">Changelog</a>
     </div>
     <div class="nav-cta">
@@ -1734,14 +1798,17 @@ footer.site-foot{
           <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M6 3v6m-3-3l3 3 3-3"/></svg></span>
         </button>
       </div>
+      <div class="hero-trust">
+        <span class="trust-seal">Apple-notarized</span>
+        <span class="trust-seal">Sandboxed</span>
+        <span class="trust-seal">No telemetry</span>
+      </div>
       <div class="hero-fine">
         <span>14-day trial · no card</span>
         <span class="dot"></span>
         <span>macOS 26+ Tahoe</span>
         <span class="dot"></span>
         <span>Apple Silicon + Intel</span>
-        <span class="dot"></span>
-        <span>No telemetry</span>
       </div>
     </div>
 
@@ -2062,7 +2129,7 @@ footer.site-foot{
       </div>
       <h3>Find any repo. <span class="accent">In three letters.</span></h3>
       <p class="lead">
-        Hit ⌥ Space, type three letters, land in the right repo.
+        Every trip through Finder is a broken thought. Every dock-bounce is a thread lost. Hit ⌥ Space, type three letters, land in the right repo — your focus stays on the problem, not on hunting for the folder.
       </p>
       <ul class="bullets">
         <li>
@@ -2227,7 +2294,7 @@ footer.site-foot{
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6"/></svg></div>
-          <div class="txt"><b>One list, not six</b><span>Every editor, every terminal, every localhost tab — one place.</span></div>
+          <div class="txt"><b>One list, not six</b><span>Cursor, VS Code, Xcode, IntelliJ, GoLand, RubyMine, Zed, Sublime, terminals, and Chrome tabs tied to a localhost preview — all in one place.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 8l3-3 3 3-3 3z"/><path d="M9 4l3 3-3 3"/></svg></div>
@@ -2253,22 +2320,22 @@ footer.site-foot{
         <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
         <div class="fp primary"><kbd>⌘ K</kbd><span>Actions</span></div>
       </div>
-      <h3>Per-project shortcuts, <span class="accent">shipped with the repo.</span></h3>
+      <h3>One actions library, <span class="accent">every project.</span></h3>
       <p class="lead">
-        Every repo has rituals — open the PR, tail the logs, hit staging, deploy a preview. Drop a <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file and they collapse into one keypress.
+        Define your shortcuts once in <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">~/.odak/config.yaml</code>. Drop an <code style="font-family:var(--mono);font-size:.9em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;">.odak</code> file in any repo to pin its IDE and variables. Odak applies the right action to the right project — automatically.
       </p>
       <ul class="bullets">
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 5l3 3-3 3M9 11h4"/></svg></div>
-          <div class="txt"><b>Lives with the project</b><span>A plain file in the repo root. Teammates get the same bindings the moment they clone.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg></div>
+          <div class="txt"><b>Pin an editor per-repo</b><span>Drop <code style="font-family:var(--mono);font-size:.85em;">"ide": "Xcode"</code> in <code style="font-family:var(--mono);font-size:.85em;">.odak</code> and that repo always opens in Xcode — even when you live in Cursor.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M4 4l4 4 4-4M4 10l4 4 4-4"/></svg></div>
-          <div class="txt"><b>Variables, too</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> once, reference it everywhere.</span></div>
+          <div class="txt"><b>Variables that travel</b><span>Declare <code style="font-family:var(--mono);font-size:.85em;">STAGING_URL</code> in <code style="font-family:var(--mono);font-size:.85em;">.odak</code> once. Reference it from any global action — same shortcut, repo-specific result.</span></div>
         </li>
         <li>
-          <div class="ico"><svg viewBox="0 0 16 16"><path d="M8 2v6l4 2"/><circle cx="8" cy="8" r="6"/></svg></div>
-          <div class="txt"><b>The right editor, every time</b><span>Pin an IDE per-project. platform-ios always opens in Xcode — even when you live in Cursor.</span></div>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 5l3 3-3 3M9 11h4"/></svg></div>
+          <div class="txt"><b>Conditional by file</b><span><code style="font-family:var(--mono);font-size:.85em;">fileExists: Package.swift</code> means "Open in Xcode" only shows for Swift repos. The palette stays relevant, not bloated.</span></div>
         </li>
       </ul>
     </div>
@@ -2279,43 +2346,34 @@ footer.site-foot{
           <div class="head">
             <span style="color:var(--mute)">📄</span>
             <span class="file-name">.odak</span>
-            <span style="color:var(--mute);margin-left:auto">TOML</span>
+            <span style="color:var(--mute);margin-left:auto">JSON · in repo</span>
           </div>
-<pre><span class="c"># web-app</span>
-<span class="k">ide</span> = <span class="s">"cursor"</span>
-
-<span class="c">[env]</span>
-<span class="k">STAGING</span> = <span class="s">"staging.acme.dev"</span>
-<span class="k">LOGS_URL</span> = <span class="s">"kibana/?q=landing"</span>
-
-<span class="c">[actions.deploy]</span>
-<span class="k">key</span>  = <span class="s">"⌘D"</span>
-<span class="k">run</span>  = <span class="s">"pnpm deploy:preview"</span>
-
-<span class="c">[actions.pr]</span>
-<span class="k">key</span>  = <span class="s">"⌘P"</span>
-<span class="k">open</span> = <span class="s">"github:pr"</span>
-
-<span class="c">[actions.logs]</span>
-<span class="k">key</span>  = <span class="s">"⌘L"</span>
-<span class="k">open</span> = <span class="b">$LOGS_URL</span></pre>
+<pre><span class="c">// web-app/.odak</span>
+{
+  <span class="k">"ide"</span>: <span class="s">"Cursor"</span>,
+  <span class="k">"variables"</span>: {
+    <span class="k">"STAGING_URL"</span>: <span class="s">"staging.acme.dev"</span>,
+    <span class="k">"LOGS_QUERY"</span>: <span class="s">"kibana?q=landing"</span>
+  }
+}</pre>
         </div>
 
         <div class="odak-actions">
           <div class="head">
             <span class="dot-accent" style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)"></span>
             <span>Actions · web-app</span>
+            <span style="color:var(--mute);margin-left:auto;font-family:var(--mono);font-size:10px">~/.odak/config.yaml</span>
           </div>
           <ul>
             <li>
               <div class="icon">↗</div>
-              <span class="name">Open PR on GitHub</span>
-              <span class="key">⌘P</span>
+              <span class="name">Open on GitHub</span>
+              <span class="key">⌘G</span>
             </li>
             <li>
-              <div class="icon">▶</div>
-              <span class="name">Deploy preview</span>
-              <span class="key">⌘D</span>
+              <div class="icon">◉</div>
+              <span class="name">Open <span style="color:var(--accent)">{STAGING_URL}</span></span>
+              <span class="key">⌘S</span>
             </li>
             <li>
               <div class="icon">≡</div>
@@ -2325,17 +2383,17 @@ footer.site-foot{
             <li>
               <div class="icon">&gt;_</div>
               <span class="name">Terminal in repo root</span>
-              <span class="key">⌘T</span>
+              <span class="key">⌘⏎</span>
             </li>
             <li>
               <div class="icon">⎘</div>
               <span class="name">Copy SSH URL</span>
-              <span class="key">⌘C</span>
+              <span class="key">⌘⇧S</span>
             </li>
             <li>
-              <div class="icon">◉</div>
-              <span class="name">Open staging</span>
-              <span class="key">⌘S</span>
+              <div class="icon">▶</div>
+              <span class="name">Open in Cursor</span>
+              <span class="key">⌘C</span>
             </li>
           </ul>
         </div>
@@ -2417,19 +2475,67 @@ footer.site-foot{
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span>14-day free trial. No credit card.</span></li>
       </ul>
       <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="buy">Start 14-day trial <span class="k">⌘ + D</span></a>
-      <p class="price-fine">One-time payment · instant activation · Sparkle auto-updates</p>
+      <p class="price-fine">One-time payment · instant activation · Sparkle auto-updates · <a href="/refund.html">30-day refund</a></p>
     </div>
 
     <div class="price-aside reveal">
-      <h3>Bought once. <span class="accent">Loved forever.</span></h3>
+      <h3>Pays for itself <span class="accent">in a week.</span></h3>
+      <p class="lead">Save fifteen seconds hunting for the right window, twenty times a day. Do the math.</p>
       <p>Developers pay for tools that earn their place on the keyboard. We don't think that relationship should renew every month.</p>
-      <p>If Odak saves you the fifteen seconds it takes to hunt down a project twenty times a day, it pays for itself in a week.</p>
       <div class="seals">
         <span class="seal">Apple-notarized</span>
         <span class="seal">Sandboxed</span>
         <span class="seal">Universal 2</span>
         <span class="seal">No telemetry</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FAQ
+     ========================================================== -->
+<section class="block" id="faq">
+  <div class="section-head reveal">
+    <div class="eyebrow">FAQ</div>
+    <h2 class="section-h">Quick <span class="accent">answers.</span></h2>
+    <p class="section-sub">Things people ask before they hit the trial button.</p>
+  </div>
+
+  <div class="faq-grid">
+    <div class="faq-item reveal">
+      <h3>Will this run on my Mac?</h3>
+      <p>macOS 26 Tahoe or later, on Apple Silicon and Intel. The Liquid Glass UI relies on macOS 26 APIs that don't backport to older systems.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>I already use Raycast — why this?</h3>
+      <p>Raycast knows apps and commands, not repos. Spotlight indexes everything, which means it indexes nothing well. Odak only knows projects — it sees which editors have them open and what each repo wants you to do next.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>Which editors does it support?</h3>
+      <p>Cursor, VS Code, IntelliJ IDEA, GoLand out of the box. Xcode and any other editor via a one-line bundle ID in Settings. Terminals and Chrome localhost tabs are tracked too.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>What goes in <code>.odak</code> vs <code>~/.odak/config.yaml</code>?</h3>
+      <p>The <code>.odak</code> file in your repo root is small — just the IDE to use and any per-project variables. Your custom actions live globally in <code>~/.odak/config.yaml</code> so you write them once and they apply everywhere. Conditional fields (e.g. <code>fileExists: Package.swift</code>) keep the palette relevant per repo.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>Where does Odak store data?</h3>
+      <p>Locally. Project list, history, and settings live in <code>~/.odak</code>. Nothing leaves your machine — no telemetry, no analytics, no cloud sync.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>What happens after the 14-day trial?</h3>
+      <p>The trial unlocks every feature. After 14 days, you choose: $15 once, or stop using it. No card up front, no cancellation flow.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <h3>Refunds?</h3>
+      <p>30 days, no questions. Email <a href="mailto:support@odak.fyi">support@odak.fyi</a>.</p>
     </div>
   </div>
 </section>
