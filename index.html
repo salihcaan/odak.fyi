@@ -218,11 +218,9 @@ button{font-family:inherit}
    ========================================================== */
 .hero{
   max-width:var(--maxw);margin:0 auto;
-  padding:72px var(--gutter) 48px;
+  padding:64px var(--gutter) 32px;
   position:relative;
-}
-.hero-grid{
-  display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;
+  text-align:center;
 }
 a.hero-bar{
   display:inline-flex;align-items:center;gap:10px;
@@ -261,25 +259,31 @@ a.hero-bar:focus-visible{
 .hero-bar .arrow svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
 
+/* Centered narrow column above the macbook — keeps the hero a tight
+   horizontal beat and lets the demo own the rest of the fold. */
+.hero-text{
+  max-width:760px;margin:0 auto;
+}
 h1.hero-h{
   font-family:var(--display);
-  font-size:clamp(48px, 7vw, 96px);
-  line-height:.96;
+  font-size:clamp(40px, 6vw, 80px);
+  line-height:1.0;
   letter-spacing:-.04em;
   font-weight:700;
-  margin:0 0 24px;
-  max-width:18ch;
+  margin:0 0 20px;
+  /* clamp the H1 to the centered column on narrow viewports so the
+     line wraps inside the gutter instead of bleeding off the right. */
+  max-width:100%;
 }
 h1.hero-h .accent{
   color:var(--accent);
   font-style:normal;
 }
-h1.hero-h .mute{color:var(--dim);font-weight:600}
 .hero-sub{
-  font-size:19px;line-height:1.45;color:var(--fg-2);
-  max-width:52ch;margin:0 0 36px;font-weight:400;letter-spacing:-.01em;
+  font-size:18px;line-height:1.45;color:var(--fg-2);
+  max-width:46ch;margin:0 auto 28px;font-weight:400;letter-spacing:-.01em;
 }
-.hero-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .hero-cta .btn-primary{padding:12px 18px;font-size:14px;border-radius:10px}
 .hero-cta .btn-primary .k{
   font-family:var(--mono);font-size:11px;opacity:.6;
@@ -303,27 +307,26 @@ h1.hero-h .mute{color:var(--dim);font-weight:600}
 .hero-cta .btn-link .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .hero-cta .btn-link:hover .arrow{transform:translateY(2px);color:var(--accent)}
 
+/* Inline fine-print row under the CTA: trial / trust seal / OS support.
+   Centered alongside the rest of the hero. */
 .hero-fine{
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
   font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.01em;
 }
-.hero-fine .dot{width:4px;height:4px;border-radius:50%;background:var(--faint)}
-
-/* Trust seals near the hero CTA — removes "is this DMG safe?" friction
-   at the moment the user is hovering the download button. */
-.hero-trust{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
-.hero-trust .trust-seal{
+.hero-fine .dot{width:3px;height:3px;border-radius:50%;background:var(--faint)}
+.trust-seal{
   display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;
   color:var(--dim);
-  padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
+  padding:3px 9px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
 }
-.hero-trust .trust-seal::before{
+.trust-seal::before{
   content:'';width:5px;height:5px;border-radius:50%;
   background:color-mix(in oklch, var(--accent) 80%, transparent);
 }
 
-/* Feature pills — the three onboarding pillars, surfaced on the hero */
+/* Feature pills (kept as a class — used by the carousel f-copy blocks).
+   Hero no longer surfaces these; the carousel does. */
 .feature-pills{
   display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 28px;
 }
@@ -1255,12 +1258,9 @@ footer.site-foot{
 /* ==========================================================
    MACBOOK STAGE — product in context, below hero
    ========================================================== */
-.mb-section{padding-top:72px}
-.mb-section .section-head{text-align:center;max-width:760px;margin:0 auto 56px}
-.mb-section .section-head .eyebrow{justify-content:center}
-.mb-section .section-head .eyebrow::before{display:none}
-.mb-section .section-head .section-h{margin:0 auto 14px;max-width:none}
-.mb-section .section-head .section-sub{margin:0 auto}
+/* Macbook section sits directly under the hero — no section-head, so
+   trim the top padding right down. Element+class beats section.block. */
+section.mb-section{padding-top:24px}
 
 .mb-stage{
   max-width:1080px;margin:0 auto;
@@ -1713,7 +1713,6 @@ footer.site-foot{
 }
 
 @media (max-width:960px){
-  .hero-grid{grid-template-columns:minmax(0, 1fr);gap:40px}
   .f-split,.f-split.rev{grid-template-columns:minmax(0, 1fr);gap:40px}
   .f-split.rev .f-copy,.f-split.rev .f-stage{order:initial}
   .f-copy{position:static}
@@ -1726,15 +1725,9 @@ footer.site-foot{
 
 @media (max-width:760px){
   .nav-links{display:none}
-  /* minmax(0, 1fr) prevents intrinsic content (e.g. nowrap hero-bar) from
-     pushing the column wider than the viewport. min-width:0 on the children
-     is the same fix at the flex/grid-item level. */
-  .hero-grid{grid-template-columns:minmax(0, 1fr);gap:32px;padding-top:40px}
-  .hero-text,.hero-stage{min-width:0}
+  .hero-text{min-width:0;padding-top:40px}
   .hero{padding:48px var(--gutter) 32px}
-  .hero-stage{width:100%;max-width:100%;overflow:hidden}
-  .hero-stage .stage-inner{padding:0;box-sizing:border-box;min-height:380px}
-  /* Let hero-bar wrap on mobile — keeps it from forcing column width */
+  /* Let hero-bar wrap on mobile so it doesn't force column width */
   a.hero-bar{white-space:normal;flex-wrap:wrap}
   /* Hero palette goes full-bleed on mobile — pull the panel radius back so
      26px on a ~280px box doesn't read as 10% of width (vs ~4.5% on desktop). */
@@ -1766,8 +1759,7 @@ footer.site-foot{
 
 /* MacBook section — scale down on tablets/phones */
 @media (max-width:760px){
-  .mb-section{padding-top:48px}
-  .mb-section .section-head{margin-bottom:36px}
+  section.mb-section{padding-top:16px}
   .mb-menubar{font-size:9px;padding:0 8px;height:18px}
   .mb-menubar .left{gap:9px}
   .mb-menubar .right{gap:8px}
@@ -1938,8 +1930,7 @@ footer.site-foot{
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-grid">
-    <div class="hero-text">
+  <div class="hero-text">
       <a class="hero-bar" href="https://github.com/salihcaan/odak.fyi/releases">
         <span class="tag">v0.1</span>
         <span>Built for macOS 26 Tahoe</span>
@@ -1948,16 +1939,10 @@ footer.site-foot{
         <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg></span>
       </a>
       <h1 class="hero-h">
-        Any repo.<br/>
-        <span class="accent">Two keys.</span>
+        Any repo. <span class="accent">Two keys.</span>
       </h1>
-      <div class="feature-pills">
-        <div class="fp primary"><kbd>⌥ Space</kbd><span>Search projects</span></div>
-        <div class="fp"><kbd>⌥ Tab</kbd><span>Switch windows</span></div>
-        <div class="fp"><kbd>⌘ K</kbd><span>Project actions</span></div>
-      </div>
       <p class="hero-sub">
-        A keyboard launcher for developers who juggle dozens of repos across Cursor, VS Code, IntelliJ, Xcode, and every terminal in between. Press a hotkey, type three letters, land in the right window.
+        A keyboard launcher for developers juggling dozens of repos across every editor open on your machine.
       </p>
       <div class="hero-cta">
         <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary">
@@ -1968,161 +1953,20 @@ footer.site-foot{
           <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M6 3v6m-3-3l3 3 3-3"/></svg></span>
         </button>
       </div>
-      <div class="hero-trust">
-        <span class="trust-seal">Apple-notarized</span>
-        <span class="trust-seal">Sandboxed</span>
-        <span class="trust-seal">No telemetry</span>
-      </div>
       <div class="hero-fine">
         <span>14-day trial · no card</span>
         <span class="dot"></span>
-        <span>macOS 26+ Tahoe</span>
+        <span class="trust-seal">Apple-notarized</span>
         <span class="dot"></span>
-        <span>Apple Silicon + Intel</span>
+        <span>macOS 26+ · Apple Silicon + Intel</span>
       </div>
     </div>
-
-    <div class="hero-stage" id="hero-stage">
-      <div class="stage-glow"></div>
-      <div class="stage-inner" id="stage-inner">
-        <!-- Palette mockup (animated, permanently visible) -->
-        <div class="palette palette-fx shown" id="hero-palette">
-          <div class="hotkey-pill" id="hero-hotkey">
-            <div class="kc" data-key="opt">⌥</div>
-            <div class="plus">+</div>
-            <div class="kc" data-key="space">Space</div>
-          </div>
-          <div class="search-bar">
-            <svg class="q" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
-            <div class="input">
-              <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
-            </div>
-            <div class="hint-pill" id="hero-hint"></div>
-            <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-          </div>
-          <ul id="hero-list">
-            <li data-keys="web-app" class="on">
-              <div class="lang ts">TS</div>
-              <div class="body">
-                <div class="title-row">web-app</div>
-                <div class="path">
-                  <span>~/code/web-app</span>
-                  <span class="sep">·</span>
-                  <span class="branch">feat/pricing</span>
-                  <span class="sep">·</span>
-                  <span class="dirty"><span class="dot"></span>7</span>
-                </div>
-              </div>
-              <div class="meta">
-                <div class="ide-stack" title="Open windows">
-                  <div class="ide" data-ide="cursor"   title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-                  <div class="ide" data-ide="vscode"   title="VS Code"><img src="assets/ide/vscode.png" alt="VS Code"></div>
-                  <div class="ide" data-ide="intellij" title="IntelliJ IDEA"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
-                </div>
-              </div>
-            </li>
-            <li data-keys="plexo-cli">
-              <div class="lang go">GO</div>
-              <div class="body">
-                <div class="title-row">plexo-cli</div>
-                <div class="path">
-                  <span>~/code/side/plexo-cli</span>
-                  <span class="sep">·</span>
-                  <span class="branch">main</span>
-                </div>
-              </div>
-              <div class="meta">
-                <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
-              </div>
-            </li>
-            <li data-keys="api-gateway">
-              <div class="lang go">GO</div>
-              <div class="body">
-                <div class="title-row">api-gateway</div>
-                <div class="path">
-                  <span>~/code/work/api-gateway</span>
-                  <span class="sep">·</span>
-                  <span class="branch">main</span>
-                </div>
-              </div>
-              <div class="meta">
-                <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
-              </div>
-            </li>
-            <li data-keys="react-dashboard">
-              <div class="lang ts">TS</div>
-              <div class="body">
-                <div class="title-row">react-dashboard</div>
-                <div class="path">
-                  <span>~/code/work/react-dashboard</span>
-                  <span class="sep">·</span>
-                  <span class="branch">feat/onboarding</span>
-                  <span class="sep">·</span>
-                  <span class="dirty"><span class="dot"></span>3</span>
-                </div>
-              </div>
-              <div class="meta">
-                <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div>
-              </div>
-            </li>
-            <li data-keys="notion-clone">
-              <div class="lang rb">RB</div>
-              <div class="body">
-                <div class="title-row">notion-clone</div>
-                <div class="path">
-                  <span>~/code/side/notion-clone</span>
-                  <span class="sep">·</span>
-                  <span class="branch">main</span>
-                </div>
-              </div>
-              <div class="meta"></div>
-            </li>
-          </ul>
-          <div class="footer">
-            <div class="row"><kbd>⌥K</kbd><kbd>⌥J</kbd> Navigate</div>
-            <div class="row"><kbd>⌘K</kbd> Actions</div>
-          </div>
-          <div class="enter-pill" id="hero-enter"><span>Press</span><kbd>↵</kbd><span>to open</span></div>
-        </div>
-
-        <!-- Editor window that "rises" when ↵ is pressed. Mirrors the
-             onboarding's SwitcherChosenWindow — title bar + Cursor mark +
-             faux code. Hidden until runLoop reveals it. -->
-        <div class="chosen-window" id="hero-chosen" aria-hidden="true">
-          <div class="frame">
-            <div class="titlebar">
-              <span class="tl-dot tl-r"></span>
-              <span class="tl-dot tl-y"></span>
-              <span class="tl-dot tl-g"></span>
-              <span>web-app — pricing.tsx</span>
-            </div>
-            <div class="body">
-              <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
-              <div class="line"><span style="width:96px"></span><span style="width:24px"></span><span class="hl" style="width:58px"></span></div>
-              <div class="line"><span style="width:140px"></span></div>
-              <div class="line"><span style="width:62px"></span><span style="width:36px"></span><span style="width:88px"></span></div>
-              <div class="line"><span class="hl" style="width:44px"></span><span style="width:112px"></span></div>
-              <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
-            </div>
-          </div>
-          <span class="app-mark"><img src="assets/ide/cursor.png" alt=""></span>
-        </div>
-
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- ==========================================================
      MACBOOK STAGE — palette in real desktop context
      ========================================================== -->
 <section class="block mb-section">
-  <div class="section-head reveal">
-    <div class="eyebrow">On your desktop</div>
-    <h2 class="section-h">Lives on your desktop. <span class="mute">Two keys away.</span></h2>
-    <p class="section-sub">No window to find. No app to alt-tab to. The palette appears wherever you are.</p>
-  </div>
-
   <div class="mb-stage reveal">
     <div class="glow"></div>
     <div class="macbook">
@@ -2304,7 +2148,7 @@ footer.site-foot{
      Tabs auto-advance; pause on hover/focus.
      ========================================================== -->
 <section class="block" id="features">
-  <div class="f-carousel" data-advance-ms="7000">
+  <div class="f-carousel" data-advance-ms="10000">
     <div class="f-tabs" role="tablist" aria-label="Features">
       <button class="f-tab active" type="button" role="tab" aria-selected="true" aria-controls="f-panel-search" id="f-tab-search" data-idx="0">
         <span class="lbl-full">Find any repo</span>
@@ -2322,6 +2166,12 @@ footer.site-foot{
         <span class="lbl-full">Per-project actions</span>
         <span class="lbl-short">Actions</span>
         <span class="kbd-hint">⌘ K</span>
+        <span class="bar"></span>
+      </button>
+      <button class="f-tab" type="button" role="tab" aria-selected="false" aria-controls="f-panel-editor" id="f-tab-editor" data-idx="3" tabindex="-1">
+        <span class="lbl-full">Pick the editor</span>
+        <span class="lbl-short">Editor</span>
+        <span class="kbd-hint">⇥</span>
         <span class="bar"></span>
       </button>
     </div>
@@ -2606,6 +2456,169 @@ footer.site-foot{
     </div>
   </div>
       </div><!-- /.f-panel#f-panel-actions -->
+
+      <!-- ===== PANEL 4 — ⇥: pick the editor (parked from hero) =====
+           Moved over from the original hero stage. The bare-palette
+           layout still has its hotkey-pill on top and enter-pill below;
+           we'll redesign this beat in a follow-up pass. -->
+      <div class="f-panel" id="f-panel-editor" role="tabpanel" aria-labelledby="f-tab-editor" data-idx="3" aria-hidden="true">
+        <div class="f-split">
+          <div class="f-copy reveal">
+      <div class="feature-pills">
+        <div class="fp"><kbd>⌥ Space</kbd><span>Search</span></div>
+        <div class="fp"><kbd>⌥ Tab</kbd><span>Switch</span></div>
+        <div class="fp primary"><kbd>⇥</kbd><span>Editor</span></div>
+      </div>
+      <h3>Pick the editor <span class="accent">without leaving the palette.</span></h3>
+      <p class="lead">
+        Same repo, three editors open — Cursor for code, VS Code for review, IntelliJ for refactors. Type to land on the project, then ⇥ to flip through the editors that already have it open. ↵ focuses the one you picked.
+      </p>
+      <ul class="bullets">
+        <li>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 5l3 3-3 3M9 11h4"/></svg></div>
+          <div class="txt"><b>Tab cycles open editors</b><span>The IDE icon in the search bar shows where ↵ will land. ⇥ flips through the others without re-typing.</span></div>
+        </li>
+        <li>
+          <div class="ico"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2"/></svg></div>
+          <div class="txt"><b>Already-open glow</b><span>Editors holding this repo light up. The ones that aren't running take a launch — same shortcut, different cost, you decide.</span></div>
+        </li>
+        <li>
+          <div class="ico"><svg viewBox="0 0 16 16"><path d="M2 12l4-4 3 3 5-6"/><path d="M9 5h4v4"/></svg></div>
+          <div class="txt"><b>Default per repo</b><span>Drop <code style="font-family:var(--mono);font-size:.85em">"ide": "Xcode"</code> in <code style="font-family:var(--mono);font-size:.85em">.odak</code> and that repo always lands in Xcode — even when you live in Cursor.</span></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="f-stage reveal">
+      <!-- Bare-palette demo (was the hero animation). The hero IIFE
+           selects #hero-stage / #hero-* IDs, so the markup stays
+           verbatim — only the surrounding wrapper changed. -->
+      <div class="hero-stage" id="hero-stage">
+        <div class="stage-glow"></div>
+        <div class="stage-inner" id="stage-inner">
+          <div class="palette palette-fx shown" id="hero-palette">
+            <div class="hotkey-pill" id="hero-hotkey">
+              <div class="kc" data-key="opt">⌥</div>
+              <div class="plus">+</div>
+              <div class="kc" data-key="space">Space</div>
+            </div>
+            <div class="search-bar">
+              <svg class="q" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+              <div class="input">
+                <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
+              </div>
+              <div class="hint-pill" id="hero-hint"></div>
+              <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+            </div>
+            <ul id="hero-list">
+              <li data-keys="web-app" class="on">
+                <div class="lang ts">TS</div>
+                <div class="body">
+                  <div class="title-row">web-app</div>
+                  <div class="path">
+                    <span>~/code/web-app</span>
+                    <span class="sep">·</span>
+                    <span class="branch">feat/pricing</span>
+                    <span class="sep">·</span>
+                    <span class="dirty"><span class="dot"></span>7</span>
+                  </div>
+                </div>
+                <div class="meta">
+                  <div class="ide-stack" title="Open windows">
+                    <div class="ide" data-ide="cursor"   title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+                    <div class="ide" data-ide="vscode"   title="VS Code"><img src="assets/ide/vscode.png" alt="VS Code"></div>
+                    <div class="ide" data-ide="intellij" title="IntelliJ IDEA"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
+                  </div>
+                </div>
+              </li>
+              <li data-keys="plexo-cli">
+                <div class="lang go">GO</div>
+                <div class="body">
+                  <div class="title-row">plexo-cli</div>
+                  <div class="path">
+                    <span>~/code/side/plexo-cli</span>
+                    <span class="sep">·</span>
+                    <span class="branch">main</span>
+                  </div>
+                </div>
+                <div class="meta">
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
+                </div>
+              </li>
+              <li data-keys="api-gateway">
+                <div class="lang go">GO</div>
+                <div class="body">
+                  <div class="title-row">api-gateway</div>
+                  <div class="path">
+                    <span>~/code/work/api-gateway</span>
+                    <span class="sep">·</span>
+                    <span class="branch">main</span>
+                  </div>
+                </div>
+                <div class="meta">
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
+                </div>
+              </li>
+              <li data-keys="react-dashboard">
+                <div class="lang ts">TS</div>
+                <div class="body">
+                  <div class="title-row">react-dashboard</div>
+                  <div class="path">
+                    <span>~/code/work/react-dashboard</span>
+                    <span class="sep">·</span>
+                    <span class="branch">feat/onboarding</span>
+                    <span class="sep">·</span>
+                    <span class="dirty"><span class="dot"></span>3</span>
+                  </div>
+                </div>
+                <div class="meta">
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div>
+                </div>
+              </li>
+              <li data-keys="notion-clone">
+                <div class="lang rb">RB</div>
+                <div class="body">
+                  <div class="title-row">notion-clone</div>
+                  <div class="path">
+                    <span>~/code/side/notion-clone</span>
+                    <span class="sep">·</span>
+                    <span class="branch">main</span>
+                  </div>
+                </div>
+                <div class="meta"></div>
+              </li>
+            </ul>
+            <div class="footer">
+              <div class="row"><kbd>⌥K</kbd><kbd>⌥J</kbd> Navigate</div>
+              <div class="row"><kbd>⌘K</kbd> Actions</div>
+            </div>
+            <div class="enter-pill" id="hero-enter"><span>Press</span><kbd>↵</kbd><span>to open</span></div>
+          </div>
+
+          <div class="chosen-window" id="hero-chosen" aria-hidden="true">
+            <div class="frame">
+              <div class="titlebar">
+                <span class="tl-dot tl-r"></span>
+                <span class="tl-dot tl-y"></span>
+                <span class="tl-dot tl-g"></span>
+                <span>web-app — pricing.tsx</span>
+              </div>
+              <div class="body">
+                <div class="line"><span style="width:44px"></span><span class="hl" style="width:78px"></span><span style="width:32px"></span></div>
+                <div class="line"><span style="width:96px"></span><span style="width:24px"></span><span class="hl" style="width:58px"></span></div>
+                <div class="line"><span style="width:140px"></span></div>
+                <div class="line"><span style="width:62px"></span><span style="width:36px"></span><span style="width:88px"></span></div>
+                <div class="line"><span class="hl" style="width:44px"></span><span style="width:112px"></span></div>
+                <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
+              </div>
+            </div>
+            <span class="app-mark"><img src="assets/ide/cursor.png" alt=""></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      </div><!-- /.f-panel#f-panel-editor -->
     </div><!-- /.f-panels -->
   </div><!-- /.f-carousel -->
 </section>
