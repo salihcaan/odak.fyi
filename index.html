@@ -1281,6 +1281,16 @@ section.mb-section{padding-top:24px}
   position:relative;width:100%;
   contain:layout style;
 }
+/* Black underlay at the screen rect — the .frame PNG has the screen
+   area cut transparent, and .screen sits on top with rounded corners.
+   Without this, the four corners outside the rounded shape leak the
+   page background through the cutout (visible as cream in light mode). */
+.macbook::before{
+  content:'';position:absolute;
+  top:10.669%;left:9.437%;right:9.437%;bottom:10.669%;
+  background:#000;
+  pointer-events:none;
+}
 /* MacBook Pro 16" Silver — Apple official mockup (M5 silver).
    Image aspect 4260x2840 = 1.500. Screen rectangle within the PNG
    (the transparent inner area, including the wings around the notch):
@@ -1330,8 +1340,9 @@ section.mb-section{padding-top:24px}
   pointer-events:none;
 }
 
-/* Desktop chrome inside the screen */
-.mb-desk{position:absolute;inset:0}
+/* Desktop chrome inside the screen. container-type lets descendants
+   (caption, etc.) size against the screen rect rather than the viewport. */
+.mb-desk{position:absolute;inset:0;container-type:inline-size}
 
 /* macOS Tahoe-style menu bar — translucent, system font, with the
    classic left cluster (Apple, app name, menus) and right cluster
@@ -1689,31 +1700,38 @@ section.mb-section{padding-top:24px}
    bottom-center of the macbook screen, fades in/out.
    ========================================================== */
 .mb-caption{
-  position:absolute;left:50%;bottom:5%;
-  transform:translate(-50%, 8px);
-  z-index:6;
-  padding:6px 13px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.005em;
+  position:absolute;left:50%;bottom:7%;
+  transform:translate(-50%, 12px) scale(.96);
+  z-index:60;
+  padding:10px 20px;
+  font-family:var(--mono);font-size:clamp(13px, 2.05cqi, 19px);
+  font-weight:500;letter-spacing:.005em;
   color:var(--fg);
-  background:rgba(0,0,0,.55);
-  border:1px solid color-mix(in oklch, var(--fg) 12%, transparent);
+  background:rgba(0,0,0,.78);
+  border:1px solid color-mix(in oklch, var(--fg) 18%, transparent);
   border-radius:999px;
-  backdrop-filter:blur(18px) saturate(160%);
-  -webkit-backdrop-filter:blur(18px) saturate(160%);
-  box-shadow:0 6px 20px -8px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  box-shadow:
+    0 12px 36px -10px rgba(0,0,0,.7),
+    0 0 0 1px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.08);
   white-space:nowrap;
   opacity:0;pointer-events:none;
-  transition:opacity .35s var(--ease-out), transform .35s var(--ease-out);
+  transition:opacity .35s var(--ease-out), transform .4s var(--ease-snappy);
 }
-.mb-caption.shown{opacity:1;transform:translate(-50%, 0)}
+.mb-caption.shown{opacity:1;transform:translate(-50%, 0) scale(1)}
+.mb-caption.shown.swapping{opacity:0;transform:translate(-50%, -4px) scale(.97);transition:opacity .14s var(--ease-out), transform .14s var(--ease-out)}
 .mb-caption kbd{
-  font-family:var(--mono);font-size:10px;color:var(--fg);
-  padding:1px 5px;background:color-mix(in oklch, var(--fg) 10%, transparent);
-  border:1px solid color-mix(in oklch, var(--fg) 14%, transparent);
-  border-radius:4px;margin:0 2px;
+  font-family:var(--mono);font-size:.85em;color:var(--fg);
+  padding:2px 7px;background:color-mix(in oklch, var(--fg) 14%, transparent);
+  border:1px solid color-mix(in oklch, var(--fg) 20%, transparent);
+  border-radius:5px;margin:0 3px;
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.2);
 }
 [data-theme="light"] .mb-caption{
-  background:rgba(255,255,255,.85);color:var(--fg);border-color:var(--border-2);
+  background:rgba(255,255,255,.92);color:var(--fg);border-color:var(--border-2);
+  box-shadow:0 12px 36px -10px rgba(26,20,16,.35), inset 0 1px 0 rgba(255,255,255,.6);
 }
 
 /* ==========================================================
@@ -3439,9 +3457,24 @@ section.mb-section{padding-top:24px}
   }
 
   // Caption track: short labels that swap per beat. Empty hides.
+  // When the caption is already shown and we're swapping copy, briefly
+  // dip the old text out before swapping so each beat reads as a
+  // distinct change instead of an instant replace the eye misses.
+  let capSwapTok = 0;
   function setCaption(html){
     if(!cap) return;
     if(!html){ cap.classList.remove('shown'); return; }
+    const tok = ++capSwapTok;
+    if(cap.classList.contains('shown') && cap.innerHTML !== html){
+      cap.classList.add('swapping');
+      setTimeout(() => {
+        if(tok !== capSwapTok) return;
+        cap.innerHTML = html;
+        cap.classList.remove('swapping');
+        cap.classList.add('shown');
+      }, 140);
+      return;
+    }
     cap.innerHTML = html;
     cap.classList.add('shown');
   }
