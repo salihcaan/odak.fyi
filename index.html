@@ -1387,9 +1387,16 @@ footer.site-foot{
    visible (their own typewriter loops handle the rest). */
 #mb-palette-wrap{
   opacity:0;
-  transition:opacity .35s var(--ease-out);
+  transition:opacity .45s var(--ease-out), filter .45s var(--ease-out);
 }
 #mb-palette-wrap.shown{opacity:1}
+/* When the chosen window grows into focus, the palette recedes — opens
+   the stage for the focused window, mirrors the real macOS handoff
+   (palette dismisses on ↵, app window takes over). */
+#mb-palette-wrap.shown.receded{
+  opacity:.18;
+  filter:blur(4px) saturate(.7);
+}
 /* Compact palette inside the macbook screen.
    Pull the panel radius back from the hero's 26px — the palette here is
    smaller than the standalone hero, so 26px reads disproportionately puffy.
@@ -3011,14 +3018,16 @@ footer.site-foot{
       openHnt.textContent = '— Open in Cursor';
 
       // Beat 5 — short beat, then the matching chaos window wakes up.
-      // Read as: search → open → THIS one. Hold so the eye lands on it.
+      // Read as: search → open → THIS one. Palette recedes to the
+      // background as the window grows into the foreground.
       await wait(550);
       focusWindow(topVisibleKey());
+      wrap.classList.add('receded');
       await wait(1700);
 
       // Beat 6 — fade palette out, brighten windows, drop focus, hold the
       // chaos briefly so the loop reads as a real cycle (not a re-mount).
-      wrap.classList.remove('shown');
+      wrap.classList.remove('shown', 'receded');
       wins.classList.remove('dimmed');
       clearFocus();
       await wait(900);
