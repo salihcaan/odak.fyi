@@ -1361,7 +1361,15 @@ section.mb-section{padding-top:24px}
    (.mb-menubar). */
 .menubar{
   height:var(--menubar-h, 24px);
-  display:flex;align-items:center;
+  /* Three-column grid carves out the notch zone in the middle so .left
+     and .right can never slip behind the notch. The notch is 8.685% of
+     the macbook frame and the screen rect is 81.126%, so the notch
+     occupies 8.685/81.126 ≈ 10.71% of the menubar's width — that's the
+     fixed center column. The two 1fr columns share the remaining 89.29%
+     (~44.65% each), which is plenty for the left + right clusters. */
+  display:grid;
+  grid-template-columns:1fr 10.71% 1fr;
+  align-items:center;
   padding:0 10px;
   background:rgba(0,0,0,.55);
   backdrop-filter:blur(22px) saturate(180%);
@@ -1370,8 +1378,20 @@ section.mb-section{padding-top:24px}
   font-size:11.5px;color:#fff;letter-spacing:-.005em;
   box-shadow:0 1px 0 rgba(255,255,255,.04);
 }
-.menubar .left{display:flex;align-items:center;gap:14px;flex-shrink:0;min-width:0;overflow:hidden}
-.menubar .right{display:flex;align-items:center;gap:11px;margin-left:auto;flex-shrink:0}
+.menubar .left{
+  grid-column:1;
+  display:flex;align-items:center;gap:14px;
+  min-width:0;overflow:hidden;
+}
+.menubar .right{
+  grid-column:3;
+  display:flex;align-items:center;gap:11px;
+  /* justify-content:flex-end keeps the clock pinned to the right edge;
+     if the cluster ever overflows its cell it clips the leftmost
+     (battery) icon first, which is the most expendable. */
+  justify-content:flex-end;
+  min-width:0;overflow:hidden;
+}
 .menubar .apple{
   display:inline-flex;align-items:center;justify-content:center;
   width:14px;height:14px;color:#fff;
@@ -1398,6 +1418,20 @@ section.mb-section{padding-top:24px}
   position:absolute;top:0;left:0;right:0;
   z-index:5;
   background:rgba(0,0,0,.32);
+}
+
+/* Progressively shed trailing left-cluster items as the screen rect
+   narrows, so words like Window/Help don't clip mid-character once the
+   .left grid cell (44.65% of the bar) gets too tight for them. Triggers
+   off .mb-desk's container size, not the viewport, so this Just Works
+   when the macbook is squeezed by its parent grid. The mobile @media
+   below also drops items past Edit at viewport ≤760px (font is 9px
+   there) — these CQ rules cover the desktop-font range above that. */
+@container (max-width: 700px) {
+  .mb-menubar .left .item:nth-of-type(n+5){display:none}  /* Help */
+}
+@container (max-width: 600px) {
+  .mb-menubar .left .item:nth-of-type(n+4){display:none}  /* + Window */
 }
 
 /* ==========================================================
@@ -1638,7 +1672,11 @@ section.mb-section{padding-top:24px}
   z-index:8;opacity:0;pointer-events:none;
   background:rgba(20,15,12,.94);
   border:1px solid rgba(255,255,255,.12);
-  border-radius:12px;
+  /* Internals below sized in cqi against .mb-palette-wrap (1cqi ≈ 5.43px
+     at the 543px desktop reference) so the action rows, icons, key caps,
+     and filter row track the palette as it shrinks instead of staying
+     chunky on a small macbook. */
+  border-radius:2.21cqi;
   box-shadow:
     0 0 0 1px rgba(255,255,255,.03),
     0 28px 60px -12px rgba(0,0,0,.7),
@@ -1659,13 +1697,13 @@ section.mb-section{padding-top:24px}
   border-color:var(--border-2);
 }
 .mb-actions{
-  list-style:none;padding:6px;margin:0;display:flex;flex-direction:column;gap:1px;
+  list-style:none;padding:1.10cqi;margin:0;display:flex;flex-direction:column;gap:1px;
 }
 .mb-actions li{
-  display:flex;align-items:center;gap:10px;
-  padding:7px 9px;border-radius:8px;
+  display:flex;align-items:center;gap:1.84cqi;
+  padding:1.29cqi 1.66cqi;border-radius:1.47cqi;
   cursor:pointer;position:relative;
-  height:30px;
+  height:5.52cqi;
 }
 .mb-actions li.on{
   background:linear-gradient(180deg,
@@ -1674,27 +1712,27 @@ section.mb-section{padding-top:24px}
   color:#fff;
 }
 .mb-actions .action-ico{
-  width:18px;height:18px;flex-shrink:0;
-  border-radius:5px;
+  width:3.31cqi;height:3.31cqi;flex-shrink:0;
+  border-radius:0.92cqi;
   display:grid;place-items:center;
   color:var(--fg);
-  font:600 10.5px var(--mono);
+  font:600 1.93cqi var(--mono);
   background:color-mix(in oklch, var(--fg) 6%, transparent);
 }
-.mb-actions .action-ico svg{display:block}
+.mb-actions .action-ico svg{display:block;width:72%;height:72%}
 .mb-actions .action-ico.ide-ico{background:transparent;padding:0;overflow:hidden}
 .mb-actions .action-ico.ide-ico img{width:100%;height:100%;display:block;object-fit:contain}
 .mb-actions li.on .action-ico:not(.ide-ico){background:rgba(255,255,255,.18);color:#fff}
 .mb-actions .action-name{
   flex:1;min-width:0;
-  font-size:12px;font-weight:500;color:var(--fg);
+  font-size:2.21cqi;font-weight:500;color:var(--fg);
   letter-spacing:-.005em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .mb-actions li.on .action-name{color:#fff;font-weight:600}
 .mb-actions kbd.action-key{
-  font-family:var(--mono);font-size:9.5px;font-weight:500;
-  padding:2px 5px;border-radius:4px;min-width:18px;text-align:center;
+  font-family:var(--mono);font-size:1.75cqi;font-weight:500;
+  padding:0.37cqi 0.92cqi;border-radius:0.74cqi;min-width:3.31cqi;text-align:center;
   background:color-mix(in oklch, var(--bg-2) 90%, transparent);
   border:1px solid var(--border);color:var(--fg);
   white-space:nowrap;
@@ -1705,13 +1743,13 @@ section.mb-section{padding-top:24px}
   color:#fff;
 }
 .mb-actions-filter{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 12px;
+  display:flex;align-items:center;gap:1.47cqi;
+  padding:1.47cqi 2.21cqi;
   border-top:1px solid var(--border);
-  font-family:var(--mono);font-size:11px;color:var(--mute);
+  font-family:var(--mono);font-size:2.03cqi;color:var(--mute);
 }
 .mb-actions-filter svg.q{
-  width:11px;height:11px;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0;
+  width:2.03cqi;height:2.03cqi;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0;
 }
 
 /* The search panel stays unchanged when actions open — the actions
