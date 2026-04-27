@@ -1280,6 +1280,12 @@ section.mb-section{padding-top:24px}
 .macbook{
   position:relative;width:100%;
   contain:layout style;
+  /* container-type lets the .frame drop-shadow below scale in cqi with
+     the macbook width — without it, the shadow stays at fixed px and
+     reads as too heavy under a phone-sized macbook. Doesn't affect
+     descendants inside .mb-desk: their cqi already resolves to the
+     closer container set on .mb-desk. */
+  container-type:inline-size;
 }
 /* Black underlay at the screen rect — the .frame PNG has the screen
    area cut transparent, and .screen sits on top with rounded corners.
@@ -1298,13 +1304,17 @@ section.mb-section{padding-top:24px}
 .macbook .frame{
   display:block;width:100%;height:auto;
   user-select:none;-webkit-user-drag:none;
-  filter:drop-shadow(0 60px 70px rgba(0,0,0,.45));
+  /* Shadow in cqi against .macbook (1cqi ≈ 10.8px at the 1080px stage
+     cap) so the floating-off-the-page drop-shadow scales with the
+     frame on mobile instead of staying chunky under a phone-sized
+     macbook. 60/70px desktop → 5.56cqi/6.48cqi. */
+  filter:drop-shadow(0 5.56cqi 6.48cqi rgba(0,0,0,.45));
   /* drop-shadow is expensive — promote to its own layer so it
      repaints once instead of on every hover/scroll above. */
   transform:translateZ(0);
 }
 [data-theme="light"] .macbook .frame{
-  filter:drop-shadow(0 60px 70px rgba(26,20,16,.28));
+  filter:drop-shadow(0 5.56cqi 6.48cqi rgba(26,20,16,.28));
 }
 /* Screen interior — the palette/menubar sit absolutely within these bounds.
    border-radius matches the rounded screen corners baked into the PNG. */
@@ -1353,14 +1363,19 @@ section.mb-section{padding-top:24px}
    stepping at the mobile breakpoint. --menubar-h is the bar height,
    reused by .mb-windows so the chaos area starts flush with the bar
    at every viewport (no dead-band when the bar shrinks on mobile). */
-.mb-desk{position:absolute;inset:0;container-type:inline-size;--menubar-h:24px}
+/* --menubar-h is sized in cqi (1cqi ≈ 8.76px at the desktop reference
+   where .mb-desk hits 876px) so the bar shrinks proportionally with the
+   macbook frame at every viewport — same look on mobile as desktop, no
+   breakpoint floor. .mb-windows reads this for its top inset, so the
+   chaos area always starts flush with the bar. */
+.mb-desk{position:absolute;inset:0;container-type:inline-size;--menubar-h:2.74cqi}
 
 /* macOS Tahoe-style menu bar — translucent, system font, with the
    classic left cluster (Apple, app name, menus) and right cluster
    (status icons + date/time). Lives inside the macbook screen
    (.mb-menubar). */
 .menubar{
-  height:var(--menubar-h, 24px);
+  height:var(--menubar-h, 2.74cqi);
   /* Three-column grid carves out the notch zone in the middle so .left
      and .right can never slip behind the notch. The notch is 8.685% of
      the macbook frame and the screen rect is 81.126%, so the notch
@@ -1370,22 +1385,26 @@ section.mb-section{padding-top:24px}
   display:grid;
   grid-template-columns:1fr 10.71% 1fr;
   align-items:center;
-  padding:0 10px;
+  /* Everything in the bar is sized in cqi (1cqi ≈ 8.76px at the desktop
+     reference where .mb-desk hits 876px) so padding, gaps, font, and
+     icons all shrink proportionally with the macbook frame on phone-
+     sized viewports. Same look at every width — no breakpoint overrides. */
+  padding:0 1.14cqi;
   background:rgba(0,0,0,.55);
   backdrop-filter:blur(22px) saturate(180%);
   -webkit-backdrop-filter:blur(22px) saturate(180%);
   font-family:-apple-system, system-ui, 'Inter', sans-serif;
-  font-size:11.5px;color:#fff;letter-spacing:-.005em;
+  font-size:1.31cqi;color:#fff;letter-spacing:-.005em;
   box-shadow:0 1px 0 rgba(255,255,255,.04);
 }
 .menubar .left{
   grid-column:1;
-  display:flex;align-items:center;gap:14px;
+  display:flex;align-items:center;gap:1.6cqi;
   min-width:0;overflow:hidden;
 }
 .menubar .right{
   grid-column:3;
-  display:flex;align-items:center;gap:11px;
+  display:flex;align-items:center;gap:1.26cqi;
   /* justify-content:flex-end keeps the clock pinned to the right edge;
      if the cluster ever overflows its cell it clips the leftmost
      (battery) icon first, which is the most expendable. */
@@ -1394,22 +1413,22 @@ section.mb-section{padding-top:24px}
 }
 .menubar .apple{
   display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;color:#fff;
+  width:1.6cqi;height:1.6cqi;color:#fff;
 }
-.menubar .apple svg{width:13px;height:14px;display:block}
+.menubar .apple svg{width:1.48cqi;height:1.6cqi;display:block}
 .menubar .app{font-weight:600;letter-spacing:-.01em}
 .menubar .item{font-weight:400;color:rgba(255,255,255,.92)}
 .menubar .ico{
   display:inline-flex;align-items:center;justify-content:center;
-  height:18px;color:#fff;opacity:.95;
+  height:2.05cqi;color:#fff;opacity:.95;
 }
-.menubar .ico svg{display:block;height:13px;width:auto}
-.menubar .ico.battery svg{height:10px}
-.menubar .ico.cc svg{height:14px}
+.menubar .ico svg{display:block;height:1.48cqi;width:auto}
+.menubar .ico.battery svg{height:1.14cqi}
+.menubar .ico.cc svg{height:1.6cqi}
 .menubar .clock{
   font-variant-numeric:tabular-nums;font-weight:400;
   letter-spacing:0;color:#fff;
-  margin-left:2px;
+  margin-left:0.23cqi;
 }
 
 /* Macbook-screen menubar: absolute inside the screen rect, slightly
@@ -1420,19 +1439,9 @@ section.mb-section{padding-top:24px}
   background:rgba(0,0,0,.32);
 }
 
-/* Progressively shed trailing left-cluster items as the screen rect
-   narrows, so words like Window/Help don't clip mid-character once the
-   .left grid cell (44.65% of the bar) gets too tight for them. Triggers
-   off .mb-desk's container size, not the viewport, so this Just Works
-   when the macbook is squeezed by its parent grid. The mobile @media
-   below also drops items past Edit at viewport ≤760px (font is 9px
-   there) — these CQ rules cover the desktop-font range above that. */
-@container (max-width: 700px) {
-  .mb-menubar .left .item:nth-of-type(n+5){display:none}  /* Help */
-}
-@container (max-width: 600px) {
-  .mb-menubar .left .item:nth-of-type(n+4){display:none}  /* + Window */
-}
+/* (No item-shedding container queries — font/padding/gaps are all in
+   cqi above, so the cluster shrinks proportionally with the bar and
+   the items always fit, even on a phone-sized macbook.) */
 
 /* ==========================================================
    DESKTOP CHAOS — 10 mock app windows scattered behind the palette,
@@ -1471,7 +1480,7 @@ section.mb-section{padding-top:24px}
   transform-origin:center;
   /* Initial entrance state — fade up from below with mild rotation */
   opacity:0;
-  transform:rotate(var(--r, 0deg)) translateY(10px) scale(.97);
+  transform:rotate(var(--r, 0deg)) translateY(1.14cqi) scale(.97);
   /* Per-window dimming + focus pop, in addition to the entrance pulse. */
   transition:
     opacity .5s var(--ease-smooth) var(--d, 0ms),
@@ -1499,10 +1508,13 @@ section.mb-section{padding-top:24px}
   opacity:1;
   z-index:50;
   transform:translate(var(--cx, 0px), var(--cy, 0px)) rotate(0deg) scale(var(--focus-scale, 1.08));
+  /* Shadow + accent halo in cqi so they scale with the macbook frame.
+     The 2px accent ring stays a touch thicker — 0.23cqi ≈ 2px desktop;
+     the visible thickness is multiplied by the focus-scale transform. */
   box-shadow:
-    0 32px 80px rgba(0,0,0,.7),
-    0 0 0 2px var(--accent),
-    0 0 48px var(--accent-glow);
+    0 3.65cqi 9.13cqi rgba(0,0,0,.7),
+    0 0 0 0.23cqi var(--accent),
+    0 0 5.48cqi var(--accent-glow);
 }
 .mb-window .titlebar{
   display:flex;align-items:center;gap:0.57cqi;
@@ -1620,7 +1632,13 @@ section.mb-section{padding-top:24px}
    .mb-odak-wrap .odak-actions (~14–18px inside the MacBook frame). */
 .mb-palette-wrap .palette{
   margin:0;max-width:100%;
-  padding-top:44px;
+  /* All internals sized in cqi against .mb-palette-wrap (1cqi ≈ 4.8px
+     at the 480px desktop palette cap) so search bar, rows, and footer
+     scale proportionally with the palette as it shrinks with the
+     macbook frame. Same look at every width — no breakpoint overrides.
+     Text-bearing rules use clamp() floors so typography stays legible
+     on phone-sized macbooks. */
+  padding-top:9.17cqi;
   /* Outer radius scales with the wrap and is capped at 14px so the
      panel doesn't read as puffy on mobile-sized macbooks. The row
      radius below tracks (outer − ul padding) so inner corners nest
@@ -1628,31 +1646,34 @@ section.mb-section{padding-top:24px}
   border-radius:clamp(7px, 3cqi, 14px);
 }
 .mb-palette-wrap .palette .search-bar{
-  height:44px;padding:8px 14px;gap:10px;
+  height:9.17cqi;padding:1.67cqi 2.92cqi;gap:2.08cqi;
 }
-.mb-palette-wrap .palette .search-bar svg.q{width:16px;height:16px}
-.mb-palette-wrap .palette .search-bar .input{font-size:16px;height:22px;line-height:22px}
-.mb-palette-wrap .palette .search-bar .input .caret{height:18px}
-.mb-palette-wrap .palette .search-bar .input .open-hint{font-size:13px}
-.mb-palette-wrap .palette .search-bar .top-ide{width:28px;height:28px;border-radius:6px}
-.mb-palette-wrap .palette ul{padding:5px;gap:1px}
+.mb-palette-wrap .palette .search-bar svg.q{width:3.33cqi;height:3.33cqi}
+.mb-palette-wrap .palette .search-bar .input{font-size:clamp(10px, 3.33cqi, 16px);height:4.58cqi;line-height:4.58cqi}
+.mb-palette-wrap .palette .search-bar .input .caret{height:3.75cqi}
+.mb-palette-wrap .palette .search-bar .input .open-hint{font-size:clamp(8.5px, 2.71cqi, 13px)}
+.mb-palette-wrap .palette .search-bar .top-ide{width:5.83cqi;height:5.83cqi;border-radius:1.25cqi}
+/* Bottom padding is generous so the last (or only) visible row never
+   reads as flush against the footer's border on desktop or the palette's
+   rounded edge on mobile (footer is hidden there). Top + sides stay at
+   1.04cqi to track the palette's curve as before. */
+.mb-palette-wrap .palette ul{padding:1.04cqi 1.04cqi clamp(5px, 2.74cqi, 13px);gap:0.21cqi}
 .mb-palette-wrap .palette li{
-  padding:8px 9px;gap:8px;max-height:56px;
-  /* Row radius = outer radius − ul padding (5px). Tracks the outer
-     formula (3cqi) above with the same 5px offset so the row's
-     rounded corners stay parallel to the palette's curve at every
-     width, instead of one shape looking puffy and the other square. */
-  border-radius:clamp(2px, calc(3cqi - 5px), 9px);
+  padding:1.67cqi 1.88cqi;gap:1.67cqi;max-height:11.67cqi;
+  /* Row radius = outer radius − ul padding (1.04cqi). Tracks the outer
+     3cqi formula above with the same offset so the row's rounded
+     corners stay parallel to the palette's curve at every width. */
+  border-radius:clamp(2px, calc(3cqi - 1.04cqi), 9px);
 }
-.mb-palette-wrap .palette li .lang{width:22px;height:22px;font-size:9px;border-radius:clamp(4px, 1.25cqi, 6px)}
-.mb-palette-wrap .palette li .title-row{font-size:11.5px;gap:6px}
-.mb-palette-wrap .palette li .path{font-size:9.5px;margin-top:2px}
+.mb-palette-wrap .palette li .lang{width:4.58cqi;height:4.58cqi;font-size:clamp(7px, 1.88cqi, 9px);border-radius:clamp(4px, 1.25cqi, 6px)}
+.mb-palette-wrap .palette li .title-row{font-size:clamp(8.5px, 2.40cqi, 11.5px);gap:1.25cqi}
+.mb-palette-wrap .palette li .path{font-size:clamp(7px, 1.98cqi, 9.5px);margin-top:0.42cqi}
 .mb-palette-wrap .palette li .ide-stack .ide{
-  width:20px;height:20px;padding:2px;border-radius:clamp(3px, 1cqi, 5px);
+  width:4.17cqi;height:4.17cqi;padding:0.42cqi;border-radius:clamp(3px, 1cqi, 5px);
 }
-.mb-palette-wrap .palette li .ide-stack{gap:3px}
-.mb-palette-wrap .palette .footer{padding:7px 12px;font-size:9.5px;gap:14px}
-.mb-palette-wrap .palette .footer kbd{font-size:8.5px;padding:1px 4px}
+.mb-palette-wrap .palette li .ide-stack{gap:0.63cqi}
+.mb-palette-wrap .palette .footer{padding:1.46cqi 2.5cqi;font-size:clamp(7px, 1.98cqi, 9.5px);gap:2.92cqi}
+.mb-palette-wrap .palette .footer kbd{font-size:clamp(6.5px, 1.77cqi, 8.5px);padding:0.21cqi 0.83cqi}
 
 /* ==========================================================
    ACTIONS PANEL — second floating layer that sits in the bottom-
@@ -1664,22 +1685,24 @@ section.mb-section{padding-top:24px}
    ========================================================== */
 .mb-actions-panel{
   position:absolute;
-  bottom:32px;
-  right:10px;
+  /* Bottom/right anchors in cqi so the popover stays the same gap from
+     the palette edge at every viewport — no mobile re-anchoring. */
+  bottom:6.67cqi;
+  right:2.08cqi;
   width:54%;
-  transform:translate(0, 8px) scale(.94);
+  transform:translate(0, 1.67cqi) scale(.94);
   transform-origin: bottom right;
   z-index:8;opacity:0;pointer-events:none;
   background:rgba(20,15,12,.94);
   border:1px solid rgba(255,255,255,.12);
-  /* Internals below sized in cqi against .mb-palette-wrap (1cqi ≈ 5.43px
-     at the 543px desktop reference) so the action rows, icons, key caps,
-     and filter row track the palette as it shrinks instead of staying
-     chunky on a small macbook. */
+  /* Internals below sized in cqi against .mb-palette-wrap (1cqi ≈ 4.8px
+     at the 480px desktop palette cap) so the action rows, icons, key
+     caps, filter row, and drop-shadow all track the palette as it
+     shrinks instead of staying chunky on a small macbook. */
   border-radius:2.21cqi;
   box-shadow:
     0 0 0 1px rgba(255,255,255,.03),
-    0 28px 60px -12px rgba(0,0,0,.7),
+    0 5.83cqi 12.5cqi -2.5cqi rgba(0,0,0,.7),
     inset 0 1px 0 rgba(255,255,255,.05);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
@@ -1764,7 +1787,11 @@ section.mb-section{padding-top:24px}
   position:absolute;left:50%;bottom:7%;
   transform:translate(-50%, 12px) scale(.96);
   z-index:60;
-  padding:10px 20px;
+  /* Padding sized in cqi against .mb-desk (1cqi ≈ 8.76px at desktop)
+     so the pill shrinks proportionally with the macbook frame. The
+     font-size already clamps for legibility — same recipe applies to
+     the inner kbd below. */
+  padding:1.14cqi 2.28cqi;
   font-family:var(--mono);font-size:clamp(13px, 2.05cqi, 19px);
   font-weight:500;letter-spacing:.005em;
   color:var(--fg);
@@ -1785,9 +1812,9 @@ section.mb-section{padding-top:24px}
 .mb-caption.shown.swapping{opacity:0;transform:translate(-50%, -4px) scale(.97);transition:opacity .14s var(--ease-out), transform .14s var(--ease-out)}
 .mb-caption kbd{
   font-family:var(--mono);font-size:.85em;color:var(--fg);
-  padding:2px 7px;background:color-mix(in oklch, var(--fg) 14%, transparent);
+  padding:0.23cqi 0.8cqi;background:color-mix(in oklch, var(--fg) 14%, transparent);
   border:1px solid color-mix(in oklch, var(--fg) 20%, transparent);
-  border-radius:5px;margin:0 3px;
+  border-radius:clamp(3px, 0.57cqi, 5px);margin:0 0.34cqi;
   box-shadow:inset 0 -1px 0 rgba(0,0,0,.2);
 }
 [data-theme="light"] .mb-caption{
@@ -1804,12 +1831,16 @@ section.mb-section{padding-top:24px}
   position:absolute;
   top:14%;left:50%;
   width:54%;
-  transform:translate(-50%, 12px) scale(.92);
+  /* Internals sized in cqi against .mb-desk (1cqi ≈ 8.76px at the
+     desktop reference where .mb-desk hits 876px) so the chrome,
+     traffic lights, and url bar shrink proportionally with the
+     macbook frame on phones — same look as desktop, just smaller. */
+  transform:translate(-50%, 1.37cqi) scale(.92);
   z-index:7;opacity:0;pointer-events:none;
   background:linear-gradient(180deg, #1c1714 0%, #14100d 100%);
   border:1px solid rgba(255,255,255,.13);
-  border-radius:9px;overflow:hidden;
-  box-shadow:0 24px 60px -12px rgba(0,0,0,.6),
+  border-radius:1.03cqi;overflow:hidden;
+  box-shadow:0 2.74cqi 6.85cqi -1.37cqi rgba(0,0,0,.6),
              0 0 0 1px rgba(255,255,255,.04),
              inset 0 1px 0 rgba(255,255,255,.05);
   transition:opacity .35s var(--ease-out), transform .45s var(--ease-snappy);
@@ -1817,22 +1848,22 @@ section.mb-section{padding-top:24px}
 }
 .mb-browser.shown{opacity:1;transform:translate(-50%, 0) scale(1);pointer-events:auto}
 .mb-browser .browser-bar{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 12px;
+  display:flex;align-items:center;gap:1.14cqi;
+  padding:0.91cqi 1.37cqi;
   background:rgba(0,0,0,.4);
   border-bottom:1px solid rgba(255,255,255,.06);
 }
-.mb-browser .traffic{display:inline-flex;gap:5px;flex-shrink:0}
-.mb-browser .traffic span{width:9px;height:9px;border-radius:50%}
+.mb-browser .traffic{display:inline-flex;gap:0.57cqi;flex-shrink:0}
+.mb-browser .traffic span{width:1.03cqi;height:1.03cqi;border-radius:50%}
 .mb-browser .traffic .r{background:#ff5f57}
 .mb-browser .traffic .y{background:#febc2e}
 .mb-browser .traffic .g{background:#28c840}
 .mb-browser .urlbar{
-  flex:1;display:flex;align-items:center;gap:7px;
-  padding:5px 11px;border-radius:6px;
+  flex:1;display:flex;align-items:center;gap:0.8cqi;
+  padding:0.57cqi 1.26cqi;border-radius:0.685cqi;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.06);
-  font-family:var(--mono);font-size:11px;color:var(--fg-2);
+  font-family:var(--mono);font-size:clamp(8px, 1.26cqi, 11px);color:var(--fg-2);
   letter-spacing:-.005em;
   overflow:hidden;
 }
@@ -1844,7 +1875,7 @@ section.mb-section{padding-top:24px}
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .mb-browser .browser-body{
-  height:120px;
+  height:13.7cqi;
   background:
     radial-gradient(ellipse 60% 40% at 30% 25%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 60%),
     linear-gradient(180deg, #181311 0%, #100c0a 100%);
@@ -2021,80 +2052,27 @@ section.mb-section{padding-top:24px}
   .chosen-window.shown{transform:translate(-50%, -50%) scale(0.82)}
 }
 
-/* MacBook section — scale down on tablets/phones */
+/* MacBook section on mobile — the entire screen interior (menubar,
+   palette, actions popover, caption, chaos windows) is now sized in
+   cqi against .mb-desk and .mb-palette-wrap, so it shrinks as one
+   proportional unit with the frame. The only mobile tweak left is
+   trimming the side bezels: they eat horizontal space on a phone
+   without adding info, so we clip 7% from each side and scale the
+   frame up to recover the trimmed width. Visible portion goes from
+   ~92% back to 100% of the container, proportionally enlarging the
+   screen interior so the desktop look fits the viewport. */
 @media (max-width:760px){
   section.mb-section{padding-top:16px}
-  /* Trim only the side bezels — they eat horizontal space on a phone
-     without adding info. Keep the base/hinge intact so the MacBook
-     still reads as a MacBook. Cutting the sides also lets us scale
-     the frame up to recover the trimmed width: visible portion goes
-     from 92% back to 100% of the container, which proportionally
-     enlarges the screen interior (and everything in it) on mobile. */
   .macbook{clip-path:inset(0 7% 0 7%);width:116.3%;margin-left:-8.15%}
-  /* Drop menubar height to 18px via the shared variable so .mb-windows
-     also re-anchors flush with the bar (no 6px dead-band like before). */
-  .mb-desk{--menubar-h:18px}
-  .mb-menubar{font-size:9px;padding:0 8px}
-  .mb-menubar .left{gap:9px}
-  .mb-menubar .right{gap:8px}
-  .mb-menubar .apple svg{width:10px;height:11px}
-  .mb-menubar .ico svg{height:10px}
-  .mb-menubar .ico.battery svg{height:8px}
-  .mb-menubar .ico.cc svg{height:11px}
-  /* Hide menu items past Edit on phones — no room. Keep app name + 1-2 menus. */
-  .mb-menubar .left .item:nth-of-type(n+3){display:none}
-  /* (chaos-window app-badge override removed — sized in cqi above so it
-     scales smoothly with the macbook frame on every viewport.) */
-  /* Palette must fit inside the on-screen rect of the MacBook PNG.
-     Available height on a phone is ~170px — drop the kbd footer and
-     the 4th project so search-bar + 3 items fit cleanly. */
-  .mb-palette-wrap{width:86%;top:22%;transform:translateX(-50%) scale(.95);transform-origin:top center}
-  .mb-palette-wrap .palette{padding-top:24px}
-  .mb-palette-wrap .palette .search-bar{height:32px;padding:5px 9px;gap:6px}
-  .mb-palette-wrap .palette .search-bar svg.q{width:13px;height:13px}
-  .mb-palette-wrap .palette .search-bar .input{font-size:12px;height:16px;line-height:16px}
-  .mb-palette-wrap .palette .search-bar .input .caret{height:12px}
-  .mb-palette-wrap .palette .search-bar .top-ide{width:20px;height:20px}
-  .mb-palette-wrap .palette ul{padding:3px;gap:1px}
-  /* Mobile uses 3px ul padding (vs 5px desktop), so the row radius must
-     track outer−3px to nest cleanly inside the palette curve. */
-  .mb-palette-wrap .palette li{padding:4px 6px;max-height:34px;border-radius:clamp(2px, calc(3cqi - 3px), 9px)}
-  .mb-palette-wrap .palette li .lang{width:16px;height:16px;font-size:7px;border-radius:4px}
-  .mb-palette-wrap .palette li .title-row{font-size:9.5px}
-  .mb-palette-wrap .palette li .path{font-size:7.5px}
-  .mb-palette-wrap .palette li .ide-stack .ide{width:13px;height:13px;padding:1px;border-radius:3px}
-  .mb-palette-wrap .palette li .ide-stack{gap:2px}
-  .mb-palette-wrap .palette ul li:nth-child(n+4){display:none}
-  /* Hero palette runs the actions beat — show up to 5 rows so the
-     ⌘K popover lands over a populated list, not a single row. */
-  #mb-palette-wrap.mb-palette-wrap .palette ul li:nth-child(n+4){display:flex}
-  #mb-palette-wrap.mb-palette-wrap .palette ul li:nth-child(n+6){display:none}
+  /* Trim list lengths so the palette + actions popover fit inside the
+     (proportionally smaller) macbook screen rect on phones. Sizes are
+     unchanged from desktop — we just show fewer rows. Hide the footer
+     so the 4 visible project rows can sit closer to the palette edge. */
+  .mb-palette-wrap .palette ul li:nth-child(n+5){display:none}
   .mb-palette-wrap .palette .footer{display:none}
-  /* Re-anchor actions popover for the smaller mobile palette. Footer
-     is hidden on mobile, so bottom can sit close to the palette edge. */
-  .mb-actions-panel{bottom:6px;right:6px;width:60%}
-  /* Caption pill: scale with the screen interior so the desktop
-     padding (10px 20px / 13px font) doesn't read as a giant pill on a
-     phone-sized macbook. */
-  .mb-caption{padding:5px 11px;font-size:clamp(10px, 3.4cqi, 12.5px);border-radius:999px}
-  .mb-caption kbd{padding:1px 4px;margin:0 2px;border-radius:4px}
-  /* When actions are open the bottom of the screen is owned by the
-     popover. Hop the caption up under the menubar so it doesn't sit
-     on top of the action rows and obscure them. */
-  .mb-palette-wrap.actions-open ~ .mb-caption{
-    bottom:auto;
-    top:calc(var(--menubar-h, 18px) + 5px);
-  }
-  .mb-palette-wrap.actions-open ~ .mb-caption.shown{
-    transform:translate(-50%, 0) scale(1);
-  }
-}
-@media (max-width:420px){
-  .mb-palette-wrap{width:90%;transform:translateX(-50%) scale(.88);transform-origin:top center}
-  /* Tighter still on small phones — the macbook screen is ~200px tall
-     so even a 5/11 pill reads chunky. */
-  .mb-caption{padding:4px 9px;font-size:10.5px}
-  .mb-caption kbd{padding:0 3px;margin:0 1.5px}
+  /* Drop the actions popover from 5 → 3 rows so it doesn't overflow
+     the small palette during the ⌘K beat. */
+  .mb-actions-panel .mb-actions li:nth-child(n+4){display:none}
 }
 
 /* Feature MacBooks on mobile — same fit-into-screen-rect logic */
