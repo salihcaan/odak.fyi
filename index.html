@@ -1968,12 +1968,13 @@ section.mb-section{padding-top:24px}
 /* MacBook section — scale down on tablets/phones */
 @media (max-width:760px){
   section.mb-section{padding-top:16px}
-  /* Crop the silver base/hinge and trim a bit off the side bezels —
-     they eat vertical/horizontal space on a phone without adding info.
-     clip-path also drops the bottom drop-shadow, which is barely
-     visible at this size anyway; margin-bottom pulls the next section
-     up to absorb the now-empty band where the base used to be. */
-  .macbook{clip-path:inset(0 4% 9% 4%);margin-bottom:-4%}
+  /* Trim only the side bezels — they eat horizontal space on a phone
+     without adding info. Keep the base/hinge intact so the MacBook
+     still reads as a MacBook. Cutting the sides also lets us scale
+     the frame up to recover the trimmed width: visible portion goes
+     from 92% back to 100% of the container, which proportionally
+     enlarges the screen interior (and everything in it) on mobile. */
+  .macbook{clip-path:inset(0 4% 0 4%);width:108.7%;margin-left:-4.35%}
   .mb-menubar{font-size:9px;padding:0 8px;height:18px}
   .mb-menubar .left{gap:9px}
   .mb-menubar .right{gap:8px}
