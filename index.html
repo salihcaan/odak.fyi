@@ -929,50 +929,66 @@ h2.section-h .mute{color:var(--dim)}
   position:relative;
 }
 [data-theme="light"] .tab-demo{box-shadow:0 40px 80px -20px rgba(26,20,16,.18), inset 0 1px 0 rgba(255,255,255,.8)}
-.tab-demo .tab-chrome{
-  display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);
-  font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;
+.tab-demo ul.win-list{list-style:none;padding:14px 12px 8px;margin:0;position:relative}
+.tab-demo .group-head{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mute);
+  padding:14px 10px 6px;
 }
-.tab-demo .tab-chrome .dot-accent{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
-.tab-demo .tab-chrome .spacer{flex:1}
-.tab-demo .tab-chrome kbd{font-family:var(--mono);font-size:10px;padding:2px 6px;border:1px solid var(--border-2);border-radius:4px;background:var(--surface-2);color:var(--fg-2);letter-spacing:0;text-transform:none}
-.tab-demo ul.win-list{list-style:none;padding:8px;margin:0;position:relative}
+.tab-demo .group-head:first-child{padding-top:4px}
 .tab-demo .win{
-  display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:9px;
+  display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:10px;
   position:relative;cursor:pointer;
   transition:background var(--dur-snappy) var(--ease-snappy),
-             box-shadow var(--dur-snappy) var(--ease-snappy);
+             color var(--dur-snappy) var(--ease-snappy);
 }
-.tab-demo .win.on{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border)}
-.tab-demo .win.on::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:2px;background:var(--accent);border-radius:2px;box-shadow:0 0 8px var(--accent-glow)}
-/* JS upgrades the static ::before bar into a single rail that slides
-   between rows. When .live is set, hide the per-row pseudo and show the
-   moving rail instead. */
-.tab-demo.live .win.on::before{display:none}
-.tab-demo .win-rail{
-  position:absolute;left:0;width:2px;
-  background:var(--accent);border-radius:2px;
-  box-shadow:0 0 8px var(--accent-glow);
-  top:0;height:0;opacity:0;
-  transition:transform var(--dur-snappy) var(--ease-snappy),
-             height var(--dur-snappy) var(--ease-snappy),
-             opacity var(--dur-fast) var(--ease-out);
-  will-change:transform,height;
-  pointer-events:none;z-index:2;
+.tab-demo .win.on{
+  background:linear-gradient(180deg,
+    color-mix(in oklch, var(--prod-blue) 95%, white 6%),
+    var(--prod-blue));
+  box-shadow:
+    0 6px 18px -6px var(--prod-blue-glow),
+    inset 0 1px 0 rgba(255,255,255,.18);
 }
-.tab-demo.live .win-rail{opacity:1}
 .tab-demo .win .app{
-  width:28px;height:28px;border-radius:7px;flex-shrink:0;overflow:hidden;
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;overflow:hidden;
   display:grid;place-items:center;
+  background:var(--surface);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 1px 2px rgba(0,0,0,.2);
 }
 .tab-demo .win .app svg,
 .tab-demo .win .app img{width:100%;height:100%;display:block;object-fit:contain}
 .tab-demo .win .body{flex:1;min-width:0}
-.tab-demo .win .title{font-size:13.5px;font-weight:500;letter-spacing:-.005em;color:var(--fg);display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.tab-demo .win .title .proj{color:var(--dim);font-family:var(--mono);font-size:11px;font-weight:400;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tab-demo .win .title{font-size:14px;font-weight:600;letter-spacing:-.005em;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .tab-demo .win .sub{font-family:var(--mono);font-size:11px;color:var(--mute);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tab-demo .win .mru{font-family:var(--mono);font-size:10px;color:var(--mute);flex-shrink:0}
+.tab-demo .win .hint{
+  display:inline-flex;align-items:center;gap:2px;flex-shrink:0;
+  font-family:var(--mono);font-size:11px;color:var(--mute);
+  padding:3px 8px;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--border);
+  letter-spacing:0;
+}
+.tab-demo .win .hint .opt{font-size:11.5px;line-height:1}
+.tab-demo .win .hint .num{font-weight:500}
+/* Selected row flips text + hint pill to white-on-accent. */
+.tab-demo .win.on .title{color:#fff}
+.tab-demo .win.on .sub{color:rgba(255,255,255,.78)}
+.tab-demo .win.on .hint{
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.28);
+  color:#fff;
+}
+.tab-demo .tab-footer{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  padding:10px 14px 12px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;color:var(--mute);
+}
+.tab-demo .tab-footer .row{display:inline-flex;align-items:center;gap:6px}
+.tab-demo .tab-footer kbd{
+  font-family:var(--mono);font-size:10px;padding:1px 5px;
+  border:1px solid var(--border-2);border-radius:4px;
+  background:var(--surface-2);color:var(--fg-2);
+}
 
 /* ==========================================================
    ACTIONS — palette → ⌘K → fire → morph to YAML
@@ -1652,9 +1668,9 @@ footer.site-foot{
    ========================================================== */
 .chosen-window{
   position:absolute;top:50%;left:50%;
-  width:480px;
+  width:560px;
   z-index:50;opacity:0;pointer-events:none;
-  transform:translate(-50%, -44%) scale(.86);
+  transform:translate(-50%, -44%) scale(.88);
   transition:opacity var(--dur-smooth) var(--ease-smooth), transform var(--dur-smooth) var(--ease-snappy);
   contain:layout style;
   will-change:transform, opacity;
@@ -2678,7 +2694,7 @@ section.mb-section{padding-top:24px;max-width:none}
   .pos-card.us::before{border-radius:14px}
   /* Cap the chosen-window at ~0.82× on mobile so it doesn't bleed past the
      hero, but keep the rise+grow delta so the entrance still animates
-     (desktop goes .86→1 + -44%→-50%). */
+     (desktop goes .88→1 + -44%→-50%). */
   .chosen-window{width:100% !important;transform:translate(-50%, -44%) scale(0.78)}
   .chosen-window.shown{transform:translate(-50%, -50%) scale(0.82)}
 }
@@ -3468,7 +3484,7 @@ section.mb-section{padding-top:24px;max-width:none}
       <ul class="bullets">
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6"/></svg></div>
-          <div class="txt"><b>One list, not six</b><span>Cursor, VS Code, Xcode, IntelliJ, GoLand, RubyMine, Zed, Sublime, terminals, and Chrome tabs tied to a localhost preview — all in one place.</span></div>
+          <div class="txt"><b>One list, not six</b><span>Cursor, VS Code, Xcode, IntelliJ, GoLand, RubyMine, Zed, Sublime — every editor window in one place, grouped by project.</span></div>
         </li>
         <li>
           <div class="ico"><svg viewBox="0 0 16 16"><path d="M3 8l3-3 3 3-3 3z"/><path d="M9 4l3 3-3 3"/></svg></div>
@@ -3483,62 +3499,56 @@ section.mb-section{padding-top:24px;max-width:none}
 
     <div class="f-stage reveal">
       <div class="tab-demo">
-        <div class="tab-chrome">
-          <span class="dot-accent"></span>
-          <span>All editor windows</span>
-          <span class="spacer"></span>
-          <kbd>⌥Tab</kbd>
-        </div>
         <ul class="win-list">
+          <li class="group-head">WEB-APP</li>
           <li class="win on">
             <div class="app"><img src="assets/ide/cursor.webp" alt="Cursor" width="256" height="256" decoding="async" loading="lazy"></div>
             <div class="body">
-              <div class="title">web-app <span class="proj">· pricing.tsx</span></div>
-              <div class="sub">Cursor · ~/code/work/web-app</div>
+              <div class="title">web-app</div>
+              <div class="sub">~/code/web-app</div>
             </div>
-            <div class="mru">just now</div>
-          </li>
-          <li class="win">
-            <div class="app"><svg><use href="#ide-iterm"/></svg></div>
-            <div class="body">
-              <div class="title">web-app <span class="proj">· pnpm dev</span></div>
-              <div class="sub">iTerm · zsh</div>
-            </div>
-            <div class="mru">2m ago</div>
-          </li>
-          <li class="win">
-            <div class="app"><img src="assets/ide/xcode.webp" alt="Xcode" width="256" height="256" decoding="async" loading="lazy"></div>
-            <div class="body">
-              <div class="title">platform-ios <span class="proj">· AppDelegate.swift</span></div>
-              <div class="sub">Xcode 16.2</div>
-            </div>
-            <div class="mru">8m</div>
-          </li>
-          <li class="win">
-            <div class="app"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA" width="256" height="256" decoding="async" loading="lazy"></div>
-            <div class="body">
-              <div class="title">platform-api <span class="proj">· handler.go</span></div>
-              <div class="sub">IntelliJ IDEA</div>
-            </div>
-            <div class="mru">14m</div>
+            <div class="hint"><span class="opt">⌥</span><span class="num">1</span></div>
           </li>
           <li class="win">
             <div class="app"><img src="assets/ide/vscode.webp" alt="VS Code" width="256" height="256" decoding="async" loading="lazy"></div>
             <div class="body">
-              <div class="title">platform-etl <span class="proj">· pipeline.py</span></div>
-              <div class="sub">VS Code</div>
+              <div class="title">web-app</div>
+              <div class="sub">~/code/web-app</div>
             </div>
-            <div class="mru">32m</div>
+            <div class="hint"><span class="opt">⌥</span><span class="num">2</span></div>
           </li>
+          <li class="group-head">PLATFORM-IOS</li>
           <li class="win">
-            <div class="app"><svg><use href="#ide-chrome"/></svg></div>
+            <div class="app"><img src="assets/ide/xcode.webp" alt="Xcode" width="256" height="256" decoding="async" loading="lazy"></div>
             <div class="body">
-              <div class="title">localhost:3000 <span class="proj">· web-app</span></div>
-              <div class="sub">Chrome · preview</div>
+              <div class="title">platform-ios</div>
+              <div class="sub">~/code/platform-ios</div>
             </div>
-            <div class="mru">1h</div>
+            <div class="hint"><span class="opt">⌥</span><span class="num">3</span></div>
+          </li>
+          <li class="group-head">PLATFORM-API</li>
+          <li class="win">
+            <div class="app"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA" width="256" height="256" decoding="async" loading="lazy"></div>
+            <div class="body">
+              <div class="title">platform-api</div>
+              <div class="sub">~/code/platform-api</div>
+            </div>
+            <div class="hint"><span class="opt">⌥</span><span class="num">4</span></div>
+          </li>
+          <li class="group-head">PLATFORM-ETL</li>
+          <li class="win">
+            <div class="app"><img src="assets/ide/vscode.webp" alt="VS Code" width="256" height="256" decoding="async" loading="lazy"></div>
+            <div class="body">
+              <div class="title">platform-etl</div>
+              <div class="sub">~/code/platform-etl</div>
+            </div>
+            <div class="hint"><span class="opt">⌥</span><span class="num">5</span></div>
           </li>
         </ul>
+        <div class="tab-footer">
+          <span class="row"><kbd>⌥K</kbd><kbd>⌥J</kbd> Navigate</span>
+          <span class="row"><kbd>⌥W</kbd> Close</span>
+        </div>
       </div>
     </div>
   </div>
@@ -4780,47 +4790,25 @@ section.mb-section{padding-top:24px;max-width:none}
   io.observe(stage);
 })();
 
-// ===== Feature 2 (⌥Tab) switcher: selection slides between rows =====
+// ===== Feature 2 (⌥Tab) switcher: selection cycles between rows =====
 (function(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const demo = document.querySelector('.tab-demo');
   if(!demo) return;
-  const list = demo.querySelector('.win-list');
   const rows = Array.from(demo.querySelectorAll('.win'));
-  if(!list || rows.length < 2) return;
-
-  // Inject the moving rail once. Hide the static ::before bar via .live.
-  const rail = document.createElement('div');
-  rail.className = 'win-rail';
-  list.appendChild(rail);
+  if(rows.length < 2) return;
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-  function positionRail(idx){
-    const r = rows[idx];
-    if(!r) return;
-    rail.style.transform = `translateY(${r.offsetTop + 9}px)`;
-    rail.style.height = `${r.offsetHeight - 18}px`;
-  }
   function setSelected(idx){
     rows.forEach(r => r.classList.remove('on'));
     rows[idx].classList.add('on');
-    positionRail(idx);
   }
-
-  // Position the rail on row 0 before flipping to .live, so it doesn't
-  // animate from (0,0) into place on first paint.
-  positionRail(0);
-  requestAnimationFrame(() => demo.classList.add('live'));
-  window.addEventListener('resize', () => {
-    const idx = rows.findIndex(r => r.classList.contains('on'));
-    if(idx >= 0) positionRail(idx);
-  });
 
   async function loop(){
     let i = 0;
     while(true){
       setSelected(i);
-      i = (i + 1) % Math.min(rows.length, 4);
+      i = (i + 1) % Math.min(rows.length, 5);
       await wait(1600);
     }
   }
