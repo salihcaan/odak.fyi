@@ -312,22 +312,28 @@ h1.hero-h .accent{
   padding:2px 6px;background:color-mix(in oklch, var(--bg) 30%, transparent);
   border-radius:4px;margin-left:4px;
 }
-.hero-cta .btn-link{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:12px 4px;font-size:14px;font-weight:500;
-  color:var(--fg-2);background:transparent;border:0;cursor:pointer;
+/* Apple-style accent text link CTA: equal visual weight with the filled
+   primary, colored, with a chevron that animates toward its destination.
+   Generic `.btn-link` so the hero AND pricing can share it. */
+.btn-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 6px;font-size:14px;font-weight:500;
+  color:var(--accent);background:transparent;border:0;cursor:pointer;
   letter-spacing:-.005em;
   transition:color .15s ease;
   white-space:nowrap;
 }
-.hero-cta .btn-link:hover{color:var(--fg)}
-.hero-cta .btn-link .arrow{
+.btn-link:hover{color:var(--accent-2)}
+.btn-link .arrow{
   display:inline-flex;align-items:center;justify-content:center;
-  color:var(--mute);
-  transition:transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  color:currentColor;
+  transition:transform var(--dur-fast) var(--ease-out);
 }
-.hero-cta .btn-link .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.hero-cta .btn-link:hover .arrow{transform:translateY(2px);color:var(--accent)}
+.btn-link .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* Chevron animates toward where it points: right→translateX, down→translateY. */
+.btn-link:hover .arrow{transform:translateX(3px)}
+.btn-link.down:hover .arrow{transform:translateY(2px)}
+.hero-cta .btn-link{padding:12px 4px}
 
 /* Inline fine-print row under the CTA: trial / trust seal / OS support.
    Centered alongside the rest of the hero. */
@@ -649,14 +655,13 @@ section.block{
   padding:var(--space-section) var(--gutter) 0;
   position:relative;
 }
+/* Apple-style eyebrow: pure caps type, no decorative bar. The page's
+   ornament (aurora, glow, grain) lives in the background — eyebrows
+   should be quiet and let the headline carry the moment. */
 .eyebrow{
   font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
   color:var(--accent);
-  display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
-}
-.eyebrow::before{
-  content:'';width:14px;height:1px;background:var(--accent);
-  box-shadow:0 0 6px var(--accent-glow);
+  display:inline-block;margin-bottom:16px;
 }
 h2.section-h{
   font-family:var(--display);
@@ -664,15 +669,15 @@ h2.section-h{
   line-height:1;
   letter-spacing:-.035em;
   font-weight:700;
-  margin:0 0 20px;
+  margin:0 0 18px;
   max-width:20ch;
 }
 h2.section-h .accent{color:var(--accent)}
 h2.section-h .mute{color:var(--dim)}
 .section-sub{
-  font-size:18px;line-height:1.5;color:var(--fg-2);max-width:56ch;margin:0;letter-spacing:-.008em;
+  font-size:19px;line-height:1.45;color:var(--fg-2);max-width:50ch;margin:0;letter-spacing:-.008em;
 }
-.section-head{margin-bottom:80px;max-width:800px}
+.section-head{margin-bottom:64px;max-width:800px}
 
 /* ==========================================================
    FEATURE — sticky product + text column
@@ -1431,6 +1436,12 @@ h2.section-h .mute{color:var(--dim)}
 }
 .price-card .buy:hover{transform:translateY(-1px)}
 .price-card .buy .k{font-family:var(--mono);font-size:11px;opacity:.75;margin-left:4px}
+/* Apple-style buy + secondary link pair. Stack into a column on narrow
+   widths so neither CTA gets squashed. */
+.price-card .buy-row{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  position:relative;z-index:1;
+}
 .price-fine{font-family:var(--mono);font-size:10.5px;color:var(--mute);letter-spacing:.02em;margin-top:14px;position:relative;z-index:1}
 .price-fine a{color:var(--fg-2);border-bottom:1px solid var(--border-2);padding-bottom:1px;transition:color .15s, border-color .15s}
 .price-fine a:hover{color:var(--accent);border-bottom-color:var(--accent)}
@@ -2736,13 +2747,13 @@ section.mb-section{padding-top:24px}
         Any repo. <span class="accent">Two keys.</span>
       </h1>
       <p class="hero-sub">
-        A keyboard launcher for developers juggling dozens of repos across every editor open on your machine.
+        A keyboard launcher for developers juggling dozens of repos across every editor.
       </p>
       <div class="hero-cta">
         <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary">
           Try free for 14 days <span class="k">⌘ + D</span>
         </a>
-        <button class="btn-link" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+        <button class="btn-link down" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
           See how it works
           <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M6 3v6m-3-3l3 3 3-3"/></svg></span>
         </button>
@@ -3690,7 +3701,10 @@ section.mb-section{padding-top:24px}
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span><b>Two years of updates</b> included. After that, keep the version you have.</span></li>
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span>14-day free trial. No credit card.</span></li>
       </ul>
-      <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="buy">Start 14-day trial <span class="k">⌘ + D</span></a>
+      <div class="buy-row">
+        <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="buy">Start 14-day trial <span class="k">⌘ + D</span></a>
+        <a href="#features" class="btn-link">See what's inside <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg></span></a>
+      </div>
       <p class="price-fine">One-time payment · instant activation · Sparkle auto-updates · <a href="/refund.html">30-day refund</a></p>
     </div>
 
