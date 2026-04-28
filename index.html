@@ -630,7 +630,7 @@ h1.hero-h .accent{
 .palette li.on .ide-stack .ide.focused{
   background:rgba(255,255,255,.32) !important;
   border-color:rgba(255,255,255,.55) !important;
-  transform:scale(1.15);
+  transform:scale(1.25);
   box-shadow:0 0 0 1px rgba(255,255,255,.18), 0 4px 10px rgba(0,0,0,.18);
 }
 .palette li .ide-stack .ide{transition:background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease}
@@ -673,7 +673,7 @@ h1.hero-h .accent{
   display:flex;align-items:center;gap:5px;
 }
 .palette li .ide-stack .ide{
-  width:26px;height:26px;padding:3px;
+  width:26px;height:26px;padding:1px;
   border-radius:7px;flex-shrink:0;
   background:var(--surface);
   border:1px solid var(--border);
@@ -2143,7 +2143,7 @@ section.mb-section{padding-top:24px;max-width:none}
 .mb-palette-wrap .palette li .title-row{font-size:clamp(8.5px, 2.40cqi, 11.5px);gap:1.25cqi}
 .mb-palette-wrap .palette li .path{font-size:clamp(7px, 1.98cqi, 9.5px);margin-top:0.42cqi}
 .mb-palette-wrap .palette li .ide-stack .ide{
-  width:4.17cqi;height:4.17cqi;padding:0.42cqi;border-radius:clamp(3px, 1cqi, 5px);
+  width:4.17cqi;height:4.17cqi;padding:0.15cqi;border-radius:clamp(3px, 1cqi, 5px);
 }
 .mb-palette-wrap .palette li .ide-stack{gap:0.63cqi}
 .mb-palette-wrap .palette .footer{padding:1.46cqi 2.5cqi;font-size:clamp(7px, 1.98cqi, 9.5px);gap:2.92cqi}
@@ -2525,7 +2525,7 @@ section.mb-section{padding-top:24px;max-width:none}
    cqi tracks the wrap (container-type set on the base .mb-palette-wrap). */
 .f-stage .mb-palette-wrap .palette li{max-height:46px;padding:6px 8px;border-radius:clamp(6px, 2.2cqi, 9px)}
 .f-stage .mb-palette-wrap .palette li .lang{width:20px;height:20px;font-size:8.5px;border-radius:clamp(3px, 1.2cqi, 5px)}
-.f-stage .mb-palette-wrap .palette li .ide-stack .ide{width:18px;height:18px;border-radius:clamp(3px, 1cqi, 4px)}
+.f-stage .mb-palette-wrap .palette li .ide-stack .ide{width:18px;height:18px;padding:1px;border-radius:clamp(3px, 1cqi, 4px)}
 .f-stage .mb-palette-wrap .palette ul li:nth-child(n+4){display:none}
 .f-stage .mb-palette-wrap .palette .footer{display:none}
 
@@ -2664,7 +2664,7 @@ section.mb-section{padding-top:24px;max-width:none}
   .palette li .path{font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .palette li .path > span{display:inline}
   .palette li .path .sep{margin:0 4px}
-  .palette li .ide-stack .ide{width:20px;height:20px;padding:2px}
+  .palette li .ide-stack .ide{width:20px;height:20px;padding:1px}
   .palette li .ide-stack{gap:3px}
   /* Keep IDE icons fully visible — let the path truncate, not the meta. */
   .palette li .meta{flex-shrink:0;overflow:visible}
@@ -2736,7 +2736,7 @@ section.mb-section{padding-top:24px;max-width:none}
 @media (max-width:420px){
   .palette li{padding:9px 8px;gap:5px}
   .palette li .lang{width:24px;height:24px;font-size:9px}
-  .palette li .ide-stack .ide{width:18px;height:18px;padding:1.5px}
+  .palette li .ide-stack .ide{width:18px;height:18px;padding:0.5px}
   .palette li .ide-stack{gap:2px}
   .palette li .path .branch,
   .palette li .path .dirty,
