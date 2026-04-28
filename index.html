@@ -180,10 +180,12 @@ button{font-family:inherit}
 .aurora::after{
   /* blur(60px) was 120px — the radial-gradient already softens the
      edges, so doubling that with a heavy blur was paying compositor
-     cost for diminishing returns. translateZ(0) pins each blob to its
-     own GPU layer so the blur rasterizes once instead of every frame. */
+     cost for diminishing returns. will-change:transform alone is
+     enough to promote the blob to its own GPU layer in 2026 evergreen
+     browsers — the translateZ(0) hack is no longer required and just
+     costs an extra matrix op. */
   content:'';position:absolute;border-radius:50%;filter:blur(60px);
-  will-change:transform;transform:translateZ(0);
+  will-change:transform;
 }
 .aurora::before{
   width:60vw;height:60vw;top:-20vw;left:-10vw;
@@ -493,12 +495,13 @@ h1.hero-h .accent{
     inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
   overflow:hidden;
   max-width:560px;margin:0 auto;  /* real app width — matched across all carousel stages */
-  backdrop-filter:blur(40px) saturate(160%);
-  -webkit-backdrop-filter:blur(40px) saturate(160%);
+  /* No backdrop-filter: the only thing behind the palette is the aurora,
+     which is already a soft blurred radial-gradient — blurring a blur
+     just paid GPU cost for an invisible difference. The opaque
+     gradient + box-shadow above sells the depth on its own. */
   /* Scope reflow + repaint to this subtree — keeps row collapses, dim,
      and chosen-window rises from invalidating ancestors. */
   contain:layout style paint;
-  will-change:transform, opacity, filter;
   /* reserve 56px at the top for the absolutely-positioned search bar — it
      is removed from the flow so nothing below (row collapse, etc.) can
      nudge its Y. */
@@ -1925,9 +1928,12 @@ section.mb-section{padding-top:24px;max-width:none}
   position:absolute;
   left:var(--x);top:var(--y);
   width:var(--w);height:var(--h);
-  background:rgba(20,15,12,.78);
-  backdrop-filter:blur(10px) saturate(160%);
-  -webkit-backdrop-filter:blur(10px) saturate(160%);
+  /* Bumped from .78 to .88 because we dropped the backdrop-filter that
+     was softening the underlying wallpaper. Ten window layers each
+     running their own blur was the heaviest paint inside the macbook
+     and the chaos state already dims them to .7 brightness — the blur
+     was invisible in practice. */
+  background:rgba(20,15,12,.88);
   border:1px solid rgba(255,255,255,.13);
   /* Internals sized in cqi (1cqi ≈ 8.76px at the desktop reference
      where .mb-desk hits its 876px max) so padding, gaps, traffic
@@ -2342,14 +2348,16 @@ section.mb-section{padding-top:24px;max-width:none}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:1.4cqi;padding:8cqi 6cqi;text-align:center;
   pointer-events:none;
-  /* Vignette + blur backdrop so the title pops over chaos windows
-     or a focused project window without competing with them. */
+  /* Vignette + static blur backdrop so the title pops over chaos windows
+     or a focused project window without competing with them. The blur
+     stays constant — only opacity transitions, since animating
+     backdrop-filter forces a full re-rasterization every frame. */
   background:
     radial-gradient(ellipse 75% 60% at 50% 50%, rgba(10,9,8,.78) 0%, rgba(10,9,8,.55) 55%, rgba(10,9,8,.2) 100%);
   backdrop-filter:blur(14px) saturate(140%);
   -webkit-backdrop-filter:blur(14px) saturate(140%);
   opacity:0;
-  transition:opacity .7s var(--ease-out), backdrop-filter .7s var(--ease-out);
+  transition:opacity .7s var(--ease-out);
 }
 .mb-titlecard.shown{opacity:1}
 /* Eyebrow — Apple's pattern is a small, sentence-case, muted label
@@ -2584,6 +2592,11 @@ section.mb-section{padding-top:24px;max-width:none}
    first paint. contain-intrinsic-size is a deliberate over-estimate
    per section so the scrollbar doesn't jump when each one rehydrates. */
 @supports (content-visibility: auto){
+  /* mb-section is the second-heaviest section in the file: huge inline
+     macbook SVG, ten window blurs, an animated title-card. It sits
+     just below the hero so it's offscreen on most viewports — adding
+     it here is the single biggest remaining first-paint win. */
+  .mb-section    { content-visibility:auto; contain-intrinsic-size:1px 900px;  }
   #features      { content-visibility:auto; contain-intrinsic-size:1px 2400px; }
   #positioning   { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
   #pricing       { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
@@ -2815,6 +2828,21 @@ section.mb-section{padding-top:24px;max-width:none}
     </div>
   </div>
 </nav>
+
+<!-- Speculation Rules: prerender the three legal pages so footer links
+     feel instant. eagerness:moderate triggers on hover/pointerdown so
+     we don't burn budget on visitors who never click. Chromium-only
+     today; non-supporting browsers ignore the script silently. -->
+<script type="speculationrules">
+{
+  "prerender": [
+    {
+      "urls": ["/privacy.html", "/terms.html", "/refund.html"],
+      "eagerness": "moderate"
+    }
+  ]
+}
+</script>
 
 <!-- HERO -->
 <section class="hero" id="hero">
