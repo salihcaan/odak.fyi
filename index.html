@@ -14,7 +14,13 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23d89a4e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='4' width='4' height='4' rx='.4'/%3E%3Ccircle cx='3' cy='3' r='1.2'/%3E%3Ccircle cx='9' cy='3' r='1.2'/%3E%3Ccircle cx='3' cy='9' r='1.2'/%3E%3Ccircle cx='9' cy='9' r='1.2'/%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" type="image/webp"
+      href="assets/devices/macbook-pro-16-1200.webp"
+      imagesrcset="assets/devices/macbook-pro-16-800.webp 800w, assets/devices/macbook-pro-16-1200.webp 1200w, assets/devices/macbook-pro-16-1800.webp 1800w, assets/devices/macbook-pro-16-2400.webp 2400w"
+      imagesizes="(min-width:1200px) 1080px, 100vw"
+      fetchpriority="high">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ==========================================================
    TOKENS — dual theme, warm-not-cool
@@ -2758,7 +2764,12 @@ section.mb-section{padding-top:24px}
   <div class="mb-stage reveal">
     <div class="glow"></div>
     <div class="macbook">
-      <img class="frame" src="assets/devices/macbook-pro-16.png" alt="" aria-hidden="true" width="4260" height="2840">
+      <picture>
+        <source type="image/webp"
+                srcset="assets/devices/macbook-pro-16-800.webp 800w, assets/devices/macbook-pro-16-1200.webp 1200w, assets/devices/macbook-pro-16-1800.webp 1800w, assets/devices/macbook-pro-16-2400.webp 2400w"
+                sizes="(min-width:1200px) 1080px, 100vw">
+        <img class="frame" src="assets/devices/macbook-pro-16.png" alt="" aria-hidden="true" width="4260" height="2840" fetchpriority="high" decoding="async">
+      </picture>
       <div class="notch" aria-hidden="true"></div>
       <div class="screen">
           <div class="mb-desk">
@@ -2788,63 +2799,63 @@ section.mb-section{padding-top:24px}
                  here — what shows up is what we can actually open. -->
             <div class="mb-windows" id="mb-windows">
               <div class="mb-window" data-project="web-app" style="--x:2%;--y:4%;--w:18%;--h:24%;--r:-3deg;--z:2;--d:40ms">
-                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">web-app · page.tsx</span></div>
+                <div class="app-badge"><img src="assets/ide/cursor.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.webp" alt=""></span><span class="title">web-app · page.tsx</span></div>
                 <div class="body"><div class="ln" style="--lw:65%"></div><div class="ln hl" style="--lw:42%"></div><div class="ln" style="--lw:78%"></div><div class="ln" style="--lw:50%"></div></div>
               </div>
               <div class="mb-window" data-project="ios-app" style="--x:36%;--y:6%;--w:15%;--h:20%;--r:2deg;--z:1;--d:80ms">
-                <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">ios-app</span></div>
+                <div class="app-badge"><img src="assets/ide/xcode.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.webp" alt=""></span><span class="title">ios-app</span></div>
                 <div class="body"><div class="ln" style="--lw:58%"></div><div class="ln b" style="--lw:42%"></div><div class="ln" style="--lw:70%"></div></div>
               </div>
               <div class="mb-window" data-project="react-dashboard" style="--x:79%;--y:5%;--w:19%;--h:26%;--r:3deg;--z:2;--d:120ms">
-                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">react-dashboard</span></div>
+                <div class="app-badge"><img src="assets/ide/cursor.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.webp" alt=""></span><span class="title">react-dashboard</span></div>
                 <div class="body"><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:38%"></div><div class="ln b" style="--lw:60%"></div><div class="ln" style="--lw:82%"></div></div>
               </div>
               <div class="mb-window" data-project="api-gateway" style="--x:2%;--y:31%;--w:16%;--h:30%;--r:-1deg;--z:3;--d:160ms">
-                <div class="app-badge"><img src="assets/ide/intellij.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.png" alt=""></span><span class="title">api-gateway</span></div>
+                <div class="app-badge"><img src="assets/ide/intellij.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.webp" alt=""></span><span class="title">api-gateway</span></div>
                 <div class="body"><div class="ln" style="--lw:55%"></div><div class="ln" style="--lw:80%"></div><div class="ln hl" style="--lw:45%"></div><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:38%"></div></div>
               </div>
               <div class="mb-window" data-project="design-tokens" style="--x:23%;--y:35%;--w:17%;--h:23%;--r:1deg;--z:2;--d:200ms">
-                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">design-tokens</span></div>
+                <div class="app-badge"><img src="assets/ide/cursor.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.webp" alt=""></span><span class="title">design-tokens</span></div>
                 <div class="body"><div class="ln hl" style="--lw:50%"></div><div class="ln" style="--lw:72%"></div><div class="ln" style="--lw:38%"></div><div class="ln" style="--lw:60%"></div></div>
               </div>
               <div class="mb-window" data-project="payments-svc" style="--x:60%;--y:36%;--w:18%;--h:24%;--r:-2deg;--z:2;--d:240ms">
-                <div class="app-badge"><img src="assets/ide/intellij.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.png" alt=""></span><span class="title">payments-svc · main.kt</span></div>
+                <div class="app-badge"><img src="assets/ide/intellij.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.webp" alt=""></span><span class="title">payments-svc · main.kt</span></div>
                 <div class="body"><div class="ln" style="--lw:64%"></div><div class="ln" style="--lw:48%"></div><div class="ln b" style="--lw:72%"></div><div class="ln" style="--lw:35%"></div></div>
               </div>
               <div class="mb-window" data-project="platform-ios" style="--x:82%;--y:33%;--w:16%;--h:28%;--r:2deg;--z:3;--d:280ms">
-                <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">platform-ios</span></div>
+                <div class="app-badge"><img src="assets/ide/xcode.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.webp" alt=""></span><span class="title">platform-ios</span></div>
                 <div class="body"><div class="ln" style="--lw:60%"></div><div class="ln" style="--lw:48%"></div><div class="ln b" style="--lw:72%"></div><div class="ln" style="--lw:55%"></div></div>
               </div>
               <div class="mb-window" data-project="admin-panel" style="--x:4%;--y:65%;--w:22%;--h:31%;--r:-2deg;--z:4;--d:320ms">
-                <div class="app-badge"><img src="assets/ide/cursor.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.png" alt=""></span><span class="title">admin-panel</span></div>
+                <div class="app-badge"><img src="assets/ide/cursor.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/cursor.webp" alt=""></span><span class="title">admin-panel</span></div>
                 <div class="body"><div class="ln" style="--lw:70%"></div><div class="ln" style="--lw:45%"></div><div class="ln" style="--lw:60%"></div><div class="ln hl" style="--lw:78%"></div><div class="ln" style="--lw:40%"></div></div>
               </div>
               <div class="mb-window" data-project="etl-pipeline" style="--x:28%;--y:68%;--w:22%;--h:28%;--r:1deg;--z:5;--d:360ms">
-                <div class="app-badge"><img src="assets/ide/vscode.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.png" alt=""></span><span class="title">etl-pipeline.py</span></div>
+                <div class="app-badge"><img src="assets/ide/vscode.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.webp" alt=""></span><span class="title">etl-pipeline.py</span></div>
                 <div class="body"><div class="ln" style="--lw:65%"></div><div class="ln b" style="--lw:50%"></div><div class="ln" style="--lw:78%"></div><div class="ln" style="--lw:42%"></div></div>
               </div>
               <div class="mb-window" data-project="odak-mac" style="--x:52%;--y:66%;--w:22%;--h:30%;--r:-1deg;--z:6;--d:400ms">
-                <div class="app-badge"><img src="assets/ide/xcode.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.png" alt=""></span><span class="title">odak-mac</span></div>
+                <div class="app-badge"><img src="assets/ide/xcode.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/xcode.webp" alt=""></span><span class="title">odak-mac</span></div>
                 <div class="body"><div class="ln" style="--lw:55%"></div><div class="ln" style="--lw:72%"></div><div class="ln hl" style="--lw:38%"></div><div class="ln" style="--lw:65%"></div><div class="ln" style="--lw:48%"></div></div>
               </div>
               <div class="mb-window" data-project="plexo-cli" style="--x:76%;--y:69%;--w:22%;--h:28%;--r:2deg;--z:5;--d:440ms">
-                <div class="app-badge"><img src="assets/ide/intellij.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.png" alt=""></span><span class="title">plexo-cli · main.go</span></div>
+                <div class="app-badge"><img src="assets/ide/intellij.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/intellij.webp" alt=""></span><span class="title">plexo-cli · main.go</span></div>
                 <div class="body"><div class="ln" style="--lw:72%"></div><div class="ln" style="--lw:48%"></div><div class="ln" style="--lw:60%"></div><div class="ln b" style="--lw:35%"></div></div>
               </div>
               <div class="mb-window" data-project="ml-notebook" style="--x:38%;--y:42%;--w:18%;--h:22%;--r:-1deg;--z:1;--d:480ms">
-                <div class="app-badge"><img src="assets/ide/vscode.png" alt=""></div>
-                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.png" alt=""></span><span class="title">ml-notebook.ipynb</span></div>
+                <div class="app-badge"><img src="assets/ide/vscode.webp" alt=""></div>
+                <div class="titlebar"><span class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></span><span class="ico"><img src="assets/ide/vscode.webp" alt=""></span><span class="title">ml-notebook.ipynb</span></div>
                 <div class="body"><div class="ln" style="--lw:60%"></div><div class="ln" style="--lw:75%"></div><div class="ln hl" style="--lw:42%"></div></div>
               </div>
             </div>
@@ -2857,7 +2868,7 @@ section.mb-section{padding-top:24px}
                   <div class="input">
                     <span class="typed" id="mb-typed"></span><span class="caret"></span><span class="ghost" id="mb-ghost"></span><span class="open-hint" id="mb-open-hint"></span>
                   </div>
-                  <div class="top-ide tinted" id="mb-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+                  <div class="top-ide tinted" id="mb-topide"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
                 </div>
                 <!-- Project list (default view; hidden when actions menu is shown) -->
                 <ul id="mb-list" class="mb-projects">
@@ -2873,9 +2884,9 @@ section.mb-section{padding-top:24px}
                     </div>
                     <div class="meta">
                       <div class="ide-stack">
-                        <div class="ide" data-ide="cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-                        <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.png" alt="VS Code"></div>
-                        <div class="ide" data-ide="intellij"><img src="assets/ide/intellij.png" alt="IntelliJ"></div>
+                        <div class="ide" data-ide="cursor"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
+                        <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.webp" alt="VS Code"></div>
+                        <div class="ide" data-ide="intellij"><img src="assets/ide/intellij.webp" alt="IntelliJ"></div>
                       </div>
                     </div>
                   </li>
@@ -2890,7 +2901,7 @@ section.mb-section{padding-top:24px}
                       </div>
                     </div>
                     <div class="meta">
-                      <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ"></div></div>
+                      <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.webp" alt="IntelliJ"></div></div>
                     </div>
                   </li>
                   <li data-keys="react-dashboard">
@@ -2904,7 +2915,7 @@ section.mb-section{padding-top:24px}
                       </div>
                     </div>
                     <div class="meta">
-                      <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div>
+                      <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.webp" alt="Cursor"></div></div>
                     </div>
                   </li>
                   <li data-keys="notion-clone">
@@ -2930,7 +2941,7 @@ section.mb-section{padding-top:24px}
                       </div>
                     </div>
                     <div class="meta">
-                      <div class="ide-stack"><div class="ide"><img src="assets/ide/xcode.png" alt="Xcode"></div></div>
+                      <div class="ide-stack"><div class="ide"><img src="assets/ide/xcode.webp" alt="Xcode"></div></div>
                     </div>
                   </li>
                   <li data-keys="etl-pipeline">
@@ -2944,7 +2955,7 @@ section.mb-section{padding-top:24px}
                       </div>
                     </div>
                     <div class="meta">
-                      <div class="ide-stack"><div class="ide"><img src="assets/ide/vscode.png" alt="VS Code"></div></div>
+                      <div class="ide-stack"><div class="ide"><img src="assets/ide/vscode.webp" alt="VS Code"></div></div>
                     </div>
                   </li>
                 </ul>
@@ -2970,12 +2981,12 @@ section.mb-section{padding-top:24px}
                   <kbd class="action-key">⌘G</kbd>
                 </li>
                 <li data-action="cursor" data-keys="cursor open">
-                  <div class="action-ico ide-ico"><img src="assets/ide/cursor.png" alt=""></div>
+                  <div class="action-ico ide-ico"><img src="assets/ide/cursor.webp" alt=""></div>
                   <span class="action-name">Open in Cursor</span>
                   <kbd class="action-key">↵</kbd>
                 </li>
                 <li data-action="intellij" data-keys="intellij ij open">
-                  <div class="action-ico ide-ico"><img src="assets/ide/intellij.png" alt=""></div>
+                  <div class="action-ico ide-ico"><img src="assets/ide/intellij.webp" alt=""></div>
                   <span class="action-name">Open in IntelliJ</span>
                   <kbd class="action-key">⇧↵</kbd>
                 </li>
@@ -3121,7 +3132,7 @@ section.mb-section{padding-top:24px}
                 <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
               </div>
               <div class="hint-pill" id="hero-hint"></div>
-              <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+              <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
             </div>
             <ul id="hero-list">
               <li data-keys="web-app" class="on">
@@ -3138,9 +3149,9 @@ section.mb-section{padding-top:24px}
                 </div>
                 <div class="meta">
                   <div class="ide-stack" title="Open windows">
-                    <div class="ide" data-ide="cursor"   title="Cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-                    <div class="ide" data-ide="vscode"   title="VS Code"><img src="assets/ide/vscode.png" alt="VS Code"></div>
-                    <div class="ide" data-ide="intellij" title="IntelliJ IDEA"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
+                    <div class="ide" data-ide="cursor"   title="Cursor"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
+                    <div class="ide" data-ide="vscode"   title="VS Code"><img src="assets/ide/vscode.webp" alt="VS Code"></div>
+                    <div class="ide" data-ide="intellij" title="IntelliJ IDEA"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA"></div>
                   </div>
                 </div>
               </li>
@@ -3155,7 +3166,7 @@ section.mb-section{padding-top:24px}
                   </div>
                 </div>
                 <div class="meta">
-                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA"></div></div>
                 </div>
               </li>
               <li data-keys="api-gateway">
@@ -3169,7 +3180,7 @@ section.mb-section{padding-top:24px}
                   </div>
                 </div>
                 <div class="meta">
-                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div></div>
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA"></div></div>
                 </div>
               </li>
               <li data-keys="react-dashboard">
@@ -3185,7 +3196,7 @@ section.mb-section{padding-top:24px}
                   </div>
                 </div>
                 <div class="meta">
-                  <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.png" alt="Cursor"></div></div>
+                  <div class="ide-stack"><div class="ide"><img src="assets/ide/cursor.webp" alt="Cursor"></div></div>
                 </div>
               </li>
               <li data-keys="notion-clone">
@@ -3225,7 +3236,7 @@ section.mb-section{padding-top:24px}
                 <div class="line"><span style="width:70px"></span><span style="width:30px"></span></div>
               </div>
             </div>
-            <span class="app-mark"><img src="assets/ide/cursor.png" alt=""></span>
+            <span class="app-mark"><img src="assets/ide/cursor.webp" alt=""></span>
           </div>
         </div>
       </div>
@@ -3272,7 +3283,7 @@ section.mb-section{padding-top:24px}
         </div>
         <ul class="win-list">
           <li class="win on">
-            <div class="app"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+            <div class="app"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
             <div class="body">
               <div class="title">web-app <span class="proj">· pricing.tsx</span></div>
               <div class="sub">Cursor · ~/code/work/web-app</div>
@@ -3288,7 +3299,7 @@ section.mb-section{padding-top:24px}
             <div class="mru">2m ago</div>
           </li>
           <li class="win">
-            <div class="app"><img src="assets/ide/xcode.png" alt="Xcode"></div>
+            <div class="app"><img src="assets/ide/xcode.webp" alt="Xcode"></div>
             <div class="body">
               <div class="title">platform-ios <span class="proj">· AppDelegate.swift</span></div>
               <div class="sub">Xcode 16.2</div>
@@ -3296,7 +3307,7 @@ section.mb-section{padding-top:24px}
             <div class="mru">8m</div>
           </li>
           <li class="win">
-            <div class="app"><img src="assets/ide/intellij.png" alt="IntelliJ IDEA"></div>
+            <div class="app"><img src="assets/ide/intellij.webp" alt="IntelliJ IDEA"></div>
             <div class="body">
               <div class="title">platform-api <span class="proj">· handler.go</span></div>
               <div class="sub">IntelliJ IDEA</div>
@@ -3304,7 +3315,7 @@ section.mb-section{padding-top:24px}
             <div class="mru">14m</div>
           </li>
           <li class="win">
-            <div class="app"><img src="assets/ide/vscode.png" alt="VS Code"></div>
+            <div class="app"><img src="assets/ide/vscode.webp" alt="VS Code"></div>
             <div class="body">
               <div class="title">platform-etl <span class="proj">· pipeline.py</span></div>
               <div class="sub">VS Code</div>
@@ -3379,7 +3390,7 @@ section.mb-section{padding-top:24px}
             <div class="input">
               <span class="typed">web</span><span class="open-hint">— Open</span>
             </div>
-            <div class="top-ide"><img src="assets/ide/cursor.png" alt="Cursor"></div>
+            <div class="top-ide"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
           </div>
           <ul>
             <li class="on" data-keys="web-app">
@@ -3396,8 +3407,8 @@ section.mb-section{padding-top:24px}
               </div>
               <div class="meta">
                 <div class="ide-stack">
-                  <div class="ide" data-ide="cursor"><img src="assets/ide/cursor.png" alt="Cursor"></div>
-                  <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.png" alt="VS Code"></div>
+                  <div class="ide" data-ide="cursor"><img src="assets/ide/cursor.webp" alt="Cursor"></div>
+                  <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.webp" alt="VS Code"></div>
                 </div>
               </div>
             </li>
@@ -3413,7 +3424,7 @@ section.mb-section{padding-top:24px}
               </div>
               <div class="meta">
                 <div class="ide-stack">
-                  <div class="ide" data-ide="intellij"><img src="assets/ide/intellij.png" alt="IntelliJ"></div>
+                  <div class="ide" data-ide="intellij"><img src="assets/ide/intellij.webp" alt="IntelliJ"></div>
                 </div>
               </div>
             </li>
@@ -3429,7 +3440,7 @@ section.mb-section{padding-top:24px}
               </div>
               <div class="meta">
                 <div class="ide-stack">
-                  <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.png" alt="VS Code"></div>
+                  <div class="ide" data-ide="vscode"><img src="assets/ide/vscode.webp" alt="VS Code"></div>
                 </div>
               </div>
             </li>
@@ -3562,7 +3573,7 @@ section.mb-section{padding-top:24px}
             <div class="np-head">Recent windows</div>
             <ul class="np-list">
               <li>
-                <span class="np-ide"><img src="assets/ide/cursor.png" alt=""></span>
+                <span class="np-ide"><img src="assets/ide/cursor.webp" alt=""></span>
                 <span class="np-name">pricing.tsx</span>
                 <span class="np-meta">just now</span>
               </li>
@@ -3905,9 +3916,9 @@ section.mb-section{padding-top:24px}
   // Tab cycles through the editors open on the selected project. Matches
   // OnboardingSearchAnimation's "Tab to pick an editor" beat.
   const EDITORS = [
-    { key: 'cursor',   src: 'assets/ide/cursor.png',   alt: 'Cursor',   name: 'Cursor'   },
-    { key: 'vscode',   src: 'assets/ide/vscode.png',   alt: 'VS Code',  name: 'VS Code'  },
-    { key: 'intellij', src: 'assets/ide/intellij.png', alt: 'IntelliJ', name: 'IntelliJ' },
+    { key: 'cursor',   src: 'assets/ide/cursor.webp',   alt: 'Cursor',   name: 'Cursor'   },
+    { key: 'vscode',   src: 'assets/ide/vscode.webp',   alt: 'VS Code',  name: 'VS Code'  },
+    { key: 'intellij', src: 'assets/ide/intellij.webp', alt: 'IntelliJ', name: 'IntelliJ' },
   ];
   function setFocusedIde(key){
     const row = list.querySelector('li.on');
@@ -3986,7 +3997,7 @@ section.mb-section{padding-top:24px}
     openHnt.textContent = '';
     filterList('');
     const img = topIde.querySelector('img');
-    img.src = 'assets/ide/cursor.png';
+    img.src = 'assets/ide/cursor.webp';
     img.alt = 'Cursor';
     topIde.classList.add('tinted');
     topIde.classList.remove('switching');
@@ -4209,9 +4220,9 @@ section.mb-section{padding-top:24px}
 
   // Editors open on web-app — order matches the row's ide-stack.
   const EDITORS = [
-    { key:'cursor',   src:'assets/ide/cursor.png',   name:'Cursor'   },
-    { key:'vscode',   src:'assets/ide/vscode.png',   name:'VS Code'  },
-    { key:'intellij', src:'assets/ide/intellij.png', name:'IntelliJ' },
+    { key:'cursor',   src:'assets/ide/cursor.webp',   name:'Cursor'   },
+    { key:'vscode',   src:'assets/ide/vscode.webp',   name:'VS Code'  },
+    { key:'intellij', src:'assets/ide/intellij.webp', name:'IntelliJ' },
   ];
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
