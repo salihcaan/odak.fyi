@@ -115,7 +115,7 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
   <div class="eyebrow">Legal</div>
   <h1>Privacy Policy</h1>
   <p class="lede">Odak collects as little as possible. This page tells you exactly what is collected, by whom, and why — across the website, the macOS app, and the purchase flow.</p>
-  <p class="meta">Effective 2026-04-25 · Last updated 2026-04-25</p>
+  <p class="meta">Effective 2026-04-25 · Last updated 2026-04-29</p>
 
   <div class="toc" aria-label="Table of contents">
     <ol>
@@ -151,12 +151,38 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
   </ul>
 
   <h2 id="app">3. The Odak macOS app</h2>
-  <p>Odak is designed to run entirely on your Mac. The app:</p>
+  <p>Odak runs locally on your Mac, sandboxed and Apple-notarized. The data the app touches falls into two buckets: what stays on your device (everything that identifies you or your work) and a stream of anonymous usage signals we collect so we can see which features earn their keep.</p>
+
+  <h3>Stays on your device</h3>
+  <p>The following never leaves your Mac. It lives in macOS application support directories on disk and syncs nowhere:</p>
   <ul>
-    <li><strong>Does not collect telemetry.</strong> No usage data, project names, search queries, file paths, or window titles ever leave your device.</li>
-    <li><strong>Stores all your data locally</strong> — frecency rankings, search history, preferences, and indexed project metadata are kept in macOS application support directories on your Mac and synced nowhere.</li>
-    <li><strong>Runs sandboxed and Apple-notarized</strong>, with the macOS Accessibility permission you grant used only to read window titles for the IDE switcher.</li>
+    <li>Project list, paths, branch names, and which projects you've opened</li>
+    <li>Search queries you type into the search panel</li>
+    <li>Frecency rankings, search history, and per-project variables in <code>.odak</code> files</li>
+    <li>Window titles read via the macOS Accessibility permission (used only by the IDE switcher)</li>
+    <li>All settings and preferences</li>
   </ul>
+
+  <h3>Anonymous usage analytics</h3>
+  <p>Odak uses <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> as our analytics processor to collect anonymous, aggregated signals about how the app is used — for example, how often the search panel opens, which built-in actions get fired, and which onboarding steps cause people to drop off. We use it to decide what to build next.</p>
+  <p>What's collected:</p>
+  <ul>
+    <li>Anonymous event names like <em>"search panel opened"</em> or <em>"action fired"</em></li>
+    <li>Application lifecycle events (launch, foreground, background, quit)</li>
+    <li>App version, macOS version, locale, and device type (e.g. "MacBook Pro")</li>
+    <li>An anonymous device-scoped identifier generated locally — not tied to your Apple ID, email, or any account</li>
+  </ul>
+  <p>What's <strong>never</strong> collected:</p>
+  <ul>
+    <li>Your project names, paths, or repo contents</li>
+    <li>Search queries</li>
+    <li>Window titles, file names, or anything you type, copy, or select</li>
+    <li>The names of the actions you define in <code>~/.odak/config.yaml</code></li>
+  </ul>
+  <p>PostHog acts as a data processor on our behalf and may log standard request metadata (IP address, user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>.</p>
+
+  <h3>Your choice</h3>
+  <p>Telemetry is <strong>on by default</strong>. The first-launch onboarding flow surfaces the toggle so you can see and change it before sending anything, and you can flip it any time at <strong>Settings → Privacy → Share anonymous usage data</strong>. When the toggle is off, the PostHog SDK is opted out before it captures anything; nothing leaves your Mac on subsequent launches.</p>
 
   <h3>Update checks (Sparkle)</h3>
   <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework to check for updates. Periodically (typically once per day when the app is running), it fetches <code>https://odak.fyi/appcast.xml</code>. The host serving that file logs standard request metadata as described in section 2. Sparkle does not transmit any information about you, your projects, or your usage of the app — only the HTTP request itself, which is necessary to download the file.</p>
