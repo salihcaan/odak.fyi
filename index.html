@@ -4024,7 +4024,6 @@ section.mb-section{padding-top:24px;max-width:none}
               <div class="input">
                 <span class="typed" id="hero-typed"></span><span class="caret" id="hero-caret"></span><span class="ghost" id="hero-ghost"></span><span class="open-hint" id="hero-open-hint"></span>
               </div>
-              <div class="hint-pill" id="hero-hint"></div>
               <div class="top-ide tinted" id="hero-topide"><img src="assets/ide/cursor.webp" alt="Cursor" width="256" height="256" decoding="async" loading="lazy"></div>
             </div>
             <ul id="hero-list">
@@ -4422,10 +4421,6 @@ section.mb-section{padding-top:24px;max-width:none}
             </div>
           </div>
 
-          <!-- ⌘K chord pill — flashes between palette and popover swap. -->
-          <div class="ax-chord" id="ax-chord" aria-hidden="true">
-            <kbd>⌘</kbd><kbd>K</kbd>
-          </div>
         </div><!-- /.ax-palette -->
       </div>
       <!-- Beat narrator: swaps copy through the ⌘K → row-by-row →
@@ -4956,6 +4951,7 @@ section.mb-section{padding-top:24px;max-width:none}
   function lightStage(){ stage.classList.add('lit'); }
 
   async function setHint(html){
+    if(!hintPill) return;
     if(hintPill.classList.contains('shown')){
       hintPill.classList.remove('shown');
       await wait(180);
@@ -4963,7 +4959,7 @@ section.mb-section{padding-top:24px;max-width:none}
     hintPill.innerHTML = html;
     hintPill.classList.add('shown');
   }
-  function hideHint(){ hintPill.classList.remove('shown'); }
+  function hideHint(){ if(hintPill) hintPill.classList.remove('shown'); }
 
   const HINT = {
     fuzzy:    '<span class="ico">⚡</span><span>Fuzzy match</span>',
@@ -5006,8 +5002,7 @@ section.mb-section{padding-top:24px;max-width:none}
     topIde.classList.remove('tinted');
     openHnt.textContent = '— Open in Cursor';
     setFocusedIde('cursor');
-    hintPill.innerHTML = HINT.alreadyOpen;
-    hintPill.classList.add('shown');
+    if(hintPill){ hintPill.innerHTML = HINT.alreadyOpen; hintPill.classList.add('shown'); }
     lightStage();
     setCap('<kbd>↵</kbd> opens Cursor.');
     return;
@@ -5130,7 +5125,7 @@ section.mb-section{padding-top:24px;max-width:none}
   const topIde  = document.getElementById('ax-topide');
   const projects= document.getElementById('ax-projects');
   const cap     = document.getElementById('ax-cap');
-  if(!palette || !card || !chord || !list || !yamlF || !yamlEl) return;
+  if(!palette || !card || !list || !yamlF || !yamlEl) return;
   if(!typed || !ghost || !projects) return;
 
   const QUERY = 'web';
@@ -5203,7 +5198,7 @@ section.mb-section{padding-top:24px;max-width:none}
       li.classList.remove('mapping');
     });
     yamlEntries.forEach(e => { e.classList.remove('lit'); e.classList.remove('mapping'); });
-    chord.classList.remove('shown');
+    if(chord) chord.classList.remove('shown');
     card.classList.remove('open');
     stage.classList.remove('popover-open','morphed');
   }
@@ -5234,14 +5229,14 @@ section.mb-section{padding-top:24px;max-width:none}
     // dropped because the yaml file lighting up alongside each row IS
     // that explanation, and the closing morphed-state caption ("Every
     // action is one yaml entry.") drives it home anyway.
-    chord.classList.add('shown');
+    if(chord) chord.classList.add('shown');
     setCap('<kbd>⌘</kbd><kbd>K</kbd> opens project actions.');
     await wait(220); if(!alive()) return;
     stage.classList.add('popover-open');
     await wait(280); if(!alive()) return;
     card.classList.add('open');
     await wait(1500); if(!alive()) return;
-    chord.classList.remove('shown');
+    if(chord) chord.classList.remove('shown');
     await wait(900); if(!alive()) return;
 
     // Beat 3 — walk the bright blue selection down the action list,
