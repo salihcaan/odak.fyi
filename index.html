@@ -2424,14 +2424,23 @@ section.mb-section{padding-top:24px;max-width:none}
   /* Shadow in cqi against .macbook (1cqi ≈ 10.8px at the 1080px stage
      cap) so the floating-off-the-page drop-shadow scales with the
      frame on mobile instead of staying chunky under a phone-sized
-     macbook. 60/70px desktop → 5.56cqi/6.48cqi. */
-  filter:drop-shadow(0 5.56cqi 6.48cqi rgba(0,0,0,.45));
+     macbook. Three layers — contact + key + far cast — sum to a
+     smooth gaussian fall-off so the shadow dissolves into the page
+     instead of ending in a visible edge. (drop-shadow has no spread
+     parameter, so layering is the only way to soften the perimeter.) */
+  filter:
+    drop-shadow(0 0.55cqi 1.30cqi rgba(0,0,0,.22))
+    drop-shadow(0 3.70cqi 5.55cqi rgba(0,0,0,.26))
+    drop-shadow(0 8.30cqi 11.10cqi rgba(0,0,0,.18));
   /* drop-shadow is expensive — promote to its own layer so it
      repaints once instead of on every hover/scroll above. */
   transform:translateZ(0);
 }
 [data-theme="light"] .macbook .frame{
-  filter:drop-shadow(0 5.56cqi 6.48cqi rgba(26,20,16,.28));
+  filter:
+    drop-shadow(0 0.55cqi 1.30cqi rgba(26,20,16,.10))
+    drop-shadow(0 3.70cqi 5.55cqi rgba(26,20,16,.16))
+    drop-shadow(0 8.30cqi 11.10cqi rgba(26,20,16,.10));
 }
 /* Notch + camera overlay. Inlined SVG slice from the original
    macbook-pro-frame.svg (the notch path + camera radial gradient
@@ -2638,10 +2647,15 @@ section.mb-section{padding-top:24px;max-width:none}
   z-index:50;
   transform:translate(var(--cx, 0px), var(--cy, 0px)) rotate(0deg) scale(var(--focus-scale, 1.08));
   /* Shadow + accent halo in cqi so they scale with the macbook frame.
+     Layered (contact + key + far cast) instead of one big α=.7 drop —
+     the focused window is also visually scaled ~3.4× by the transform,
+     which would amplify any single-layer edge into a hard cut.
      The 2px accent ring stays a touch thicker — 0.23cqi ≈ 2px desktop;
      the visible thickness is multiplied by the focus-scale transform. */
   box-shadow:
-    0 3.65cqi 9.13cqi rgba(0,0,0,.7),
+    0 0.7cqi 1.6cqi rgba(0,0,0,.30),
+    0 2.4cqi 5.5cqi rgba(0,0,0,.36),
+    0 5.5cqi 11.0cqi rgba(0,0,0,.26),
     0 0 0 0.23cqi var(--accent),
     0 0 5.48cqi var(--accent-glow);
 }
@@ -3236,7 +3250,9 @@ section.mb-section{padding-top:24px;max-width:none}
   width:74%;max-width:300px;
   margin:0;border-radius:14px;
   box-shadow:
-    0 30px 60px -10px rgba(0,0,0,.6),
+    0 6px 14px rgba(0,0,0,.22),
+    0 22px 44px -8px rgba(0,0,0,.38),
+    0 44px 72px -16px rgba(0,0,0,.22),
     0 0 0 1px rgba(255,255,255,.05);
 }
 .mb-odak-wrap .odak-actions .head{padding:8px 12px;font-size:10px;gap:8px}
@@ -3260,11 +3276,13 @@ section.mb-section{padding-top:24px;max-width:none}
    first paint. contain-intrinsic-size is a deliberate over-estimate
    per section so the scrollbar doesn't jump when each one rehydrates. */
 @supports (content-visibility: auto){
-  /* mb-section is the second-heaviest section in the file: huge inline
-     macbook SVG, ten window blurs, an animated title-card. It sits
-     just below the hero so it's offscreen on most viewports — adding
-     it here is the single biggest remaining first-paint win. */
-  .mb-section    { content-visibility:auto; contain-intrinsic-size:1px 900px;  }
+  /* .mb-section is intentionally excluded: content-visibility:auto
+     silently applies paint containment, which clips any draw that
+     extends past the section's box — including the macbook frame's
+     upward drop-shadow halo. The clip read as a hard horizontal cut
+     just above the device. mb-section sits directly under the hero
+     and is in-viewport on most loads anyway, so the perf cost of
+     omitting it is small and the visual win is unambiguous. */
   #features      { content-visibility:auto; contain-intrinsic-size:1px 2400px; }
   #positioning   { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
   #pricing       { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
