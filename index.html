@@ -892,6 +892,81 @@ h2.section-h .mute{color:var(--dim)}
    so the copy doesn't fight the panel transition. */
 .f-carousel .f-copy{position:static;padding-top:0;padding-bottom:0}
 
+/* ==========================================================
+   F-CAP — bottom-anchored caption pill that narrates each
+   carousel beat. Same chrome and swap-cadence as .mb-caption
+   inside the macbook frame: Inter semibold, translucent black
+   pill, with mono kbd for keystrokes. The f-copy column on the
+   left explains the feature; this pill explains what's happening
+   in the live demo right now ("⌘K opens actions", "Tail logs in
+   Kibana", etc.) so the viewer never has to guess which beat is
+   on screen.
+   ========================================================== */
+.f-cap-track{
+  /* Sits below the demo in normal flow with a fixed reserved height
+     so the caption never overlaps the demo and the whole f-stage
+     extends by a predictable amount. Centered horizontally; the
+     demo above is centered too, so the pill aligns visually with
+     the demo's main column. */
+  margin-top:24px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.f-cap{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 14px;
+  font-family:var(--display);font-size:13.5px;font-weight:500;
+  /* Letter-spacing, blur, and shadow values are harmonized with
+     .mb-caption so the carousel and macbook captions read as the
+     same UI component at different sizes. Don't tweak one without
+     the other. */
+  letter-spacing:-.008em;color:var(--fg);
+  background:rgba(0,0,0,.78);
+  border:1px solid color-mix(in oklch, var(--fg) 18%, transparent);
+  border-radius:999px;
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:
+    0 12px 32px -10px rgba(0,0,0,.65),
+    0 0 0 1px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  white-space:nowrap;
+  opacity:0;transform:translateY(6px) scale(.97);
+  /* Snappier entrance than .mb-caption — captions here narrate beats
+     that typically last 1.2–2.5s, so a 350ms fade-in chewed too much
+     of the readable window. 240ms in / 100ms swap-dip leaves ~80%
+     of each beat as steady, fully-rendered copy. */
+  transition:opacity .24s var(--ease-out), transform .32s var(--ease-snappy);
+}
+.f-cap.shown{opacity:1;transform:none}
+/* Brief dip on swap so consecutive beats read as distinct rather
+   than one piece of text mutating in place. Kept short (100ms) so
+   the readable window per beat isn't eaten by transition time. */
+.f-cap.swapping{
+  opacity:0;transform:translateY(-3px) scale(.97);
+  transition:opacity .1s var(--ease-out), transform .1s var(--ease-out);
+}
+.f-cap kbd{
+  font-family:var(--mono);font-size:.86em;color:var(--fg);
+  padding:1.5px 6px;border-radius:4px;margin:0 1px;
+  background:color-mix(in oklch, var(--fg) 14%, transparent);
+  border:1px solid color-mix(in oklch, var(--fg) 20%, transparent);
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.2);
+  letter-spacing:0;
+}
+.f-cap .dim{color:var(--fg-2)}
+[data-theme="light"] .f-cap{
+  background:rgba(255,255,255,.92);color:var(--fg);
+  border-color:var(--border-2);
+  box-shadow:
+    0 10px 28px -10px rgba(26,20,16,.22),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+@media (max-width:520px){
+  .f-cap{font-size:12px;padding:6px 11px;gap:6px}
+  .f-cap kbd{font-size:.84em;padding:1px 5px}
+}
+
 @media (max-width:960px){
   /* Mobile: keep the carousel — three stacked feature blocks would be
      too much scrolling — but compact the tab strip so all three labels
@@ -1181,7 +1256,7 @@ h2.section-h .mute{color:var(--dim)}
 .actions-stage .ax-card{
   position:absolute;
   bottom:10px;right:10px;
-  width:62%;
+  width:52%;
   background:rgba(20,15,12,.96);
   border:1px solid rgba(255,255,255,.12);
   border-radius:9px;
@@ -2881,15 +2956,20 @@ section.mb-section{padding-top:24px;max-width:none}
      keys themselves render in mono so the technical accuracy stays. */
   padding:1.14cqi 2.28cqi;
   font-family:var(--display);font-size:clamp(13px, 2.05cqi, 19px);
-  font-weight:500;letter-spacing:-.01em;
+  font-weight:500;letter-spacing:-.008em;
   color:var(--fg);
+  /* Chrome (background, border, blur, shadow) matches .f-cap so the
+     carousel and macbook captions feel like the same component at
+     different sizes. Sizing IS context-driven (cqi vs fixed px) on
+     purpose: this pill lives inside a container-query macbook frame
+     and needs to scale with it. */
   background:rgba(0,0,0,.78);
   border:1px solid color-mix(in oklch, var(--fg) 18%, transparent);
   border-radius:999px;
-  backdrop-filter:blur(22px) saturate(180%);
-  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
   box-shadow:
-    0 12px 36px -10px rgba(0,0,0,.7),
+    0 12px 32px -10px rgba(0,0,0,.65),
     0 0 0 1px rgba(255,255,255,.04),
     inset 0 1px 0 rgba(255,255,255,.08);
   white-space:nowrap;
@@ -3836,7 +3916,7 @@ section.mb-section{padding-top:24px;max-width:none}
      Tabs auto-advance; pause on hover/focus.
      ========================================================== -->
 <section class="block" id="features">
-  <div class="f-carousel" data-advance-ms="13000">
+  <div class="f-carousel" data-advance-ms="16000">
     <div class="f-tabs" role="tablist" aria-label="Features">
       <button class="f-tab active" type="button" role="tab" aria-selected="true" aria-controls="f-panel-search" id="f-tab-search" data-idx="0">
         <span class="lbl-full">Find &amp; focus</span>
@@ -4020,6 +4100,9 @@ section.mb-section{padding-top:24px;max-width:none}
           </div>
         </div>
       </div>
+      <!-- Beat narrator: swaps copy each time the search demo enters
+           a new state (chord, type, ⇥, ↵). See the hero IIFE. -->
+      <div class="f-cap-track"><div class="f-cap" id="hero-cap" aria-live="polite"></div></div>
     </div>
   </div>
       </div>
@@ -4106,6 +4189,8 @@ section.mb-section{padding-top:24px;max-width:none}
           <span class="row"><kbd>⌥W</kbd> Close</span>
         </div>
       </div>
+      <!-- Beat narrator: swaps copy as the selection walks the list. -->
+      <div class="f-cap-track"><div class="f-cap" id="tab-cap" aria-live="polite"></div></div>
     </div>
   </div>
       </div>
@@ -4318,6 +4403,12 @@ section.mb-section{padding-top:24px;max-width:none}
           </div>
         </div><!-- /.ax-palette -->
       </div>
+      <!-- Beat narrator: swaps copy through the ⌘K → row-by-row →
+           yaml-mapping arc. Crucial for the actions panel because
+           each row's effect (open browser, tail logs, terminal,
+           per-repo variable) reads as one yaml entry, and the
+           caption is what makes that connection legible. -->
+      <div class="f-cap-track"><div class="f-cap" id="ax-cap" aria-live="polite"></div></div>
     </div>
   </div>
       </div><!-- /.f-panel#f-panel-actions -->
@@ -4461,6 +4552,10 @@ section.mb-section{padding-top:24px;max-width:none}
           </svg>
         </span>
       </div>
+      <!-- Beat narrator: aligned by CSS keyframes to the 13s notch
+           cycle so the copy swaps as the cursor climbs, the popover
+           drops, and each IDE row gets hovered. -->
+      <div class="f-cap-track"><div class="f-cap f-cap-notch" id="notch-cap" aria-live="polite"></div></div>
     </div>
   </div>
       </div><!-- /.f-panel#f-panel-notch -->
@@ -4764,7 +4859,30 @@ section.mb-section{padding-top:24px;max-width:none}
   const hintPill = document.getElementById('hero-hint');
   const chosen  = document.getElementById('hero-chosen');
   const list    = document.getElementById('hero-list');
+  const cap     = document.getElementById('hero-cap');
   if(!palette || !list || !stage) return;
+
+  // Caption pill below the demo. Same swap pattern as .mb-caption:
+  // briefly dip the old text out before the new copy arrives so each
+  // beat reads as a discrete change instead of a silent replace.
+  let capTok = 0;
+  function setCap(html){
+    if(!cap) return;
+    if(!html){ cap.classList.remove('shown'); return; }
+    const tok = ++capTok;
+    if(cap.classList.contains('shown') && cap.innerHTML !== html){
+      cap.classList.add('swapping');
+      setTimeout(() => {
+        if(tok !== capTok) return;
+        cap.innerHTML = html;
+        cap.classList.remove('swapping');
+        cap.classList.add('shown');
+      }, 110);
+      return;
+    }
+    cap.innerHTML = html;
+    cap.classList.add('shown');
+  }
 
   // Tab cycles through the editors open on the selected project. Matches
   // OnboardingSearchAnimation's "Tab to pick an editor" beat.
@@ -4873,6 +4991,7 @@ section.mb-section{padding-top:24px;max-width:none}
     hintPill.innerHTML = HINT.alreadyOpen;
     hintPill.classList.add('shown');
     lightStage();
+    setCap('<kbd>↵</kbd> opens Cursor.');
     return;
   }
 
@@ -4885,51 +5004,69 @@ section.mb-section{padding-top:24px;max-width:none}
 
     resetState();
     lightStage();
-    await wait(380); if(!alive()) return;
+    // Three captions for the whole arc — gesture, action, result.
+    // The hint-pill INSIDE the search bar (HINT.fuzzy / alreadyOpen /
+    // tab / enter) handles the contextual "fuzzy match", "already
+    // open · 3 editors" colour — this caption pill stays focused on
+    // the keyboard chord that the viewer needs to learn.
+    setCap('<kbd>⌥</kbd><kbd>Space</kbd> opens the palette.');
+    await wait(560); if(!alive()) return;
 
     // ⌥ Space chord — quick visual confirmation
-    await pressChord(220); if(!alive()) return;
-    await wait(220);       if(!alive()) return;
+    await pressChord(280); if(!alive()) return;
+    await wait(420);       if(!alive()) return;
 
-    // Type "web" — list shrinks as non-matches filter out
+    // Type "web" — list shrinks as non-matches filter out. Slower
+    // per-key cadence (240ms) so the typing reads as deliberate.
     setHint(HINT.fuzzy);
+    setCap('Type three letters.');
     for(let i = 1; i <= QUERY.length; i++){
       if(!alive()) return;
       const q = QUERY.slice(0, i);
       typed.textContent = q;
       filterList(q);
       setGhost(q);
-      await wait(190);
+      await wait(240);
     }
-    await wait(620); if(!alive()) return;
+    await wait(1100); if(!alive()) return;
 
-    // Un-tint Cursor — "already open"
+    // Un-tint Cursor — "already open" hint pill carries the message
+    // ("Already open · 3 editors") via the small badge in the search
+    // bar; the bottom caption stays quiet so the eye can read the
+    // hint-pill without two simultaneous prose updates.
     topIde.classList.remove('tinted');
     openHnt.textContent = '— Open in Cursor';
     setFocusedIde('cursor');
     setHint(HINT.alreadyOpen);
-    await wait(820); if(!alive()) return;
+    await wait(1100); if(!alive()) return;
 
-    // Tab cycle through the 3 open editors
+    // Tab cycle through the 3 open editors. ONE caption explains the
+    // gesture; the visible top-IDE icon swap IS the per-step proof.
+    // Captioning each individual editor swap (Cursor → VS Code →
+    // IntelliJ → Cursor) read as a flicker the eye couldn't track.
     await setHint(HINT.tab);
-    await wait(260);          if(!alive()) return;
+    setCap('<kbd>⇥</kbd> picks the editor.');
+    await wait(900);           if(!alive()) return;
     await tabSwap(EDITORS[1]); if(!alive()) return;
-    await wait(440);          if(!alive()) return;
+    await wait(800);           if(!alive()) return;
     await tabSwap(EDITORS[2]); if(!alive()) return;
-    await wait(440);          if(!alive()) return;
+    await wait(800);           if(!alive()) return;
     await tabSwap(EDITORS[0]); if(!alive()) return;
-    await wait(320);          if(!alive()) return;
+    await wait(700);           if(!alive()) return;
 
     // ↵ — focus the chosen window
     await setHint(HINT.enter);
+    setCap('<kbd>↵</kbd> opens Cursor.');
     enterP.classList.add('shown');
-    await wait(620); if(!alive()) return;
+    await wait(950); if(!alive()) return;
 
     chosen.classList.add('shown');
     palette.classList.add('dimmed');
     enterP.classList.remove('shown');
     hideHint();
-    // Stay in the focused state until the next activation re-runs the demo.
+    // No closing caption — the chosen window growing into focus is
+    // the result; restating it as text would dilute the visual.
+    // Stay in the focused state until the next activation re-runs.
   }
 
   // Trigger on initial intersection (page-load arrival) AND whenever
@@ -4974,6 +5111,7 @@ section.mb-section{padding-top:24px;max-width:none}
   const openHnt = document.getElementById('ax-open-hint');
   const topIde  = document.getElementById('ax-topide');
   const projects= document.getElementById('ax-projects');
+  const cap     = document.getElementById('ax-cap');
   if(!palette || !card || !chord || !list || !yamlF || !yamlEl) return;
   if(!typed || !ghost || !projects) return;
 
@@ -4981,6 +5119,40 @@ section.mb-section{padding-top:24px;max-width:none}
   const projectItems = Array.from(projects.querySelectorAll('li'));
   const actionItems  = Array.from(list.querySelectorAll('li'));
   const yamlEntries  = Array.from(yamlEl.querySelectorAll('.ax-yaml-entry'));
+
+  // One per action row. The mapping beat needs more than the action's
+  // label — the viewer should learn what each action does, where it
+  // lives in ~/.odak/config.yaml, and which dimension changes per
+  // project (URL, env var, working directory). Keyed by data-key on
+  // the popover row so the captions can't drift if rows reorder.
+  const ACTION_CAPTIONS = {
+    'open-github':   '<kbd>⌘</kbd><kbd>G</kbd> opens <span class="dim">github.com/acme/web-app</span>.',
+    'open-staging':  '<kbd>⌘</kbd><kbd>S</kbd> opens <span class="dim">{STAGING_URL}</span> from <span class="dim">.odak</span>.',
+    'tail-logs':     '<kbd>⌘</kbd><kbd>L</kbd> tails Kibana for <span class="dim">web-app</span>.',
+    'terminal-here': '<kbd>⌘</kbd><kbd>↵</kbd> opens a shell <span class="dim">cd\'d</span> into the repo.',
+  };
+
+  // Caption pill at the bottom of the actions panel. Same swap pattern
+  // as the macbook frame's .mb-caption — brief dip-out before the new
+  // copy lands so each beat reads as a deliberate change.
+  let capTok = 0;
+  function setCap(html){
+    if(!cap) return;
+    if(!html){ cap.classList.remove('shown'); return; }
+    const tok = ++capTok;
+    if(cap.classList.contains('shown') && cap.innerHTML !== html){
+      cap.classList.add('swapping');
+      setTimeout(() => {
+        if(tok !== capTok) return;
+        cap.innerHTML = html;
+        cap.classList.remove('swapping');
+        cap.classList.add('shown');
+      }, 110);
+      return;
+    }
+    cap.innerHTML = html;
+    cap.classList.add('shown');
+  }
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
 
@@ -5024,6 +5196,7 @@ section.mb-section{padding-top:24px;max-width:none}
     yamlEntries.forEach(e => e.classList.add('lit'));
     actionItems.forEach(li => li.classList.remove('on'));
     stage.classList.add('popover-open','morphed');
+    setCap('Every action is one yaml entry.');
     return;
   }
 
@@ -5033,50 +5206,62 @@ section.mb-section{padding-top:24px;max-width:none}
     const alive = () => myToken === runToken;
 
     resetState();
-    // Beat 1 — palette opens with the project list already visible;
-    // web-app is the active project (.on). Hold long enough for the
-    // viewer to register the list before ⌘K fires.
+    // No "web-app selected." caption — the highlighted row in the
+    // palette is the visual confirmation by itself.
     await wait(1100); if(!alive()) return;
 
     // Beat 2 — ⌘K chord flashes; the search/project rows fade out;
-    // yaml file reveals; popover slides in bottom-right. The longer
-    // pause after the popover lands lets the eye take in the menu
-    // before the mapping beat starts pairing rows.
+    // yaml file reveals; popover slides in bottom-right. ONE caption
+    // here for the gesture; the "each row is one yaml entry" beat is
+    // dropped because the yaml file lighting up alongside each row IS
+    // that explanation, and the closing morphed-state caption ("Every
+    // action is one yaml entry.") drives it home anyway.
     chord.classList.add('shown');
-    await wait(180); if(!alive()) return;
-    stage.classList.add('popover-open');
+    setCap('<kbd>⌘</kbd><kbd>K</kbd> opens project actions.');
     await wait(220); if(!alive()) return;
+    stage.classList.add('popover-open');
+    await wait(280); if(!alive()) return;
     card.classList.add('open');
-    await wait(500); if(!alive()) return;
+    await wait(1500); if(!alive()) return;
     chord.classList.remove('shown');
-    await wait(680); if(!alive()) return;
+    await wait(900); if(!alive()) return;
 
     // Beat 3 — walk the bright blue selection down the action list,
-    // pairing each row with its corresponding yaml entry. Moving .on
+    // pairing each row with its corresponding yaml entry AND swapping
+    // the caption to whichever effect that action fires. Each row's
+    // caption explains what the action *does* (open browser, tail
+    // logs, cd into repo) so the viewer learns the action library
+    // even when their cursor isn't over the screen. Moving .on
     // (instead of pinning it to row 0) reads as "the next action is
     // selected" — the same visual you'd see arrowing through the
-    // real popover. Slow and deliberate: a 950ms simultaneous pulse
-    // lets the pair register as one beat, then a 560ms rest before
-    // the next pair starts so the wave reads as "1… 2… 3… 4" — slow
-    // enough that the viewer can follow each row → yaml mapping.
+    // real popover.
+    //
+    // Pulse pacing (slowed from 950+560 = 1510ms): 1300ms with the
+    // mapping flash on, then 900ms rest with .lit holding. Total
+    // 2200ms per row gives the eye time to read the action's caption
+    // (sentence-length, includes a kbd chord + a description) before
+    // the next pair takes over. Last pair gets a longer rest so the
+    // morphed beat doesn't feel rushed.
     for(let i = 0; i < actionItems.length; i++){
       if(!alive()) return;
       const entry = yamlEntries[i];
+      const row   = actionItems[i];
+      const key   = row && row.dataset.key;
       actionItems.forEach((li, j) => li.classList.toggle('on', j === i));
       if(entry){
         entry.classList.add('mapping');
         entry.classList.add('lit');
       }
-      await wait(950);
+      if(key && ACTION_CAPTIONS[key]) setCap(ACTION_CAPTIONS[key]);
+      await wait(1300);
       if(!alive()) return;
       if(entry) entry.classList.remove('mapping');
-      // Last pair gets a longer rest to settle the eye before the
-      // popover dismisses and the file lifts to centre stage.
-      await wait(i === actionItems.length - 1 ? 1100 : 560);
+      await wait(i === actionItems.length - 1 ? 1500 : 900);
     }
 
     // Beat 4 — popover dismisses, yaml file lifts to centre stage.
     stage.classList.add('morphed');
+    setCap('Every action is one yaml entry.');
     // Hold on the morphed state until the carousel advances and re-fires.
   }
 
@@ -5316,7 +5501,7 @@ section.mb-section{padding-top:24px;max-width:none}
     filterList(QUERY);
     openActions();
     if(browser) browser.classList.add('shown');
-    setCaption('<kbd>⌘</kbd><kbd>K</kbd> opens on GitHub.');
+    setCaption('<kbd>↵</kbd> opens on GitHub.');
     hideTitleCard();
     return;
   }
@@ -5348,58 +5533,73 @@ section.mb-section{padding-top:24px;max-width:none}
       // ACT 1 — Search
       // =========================================================
       showTitleCard({
-        eyebrow: 'Search',
+        eyebrow: 'Act 1 — Search',
         title: 'Any repo. <em>Instantly.</em>',
-        sub: '<kbd>⌥</kbd><kbd>Space</kbd>. Type. Done.'
+        sub: '<kbd>⌥</kbd><kbd>Space</kbd> <span class="dot"></span> Type three letters <span class="dot"></span> <kbd>↵</kbd>'
       });
       await wait(TC_HOLD);
       hideTitleCard();
       await wait(TC_FADE);
 
       // ----- Beat 1: chaos reveal -----
+      // No caption — the wall of scattered IDE windows is the question
+      // ("which one?") all by itself. A pill underneath would just
+      // restate what the eye already sees.
       wins.classList.add('shown');
-      setCaption('12 projects. Which one?');
-      await wait(1400);
+      await wait(1600);
 
       // ----- Beat 2: palette opens (⌥ Space) -----
+      // First explanatory caption — viewers need to know the gesture
+      // since the chord isn't visualized in the chrome.
       wins.classList.add('dimmed');
       wrap.classList.add('shown');
       setCaption('<kbd>⌥</kbd><kbd>Space</kbd> opens Odak.');
-      await wait(800);
+      await wait(1700);
 
       // ----- Beat 3: type "we" -----
-      setCaption('Just type.');
+      // Caption renders before the typing starts so the viewer reads
+      // it WHILE the keys appear. Slower per-key cadence (200ms) makes
+      // the typing itself easier to follow as well.
+      setCaption('Type three letters.');
       for(let i = 1; i <= QUERY.length; i++){
         const q = QUERY.slice(0, i);
         typed.textContent = q;
         filterList(q);
         setGhost(q);
-        await wait(160 + Math.random() * 70);
+        await wait(200 + Math.random() * 70);
       }
-      await wait(550);
+      await wait(1300);
 
       // ----- Beat 4: settle, signal already-open Cursor -----
+      // No caption — the row's three IDE icons (Cursor, VS Code,
+      // IntelliJ) and the un-tinted top icon already say "already
+      // open in three editors". Hold briefly so the viewer can land
+      // on that visual before ⇥ starts cycling.
       topIde.classList.remove('tinted');
       openHnt.textContent = '— Open in Cursor';
       setFocusedIde('cursor');
-      await wait(800);
+      await wait(900);
 
       // ----- Beat 5: Tab cycles through the 3 editors open on web-app -----
-      setCaption('<kbd>⇥</kbd> switches editor.');
-      await wait(500);
+      // ONE caption for the whole cycle — the visible IDE icon swapping
+      // in the top-right of the search bar IS the demonstration of ⇥;
+      // captioning each individual swap (Cursor → VS Code → IntelliJ →
+      // Cursor) only adds a flicker the eye has to chase.
+      setCaption('<kbd>⇥</kbd> picks the editor.');
+      await wait(1000);
       await tabSwap(EDITORS[1]);  // VS Code
-      await wait(750);
+      await wait(900);
       await tabSwap(EDITORS[2]);  // IntelliJ
-      await wait(750);
+      await wait(900);
       await tabSwap(EDITORS[0]);  // back to Cursor
-      await wait(600);
+      await wait(700);
 
       // ----- Beat 6: ↵ → matching window grows into focus -----
-      setCaption('<kbd>↵</kbd> opens in Cursor.');
-      await wait(320);
+      setCaption('<kbd>↵</kbd> opens Cursor.');
+      await wait(520);
       focusWindow(topVisibleKey());
       wrap.classList.add('receded');
-      await wait(1500);
+      await wait(2100);
 
       // =========================================================
       // ACT 2 — Actions
@@ -5411,9 +5611,9 @@ section.mb-section{padding-top:24px;max-width:none}
       // =========================================================
       setCaption('');
       showTitleCard({
-        eyebrow: 'Actions',
-        title: 'Any action. <em>Anywhere.</em>',
-        sub: '<kbd>⌘</kbd><kbd>K</kbd>. Pick. Done.'
+        eyebrow: 'Act 2 — Actions',
+        title: 'Any action. <em>Per repo.</em>',
+        sub: '<kbd>⌘</kbd><kbd>K</kbd> <span class="dot"></span> Pick the action <span class="dot"></span> <kbd>↵</kbd>'
       });
       // Cleanup behind the card: full project list visible, top row
       // selected, search bar empty, top-IDE back to its tinted resting
@@ -5432,34 +5632,41 @@ section.mb-section{padding-top:24px;max-width:none}
 
       // ----- Beat 6: ↓ navigate — selection walks down a few rows so
       //  the user sees keyboard nav without typing. Lands on the
-      //  3rd row (index 2 = react-dashboard) for the actions context. -----
-      setCaption('<kbd>↓</kbd> picks the project.');
-      await wait(380);
+      //  3rd row (index 2 = react-dashboard) for the actions context.
+      // No caption — the highlight visibly walking is itself the
+      // explanation. A "↓ picks the project" pill restates the visual.
+      await wait(620);
       const NAV_TARGET = Math.min(2, items.length - 1);
       for(let s = 1; s <= NAV_TARGET; s++){
         items.forEach(li => li.classList.remove('on'));
         items[s].classList.add('on');
-        await wait(360);
+        await wait(460);
       }
-      await wait(700);
+      await wait(900);
 
       // ----- Beat 7: ⌘K — actions popover opens scoped to the row the
       //  user just arrowed onto. "Open on GitHub" is already selected. -----
+      // ONE caption for ⌘K — the popover that drops in already shows
+      // the action library (GitHub / logs / terminal), so a follow-up
+      // line listing those actions would just label what's on screen.
       openActions();
-      setCaption('<kbd>⌘</kbd><kbd>K</kbd> opens actions.');
-      await wait(2200);
+      setCaption('<kbd>⌘</kbd><kbd>K</kbd> opens project actions.');
+      await wait(2400);
 
       // ----- Beat 8: caption swap, hint at the action ↵ fires -----
       setCaption('<kbd>↵</kbd> opens on GitHub.');
-      await wait(1500);
+      await wait(1700);
 
       // ----- Beat 9: actions close, browser mock pops up — sync the
       //  URL to whichever project is currently selected so the mock
-      //  doesn't lie about where the action went. -----
+      //  doesn't lie about where the action went.
+      // No caption — the browser mock IS the proof; clearing the
+      // caption keeps the eye on the URL bar instead of new copy. -----
       syncBrowserUrl();
       closeActions();
       if(browser) browser.classList.add('shown');
-      await wait(2600);
+      setCaption('');
+      await wait(2400);
 
       // ----- Outro: fade everything, loop back to the Act-1 card -----
       if(browser) browser.classList.remove('shown');
@@ -5485,11 +5692,27 @@ section.mb-section{padding-top:24px;max-width:none}
 
 // ===== Feature 2 (⌥Tab) switcher: selection cycles between rows =====
 (function(){
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const demo = document.querySelector('.tab-demo');
   if(!demo) return;
   const rows = Array.from(demo.querySelectorAll('.win'));
   if(rows.length < 2) return;
+  const cap  = document.getElementById('tab-cap');
+
+  // ONE static caption for the whole panel — every row already shows
+  // project + IDE icon + ⌥1–9 hint, so swapping the pill on each
+  // selection just labelled what was already on screen. The pill
+  // sticks to the gesture itself ("⌥⇥ walks every editor window")
+  // because the chord is the only piece NOT visualized in the chrome.
+  function showCap(html){
+    if(!cap) return;
+    cap.innerHTML = html;
+    cap.classList.add('shown');
+  }
+
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    showCap('<kbd>⌥</kbd><kbd>⇥</kbd> walks every editor window.');
+    return;
+  }
 
   function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
   function setSelected(idx){
@@ -5498,11 +5721,13 @@ section.mb-section{padding-top:24px;max-width:none}
   }
 
   async function loop(){
+    showCap('<kbd>⌥</kbd><kbd>⇥</kbd> walks every editor window.');
     let i = 0;
+    const max = Math.min(rows.length, 5);
     while(true){
       setSelected(i);
-      i = (i + 1) % Math.min(rows.length, 5);
-      await wait(1600);
+      i = (i + 1) % max;
+      await wait(1700);
     }
   }
 
@@ -5516,7 +5741,10 @@ section.mb-section{padding-top:24px;max-width:none}
 // CSS animations don't replay just because a parent class flips, and the
 // notch demo needs every layer (cursor, popover, growing notch, IDE icon
 // hovers) to restart from 0% so the choreography stays in sync every
-// time the carousel returns to this panel.
+// time the carousel returns to this panel. The caption pill below the
+// notch is also driven from here — JS schedules its swaps against the
+// same 13s cycle the cursor keyframes use, so the copy lines up with
+// "approach", "drop", "hover-A", "hover-B", "hover-C", "drift away".
 (function(){
   const panel = document.getElementById('f-panel-notch');
   if(!panel) return;
@@ -5524,6 +5752,62 @@ section.mb-section{padding-top:24px;max-width:none}
     '.ns-cursor, .ns-popover, .ns-bezel, .ns-shoulder, .np-ide'
   );
   if(!targets.length) return;
+  const cap = document.getElementById('notch-cap');
+
+  // ONE caption that holds for the whole 13s cycle. Every other beat
+  // (cursor climbing, popover dropping, the three IDE-icon hovers) is
+  // narrated by the visible motion itself; an extra pill restating
+  // each phase ("Cursor drifts up", "Recents drop", "Hover Odak", …)
+  // turned the bottom row into a typewriter the eye had to chase.
+  // The single line names the GESTURE — the only thing the chrome
+  // doesn't visualize — so the viewer can read it once and keep
+  // their attention up on the notch where the action happens.
+  const NOTCH_BEATS = [
+    { at: 2400, html: 'Hover the notch — recents + per-project actions.' },
+  ];
+  let capTimers = [];
+  function clearCapTimers(){
+    capTimers.forEach(t => clearTimeout(t));
+    capTimers = [];
+  }
+  function applyCap(html){
+    if(!cap) return;
+    if(cap.classList.contains('shown') && cap.innerHTML !== html){
+      cap.classList.add('swapping');
+      setTimeout(() => {
+        cap.innerHTML = html;
+        cap.classList.remove('swapping');
+        cap.classList.add('shown');
+      }, 110);
+      return;
+    }
+    cap.innerHTML = html;
+    cap.classList.add('shown');
+  }
+  function scheduleCaps(){
+    if(!cap) return;
+    clearCapTimers();
+    NOTCH_BEATS.forEach(b => {
+      capTimers.push(setTimeout(() => applyCap(b.html), b.at));
+    });
+    // Loop the schedule alongside the 13s CSS animation cycle so the
+    // captions keep narrating after the first run without relying on
+    // panel:active alone (which only fires on tab-switch, not loops).
+    capTimers.push(setTimeout(scheduleCaps, 13000));
+  }
+
+  // Reduced-motion: animations are stopped at the "popover open" frame,
+  // so park the caption on a static label that matches what the user
+  // is looking at instead of cycling through copy that doesn't match.
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    if(cap){ cap.innerHTML = 'Hover the notch — recents and actions.'; cap.classList.add('shown'); }
+  } else if(cap){
+    // Pre-populate first beat so the panel doesn't show an empty
+    // pill on initial paint before the first scheduled timer fires.
+    cap.innerHTML = NOTCH_BEATS[0].html;
+    cap.classList.add('shown');
+  }
+
   panel.addEventListener('panel:active', () => {
     targets.forEach(el => {
       el.style.animation = 'none';
@@ -5531,7 +5815,17 @@ section.mb-section{padding-top:24px;max-width:none}
       void el.offsetWidth;
       el.style.animation = '';
     });
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    scheduleCaps();
   });
+
+  // Kick off the schedule once the panel is initially visible — a
+  // panel that starts active (e.g. linked-to from elsewhere) wouldn't
+  // get panel:active otherwise, and the captions would never run.
+  if(panel.classList.contains('active') &&
+     !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    scheduleCaps();
+  }
 })();
 
 /* ============================================================
