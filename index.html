@@ -11,7 +11,8 @@
 <meta property="og:description" content="Press a hotkey, type a few letters, land in the right window. Built for macOS 26 Tahoe."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://odak.fyi/"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23d89a4e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='4' width='4' height='4' rx='.4'/%3E%3Ccircle cx='3' cy='3' r='1.2'/%3E%3Ccircle cx='9' cy='3' r='1.2'/%3E%3Ccircle cx='3' cy='9' r='1.2'/%3E%3Ccircle cx='9' cy='9' r='1.2'/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/png" href="assets/logo/odak.png"/>
+<link rel="apple-touch-icon" href="assets/logo/odak.png"/>
 <!-- Bundled hero/heading fonts: Inter 700 and JetBrains Mono 600 ship from
      /assets/bundled so the H1 doesn't flicker through a system fallback
      while Google Fonts roundtrips. Preload guarantees the woff2 starts
@@ -263,16 +264,27 @@ button{font-family:inherit}
   padding:14px var(--gutter);gap:24px;
 }
 .nav-brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:16px}
+/* Brand mark — uses the real Odak app icon (terracotta ⌘) shipped from
+   assets/logo/. Two variants are inlined so we can theme-swap without
+   JS: the dark-bg .icon-dark is shown by default (page is dark by
+   default) and we swap to .icon-light under [data-theme="light"]. The
+   PNG already carries its own rounded square + soft shadow + glow, so
+   the wrapper is a clean inline-block — no gradient/box-shadow that
+   would double up on the icon's own. */
 .nav-brand .mark{
-  width:22px;height:22px;display:grid;place-items:center;
-  background:linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-radius:6px;
-  box-shadow:0 0 0 1px var(--border-2), inset 0 1px 0 rgba(255,255,255,.3), 0 0 20px var(--accent-glow);
-  color:var(--accent-ink);
-  font-weight:700;font-size:11px;
-  font-family:var(--mono);
+  width:22px;height:22px;display:inline-block;flex-shrink:0;line-height:0;
 }
-.nav-brand .mark svg{width:12px;height:12px}
+.nav-brand .mark img{
+  width:100%;height:100%;display:block;
+  /* Subtle drop-shadow lifts the icon off the nav surface at 22px —
+     the icon's own shadow is tuned for full-size dock display and
+     fades away when downscaled this far. */
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
+}
+.nav-brand .mark .icon-light{display:none}
+[data-theme="light"] .nav-brand .mark .icon-dark{display:none}
+[data-theme="light"] .nav-brand .mark .icon-light{display:block}
+[data-theme="light"] .nav-brand .mark img{filter:drop-shadow(0 2px 6px rgba(26,20,16,.18))}
 .nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
 .nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s}
 .nav-links a:hover{color:var(--fg);background:var(--surface)}
@@ -3461,11 +3473,8 @@ section.mb-section{padding-top:24px;max-width:none}
   <div class="nav-inner">
     <a href="#" class="nav-brand">
       <div class="mark">
-        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="4" height="4" rx=".4"/>
-          <circle cx="3" cy="3" r="1.2"/><circle cx="9" cy="3" r="1.2"/>
-          <circle cx="3" cy="9" r="1.2"/><circle cx="9" cy="9" r="1.2"/>
-        </svg>
+        <img class="icon-dark" src="assets/logo/odak-dark.png" alt="" width="44" height="44" decoding="async">
+        <img class="icon-light" src="assets/logo/odak.png" alt="" width="44" height="44" decoding="async">
       </div>
       <span>Odak</span>
     </a>
@@ -4709,12 +4718,9 @@ section.mb-section{padding-top:24px;max-width:none}
   <div class="foot-grid">
     <div class="foot-brand">
       <a href="#" class="nav-brand" style="font-size:18px">
-        <div class="mark">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="4" width="4" height="4" rx=".4"/>
-            <circle cx="3" cy="3" r="1.2"/><circle cx="9" cy="3" r="1.2"/>
-            <circle cx="3" cy="9" r="1.2"/><circle cx="9" cy="9" r="1.2"/>
-          </svg>
+        <div class="mark" style="width:28px;height:28px">
+          <img class="icon-dark" src="assets/logo/odak-dark.png" alt="" width="56" height="56" decoding="async">
+          <img class="icon-light" src="assets/logo/odak.png" alt="" width="56" height="56" decoding="async">
         </div>
         <span>Odak</span>
       </a>
