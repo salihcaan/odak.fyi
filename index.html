@@ -3388,7 +3388,11 @@ section.mb-section{padding-top:24px;max-width:none}
    screen interior so the desktop look fits the viewport. */
 @media (max-width:760px){
   section.mb-section{padding-top:16px}
-  .macbook{clip-path:inset(0 7% 0 7%);width:116.3%;margin-left:-8.15%}
+  /* Bezel sits at viewBox x=48.31..570.24 (~7.8% / ~7.88%); a 7% clip leaves
+     a hair of transparent SVG outside the bezel that reveals the cream page
+     bg as white slivers near the corners on light mode. Clip at 8% to land
+     just past both bezel edges; recover width = 100/(1-.16) = 119.05%. */
+  .macbook{clip-path:inset(0 8% 0 8%);width:119.05%;margin-left:-9.52%}
   /* Trim list lengths so the palette + actions popover fit inside the
      (proportionally smaller) macbook screen rect on phones. Sizes are
      unchanged from desktop — we just show fewer rows. Hide the footer
