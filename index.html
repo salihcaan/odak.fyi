@@ -59,9 +59,13 @@
   --prod-blue-2: #3d70c4;
   --prod-blue-glow: rgba(61,112,196,.55);
 
-  /* density */
-  --space-section: 128px;
-  --space-block: 28px;
+  /* density — section padding scales with viewport so phones get
+     ~80px of breathing room between sections instead of the desktop
+     128px (which eats ~17% of a 760px-tall viewport). --space-head
+     pairs eyebrow+title+sub to the next content block on the same
+     scale so the rhythm step is consistent across the page. */
+  --space-section: clamp(80px, 11vw, 128px);
+  --space-head: clamp(40px, 5vw, 64px);
   --radius: 14px;
   --radius-lg: 26px;  /* real app panelCornerRadius */
 
@@ -750,14 +754,17 @@ h2.section-h{
   letter-spacing:-.035em;
   font-weight:700;
   margin:0 0 18px;
-  max-width:20ch;
+  /* 22ch lets longer headings ("Why not just use Raycast?") wrap on
+     a natural breakpoint instead of getting chopped at the accent
+     span; shorter ones ($15. Once. Yours.) still hold their shape. */
+  max-width:22ch;
 }
 h2.section-h .accent{color:var(--accent)}
 h2.section-h .mute{color:var(--dim)}
 .section-sub{
-  font-size:19px;line-height:1.45;color:var(--fg-2);max-width:50ch;margin:0;letter-spacing:-.008em;
+  font-size:18px;line-height:1.45;color:var(--fg-2);max-width:50ch;margin:0;letter-spacing:-.01em;
 }
-.section-head{margin-bottom:64px;max-width:800px}
+.section-head{margin-bottom:var(--space-head);max-width:800px}
 
 /* ==========================================================
    FEATURE — sticky product + text column
@@ -776,7 +783,7 @@ h2.section-h .mute{color:var(--dim)}
   line-height:1.02;letter-spacing:-.03em;font-weight:700;margin:0 0 20px;
 }
 .f-copy h3 .accent{color:var(--accent)}
-.f-copy .lead{font-size:17px;color:var(--fg-2);line-height:1.5;margin:0 0 28px;letter-spacing:-.005em}
+.f-copy .lead{font-size:18px;color:var(--fg-2);line-height:1.5;margin:0 0 28px;letter-spacing:-.005em}
 .f-copy .bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
 .f-copy .bullets li{
   display:flex;align-items:flex-start;gap:14px;padding:14px 16px;
@@ -793,8 +800,8 @@ h2.section-h .mute{color:var(--dim)}
 }
 .f-copy .bullets li .ico svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .f-copy .bullets li .txt{flex:1}
-.f-copy .bullets li .txt b{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px;letter-spacing:-.005em}
-.f-copy .bullets li .txt span{color:var(--dim);font-size:13.5px;line-height:1.45}
+.f-copy .bullets li .txt b{display:block;font-weight:600;font-size:15px;margin-bottom:3px;letter-spacing:-.005em}
+.f-copy .bullets li .txt span{color:var(--dim);font-size:14px;line-height:1.45}
 
 .f-stage{
   position:relative;min-height:540px;
@@ -813,7 +820,7 @@ h2.section-h .mute{color:var(--dim)}
 .f-tabs{
   display:flex;
   border-bottom:1px solid var(--border);
-  margin-bottom:56px;
+  margin-bottom:var(--space-head);
   gap:0;
   position:relative;
 }
@@ -2088,9 +2095,9 @@ h2.section-h .mute{color:var(--dim)}
 }
 .pos-card.us .role{color:var(--accent)}
 .pos-card .name{
-  font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0 0 10px;
+  font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 10px;
 }
-.pos-card .tag{font-size:14.5px;color:var(--fg-2);line-height:1.45;margin:0 0 22px;letter-spacing:-.005em}
+.pos-card .tag{font-size:15px;color:var(--fg-2);line-height:1.45;margin:0 0 22px;letter-spacing:-.005em}
 .pos-card .scope{display:flex;flex-direction:column;gap:8px;margin-top:auto}
 .pos-card .scope-row{
   display:flex;align-items:center;gap:10px;
@@ -2145,7 +2152,7 @@ h2.section-h .mute{color:var(--dim)}
 .price-card .amount-sub{font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin:4px 0 32px;position:relative;z-index:1}
 .price-card ul{list-style:none;padding:0;margin:0 0 32px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
 .price-card ul li{
-  display:flex;align-items:flex-start;gap:12px;color:var(--fg-2);font-size:14.5px;line-height:1.4;
+  display:flex;align-items:flex-start;gap:12px;color:var(--fg-2);font-size:15px;line-height:1.45;
   letter-spacing:-.005em;
 }
 .price-card ul li svg{
@@ -2158,7 +2165,7 @@ h2.section-h .mute{color:var(--dim)}
   padding:14px 22px;border-radius:12px;
   background:linear-gradient(180deg, var(--accent), var(--accent-2));
   color:var(--accent-ink);
-  font-weight:600;font-size:14.5px;letter-spacing:-.005em;
+  font-weight:600;font-size:15px;letter-spacing:-.005em;
   border:1px solid color-mix(in oklch, var(--accent) 70%, black 10%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 12px 32px -8px var(--accent-glow);
   cursor:pointer;transition:transform .18s;
@@ -2177,10 +2184,10 @@ h2.section-h .mute{color:var(--dim)}
 .price-fine a{color:var(--fg-2);border-bottom:1px solid var(--border-2);padding-bottom:1px;transition:color .15s, border-color .15s}
 .price-fine a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 
-.price-aside h3{font-family:var(--display);font-size:34px;font-weight:700;letter-spacing:-.03em;margin:0 0 16px;line-height:1.04}
+.price-aside h3{font-family:var(--display);font-size:32px;font-weight:700;letter-spacing:-.03em;margin:0 0 16px;line-height:1.04}
 .price-aside h3 .accent{color:var(--accent)}
-.price-aside p{color:var(--fg-2);line-height:1.55;margin:0 0 16px;font-size:15.5px;letter-spacing:-.005em}
-.price-aside p.lead{font-size:17.5px;color:var(--fg);margin-bottom:20px}
+.price-aside p{color:var(--fg-2);line-height:1.55;margin:0 0 16px;font-size:15px;letter-spacing:-.005em}
+.price-aside p.lead{font-size:18px;color:var(--fg);margin-bottom:20px}
 .price-aside .seals{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .price-aside .seal{
   font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--dim);
@@ -2191,7 +2198,7 @@ h2.section-h .mute{color:var(--dim)}
    FAQ
    ========================================================== */
 .faq-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:28px 56px;
+  display:grid;grid-template-columns:1fr 1fr;gap:32px 48px;
   max-width:1000px;margin:0 auto;
 }
 .faq-item{
@@ -2203,7 +2210,7 @@ h2.section-h .mute{color:var(--dim)}
   margin:0 0 10px;color:var(--fg);line-height:1.3;
 }
 .faq-item p{
-  margin:0;color:var(--fg-2);font-size:14.5px;line-height:1.55;letter-spacing:-.005em;
+  margin:0;color:var(--fg-2);font-size:15px;line-height:1.55;letter-spacing:-.005em;
 }
 .faq-item p a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in oklch, var(--accent) 50%, transparent)}
 .faq-item p a:hover{border-bottom-color:var(--accent)}
@@ -2219,7 +2226,7 @@ h2.section-h .mute{color:var(--dim)}
    FOOTER
    ========================================================== */
 footer.site-foot{
-  max-width:var(--maxw);margin:120px auto 0;
+  max-width:var(--maxw);margin:var(--space-section) auto 0;
   padding:48px var(--gutter) 32px;
   border-top:1px solid var(--border);
 }
