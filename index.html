@@ -2459,11 +2459,16 @@ section.mb-section{padding-top:24px;max-width:none}
      macbook. Three layers — contact + key + far cast — sum to a
      smooth gaussian fall-off so the shadow dissolves into the page
      instead of ending in a visible edge. (drop-shadow has no spread
-     parameter, so layering is the only way to soften the perimeter.) */
+     parameter, so layering is the only way to soften the perimeter.)
+     Far-cast layer kept light (.08 alpha): on a 1280-1440px desktop
+     with .mb-stage at 92vw the breathing room is only ~50px while the
+     blur extends ~110px, so the body's overflow-x:clip cuts the
+     shadow inside its gaussian fall-off — a heavier alpha would read
+     as a vertical band at the viewport's left/right edges. */
   filter:
     drop-shadow(0 0.55cqi 1.30cqi rgba(0,0,0,.22))
-    drop-shadow(0 3.70cqi 5.55cqi rgba(0,0,0,.26))
-    drop-shadow(0 8.30cqi 11.10cqi rgba(0,0,0,.18));
+    drop-shadow(0 3.20cqi 5.00cqi rgba(0,0,0,.22))
+    drop-shadow(0 6.50cqi 10.00cqi rgba(0,0,0,.08));
   /* drop-shadow is expensive — promote to its own layer so it
      repaints once instead of on every hover/scroll above. */
   transform:translateZ(0);
@@ -2471,8 +2476,8 @@ section.mb-section{padding-top:24px;max-width:none}
 [data-theme="light"] .macbook .frame{
   filter:
     drop-shadow(0 0.55cqi 1.30cqi rgba(26,20,16,.10))
-    drop-shadow(0 3.70cqi 5.55cqi rgba(26,20,16,.16))
-    drop-shadow(0 8.30cqi 11.10cqi rgba(26,20,16,.10));
+    drop-shadow(0 3.20cqi 5.00cqi rgba(26,20,16,.14))
+    drop-shadow(0 6.50cqi 10.00cqi rgba(26,20,16,.04));
 }
 /* Notch + camera overlay. Inlined SVG slice from the original
    macbook-pro-frame.svg (the notch path + camera radial gradient
