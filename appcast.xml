@@ -21,5 +21,35 @@
             <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.0/Odak-0.1.0.dmg" length="27557916" type="application/x-apple-diskimage" sparkle:edSignature="BQ3RWJHwCitSIuU+Gl7E6VQqoMwSA7Wn6MbsfQ7gQ96q1WaU+q3qsNrrgKk9NKjJqShSGNhM4Uf3hfGHsk5aCQ=="/>
         </item>
+            <item>
+            <title>Version 0.1.1</title>
+            <pubDate>Tue, 05 May 2026 22:52:39 +0000</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.1 — quieter idle, snappier feel
+
+This release is mostly performance work. Idle CPU drops to roughly nothing on Apple Silicon — the previous build had a hover-detection timer running 10 times a second whether or not anything was happening, and a search cache rebuilding itself every time any IDE window changed title.
+
+### Performance
+- Dynamic Island hover monitor halves its polling rate (10 Hz → 5 Hz) and skips hit-tests entirely when the cursor isn't anywhere near the top of the screen. This is the biggest win — most ticks now exit on a single coordinate compare.
+- Search caches no longer rebuild while the panel is hidden. They refresh automatically the moment you open it, so badges and filter chips are always current.
+- Global hotkey event tap reads cached shortcut bindings instead of touching the observable settings store on every keystroke.
+
+### Fixes (since 0.1.0)
+- Dynamic Island flares now meet the bezel with a clean horizontal tangent, and the pill blends into the notch and external-display top edge.
+- Search result rows no longer drift when the same project appears under multiple paths.
+- Settings detail pane no longer picks up the accent tint on its form background.
+- Click-to-pin removed from the Dynamic Island; hover-out collapse is reliable again.
+
+### Known limits
+- No in-app purchase yet (license server still being stood up). Trial runs unattended.
+- macOS 26+ only.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.1/Odak-0.1.1.dmg" length="27572559" type="application/x-apple-diskimage" sparkle:edSignature="dvLMpe6g7ElafCRdLWFgwYQy7a5tmW/Lk2kfMcG9ZKqFc4kL0pOxflFnuDQAtarcnTEp/F5oH4UIoJxvCRtKAg=="/>
+        </item>
     </channel>
 </rss>
