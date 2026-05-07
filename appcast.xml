@@ -51,5 +51,23 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.1/Odak-0.1.1.dmg" length="27572559" type="application/x-apple-diskimage" sparkle:edSignature="dvLMpe6g7ElafCRdLWFgwYQy7a5tmW/Lk2kfMcG9ZKqFc4kL0pOxflFnuDQAtarcnTEp/F5oH4UIoJxvCRtKAg=="/>
         </item>
+            <item>
+            <title>Version 0.1.2</title>
+            <pubDate>Thu, 07 May 2026 06:33:36 +0000</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.2 — fixes a launch crash on second launch
+
+A bug-fix release for a crash that some users hit on Apple Silicon Macs after using the app once: the next launch could trap inside `applicationDidFinishLaunching` and the app would never reach its first window.
+
+### Fixes
+- Don't crash on launch when two configured scan folders overlap (a parent and one of its subfolders, or roots that resolve to the same target). The project scanner now drops duplicate paths before returning, which kept the Dynamic Island, search, and App Intents from tripping a duplicate-key trap when building their path-keyed lookups.
+
+No behavior or UI changes — same 0.1.1, just no crash.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.2/Odak-0.1.2.dmg" length="27573165" type="application/x-apple-diskimage" sparkle:edSignature="HzO/cBP4SHSTbdPcLAz6fDmmsj0WyAUXrmv60mollPquaW/UxABzkdLlZrCdTAEahedCWkKJQFjZDqrdRdiBDw=="/>
+        </item>
     </channel>
 </rss>
