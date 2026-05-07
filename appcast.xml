@@ -69,5 +69,26 @@ No behavior or UI changes — same 0.1.1, just no crash.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.2/Odak-0.1.2.dmg" length="27573165" type="application/x-apple-diskimage" sparkle:edSignature="HzO/cBP4SHSTbdPcLAz6fDmmsj0WyAUXrmv60mollPquaW/UxABzkdLlZrCdTAEahedCWkKJQFjZDqrdRdiBDw=="/>
         </item>
+            <item>
+            <title>Version 0.1.3</title>
+            <pubDate>Thu, 07 May 2026 10:24:16 +0000</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>0.1.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.3 — notch matches the Quick Switcher
+
+The Dynamic Island now shows the same set of open IDE windows that the Quick Switcher does, with one row per actual project.
+
+### Improvements
+- **DataGrip and other JetBrains-virtual projects** now appear in the notch. Previously only projects living in your configured scan folders showed up, so DataGrip sessions (and any project opened from outside your scan roots) silently went missing even when the Switcher could see them.
+- **Same-named projects at different paths render as separate rows.** Two `Swee` projects in different folders no longer collapse into a single ambiguous row whose icon belonged to whichever scan-folder iteration order won.
+- **Each open window gets its own icon in the row's strip.** Two Cursor windows of the same project show as two Cursor icons — each focusable independently — instead of being deduplicated into one.
+
+### Fixes
+- Hovering one row no longer highlights another. Variable row heights from a missing subtitle line, plus a couple of paths that produced colliding row IDs, were causing multiple rows to light up at once.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.3/Odak-0.1.3.dmg" length="27618743" type="application/x-apple-diskimage" sparkle:edSignature="q3BbxZXsAQs0pmkGkUFeQPkaXiHKI1Y+pDHkZARed3g0Z45fNdHOgNcavIfLcgT2xIrPX2NQhsTT4yHdYKlCAg=="/>
+        </item>
     </channel>
 </rss>
