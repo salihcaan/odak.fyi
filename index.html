@@ -736,7 +736,7 @@ h1.hero-h .accent{
    ========================================================== */
 section.block{
   max-width:var(--maxw);margin:0 auto;
-  padding:var(--space-section) var(--gutter) 0;
+  padding:calc(var(--space-section) - 48px) var(--gutter) 48px;
   position:relative;
 }
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
@@ -2408,7 +2408,7 @@ footer.site-foot{
    radial halo below (which extends ~50% of stage height past the base)
    plus the largest drop-shadow's blur+offset, so the shadow always has
    room to fully dissolve before hitting #features. */
-section.mb-section{padding-top:24px;padding-bottom:clamp(180px, 22vw, 360px);max-width:none}
+section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-width:none}
 
 /* Three-way cap on the stage so the device stays a "device" instead of
    dominating the viewport on ultra-wide monitors. The vh*1.642 term
@@ -2450,10 +2450,10 @@ section.mb-section{padding-top:24px;padding-bottom:clamp(180px, 22vw, 360px);max
   content:'';
   position:absolute;
   left:50%;
-  top:80%;
+  top:90%;
   transform:translateX(-50%);
   width:110%;
-  height:100%;
+  height:50%;
   z-index:-2;
   pointer-events:none;
   background:radial-gradient(
@@ -2557,17 +2557,17 @@ section.mb-section{padding-top:24px;padding-bottom:clamp(180px, 22vw, 360px);max
      Sized in cqi against .macbook-wrap (1cqi ≈ 10.8px at the 1080px stage cap).
      Four layers hugging the silhouette: tight contact, near-key, wide halo, bridge. */
   filter:
-    drop-shadow(0 0.18cqi 0.46cqi rgba(0,0,0,.34))
-    drop-shadow(0 0.92cqi 2.04cqi rgba(0,0,0,.26))
-    drop-shadow(0 3.20cqi 5.00cqi rgba(0,0,0,.22))
-    drop-shadow(0 6.50cqi 10.00cqi rgba(0,0,0,.08));
+    drop-shadow(0 0.1cqi 0.3cqi rgba(0,0,0,.34))
+    drop-shadow(0 0.5cqi 1.2cqi rgba(0,0,0,.26))
+    drop-shadow(0 1.5cqi 3.0cqi rgba(0,0,0,.22))
+    drop-shadow(0 3.0cqi 5.0cqi rgba(0,0,0,.08));
 }
 [data-theme="light"] .macbook-wrap{
   filter:
-    drop-shadow(0 0.18cqi 0.46cqi rgba(26,20,16,.28))
-    drop-shadow(0 0.92cqi 2.04cqi rgba(26,20,16,.20))
-    drop-shadow(0 3.20cqi 5.00cqi rgba(26,20,16,.16))
-    drop-shadow(0 6.50cqi 10.00cqi rgba(26,20,16,.07));
+    drop-shadow(0 0.1cqi 0.3cqi rgba(26,20,16,.28))
+    drop-shadow(0 0.5cqi 1.2cqi rgba(26,20,16,.20))
+    drop-shadow(0 1.5cqi 3.0cqi rgba(26,20,16,.16))
+    drop-shadow(0 3.0cqi 5.0cqi rgba(26,20,16,.07));
 }
 /* MacBook Pro 16" Silver — inline SVG mockup (open-lid view with
    visible base + feet). Frame aspect 619x377 = 1.642. Screen rectangle
@@ -3421,10 +3421,9 @@ section.mb-section{padding-top:24px;padding-bottom:clamp(180px, 22vw, 360px);max
      just above the device. mb-section sits directly under the hero
      and is in-viewport on most loads anyway, so the perf cost of
      omitting it is small and the visual win is unambiguous. */
-  /* #features, #positioning, and #pricing are also excluded because
-     their cards cast heavy drop-shadows that extend past the section box.
-     Applying paint containment clips these shadows exactly at the padding
-     boundary, creating a harsh cut-off. */
+  #features      { content-visibility:auto; contain-intrinsic-size:1px 2400px; }
+  #positioning   { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
+  #pricing       { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
   #faq           { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
   .site-foot     { content-visibility:auto; contain-intrinsic-size:1px 360px;  }
 }
