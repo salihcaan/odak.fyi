@@ -1,0 +1,19 @@
+#!/bin/sh
+# Auto-rebuilds minified HTML when src/*.html is staged, so the deployed
+# files at repo root never drift from their src/ source. Bypass with
+# `git commit --no-verify` if you really need to.
+
+if ! git diff --cached --name-only | grep -qE '^src/.*\.html$'; then
+  exit 0
+fi
+
+echo "→ pre-commit: rebuilding HTML"
+if ! npm run --silent build; then
+  echo "✖ build failed; commit aborted"
+  exit 1
+fi
+
+for f in src/*.html; do
+  base=$(basename "$f")
+  [ -f "$base" ] && git add "$base"
+done
