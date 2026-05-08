@@ -1,9 +1,0 @@
-src/
-node_modules/
-build.mjs
-package.json
-package-lock.json
-.gitignore
-.assetsignore
-docs/conversion-review-plan.md
-docs/paddle-integration-plan.md

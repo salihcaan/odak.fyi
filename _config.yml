@@ -1,0 +1,18 @@
+# GitHub Pages Jekyll config. Site is plain HTML — Jekyll only runs to
+# apply the exclude list below; HTML/CSS/JS files lack YAML front-matter
+# so Jekyll passes them through unmodified.
+
+exclude:
+  - src
+  - build.mjs
+  - package.json
+  - package-lock.json
+  - node_modules
+  - .githooks
+  - .gitignore
+  - .assetsignore
+  - _redirects
+  - README.md
+  - CLAUDE.md
+  - docs/conversion-review-plan.md
+  - docs/paddle-integration-plan.md
