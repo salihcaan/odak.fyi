@@ -90,5 +90,24 @@ The Dynamic Island now shows the same set of open IDE windows that the Quick Swi
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.3/Odak-0.1.3.dmg" length="27618743" type="application/x-apple-diskimage" sparkle:edSignature="q3BbxZXsAQs0pmkGkUFeQPkaXiHKI1Y+pDHkZARed3g0Z45fNdHOgNcavIfLcgT2xIrPX2NQhsTT4yHdYKlCAg=="/>
         </item>
+            <item>
+            <title>Version 0.1.4</title>
+            <pubDate>Fri, 08 May 2026 22:16:38 +0000</pubDate>
+            <sparkle:version>7</sparkle:version>
+            <sparkle:shortVersionString>0.1.4</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.4 — same-name projects, everywhere
+
+When two projects share a name (e.g. an `odak.fyi` checkout in `~/code/` and another in `~/code/configs/`), Odak now shows the disambiguating parent folder as a small chip next to the project name on every surface, not just the search results.
+
+### Improvements
+- **Parent-folder chip in the Quick Switcher and Dynamic Island.** Two windows or rows for same-named projects in different folders now show a `configs` / `code` pill next to the title, the same one you've seen in search. The notch uses a higher-contrast variant so the pill stays readable on the dark notch surface in light mode.
+
+### Fixes
+- **Xcode-opened projects now match their scanned project correctly.** Opening Odak (or any Xcode project whose inner source directory shares the project name) used to produce two rows in the notch — one for the scanned project, one phantom row labelled like `Odak Odak` — and the search row would lose its Xcode icon. Windows resolved into a subdirectory of a scanned project now fold into that project everywhere.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.4/Odak-0.1.4.dmg" length="7844952" type="application/x-apple-diskimage" sparkle:edSignature="wO4JuIpnEnEVMuzJMAJsFi/C2jm6JXnu/dlYWvV+XJj2NcgId8ZJ22VcN00G56eT7a3Ei8P6YMIqJu072tjvCQ=="/>
+        </item>
     </channel>
 </rss>
