@@ -219,6 +219,16 @@ button{font-family:inherit}
   0%{transform:translate(0,0) scale(1)}
   100%{transform:translate(-12vw,-6vh) scale(1.1)}
 }
+/* Pause the aurora drift while the user is actively scrolling — two
+   full-viewport blurred (60px) blobs animating transform keep their
+   textures live on the GPU, which costs composite budget exactly when
+   we want it free for the scroll itself. The motion is only perceptible
+   when the page is at rest anyway, so pausing during scroll is invisible
+   and resumes after 150ms idle (toggled from the nav scroll listener). */
+body.scrolling .aurora::before,
+body.scrolling .aurora::after{
+  animation-play-state:paused;
+}
 
 /* grain */
 .grain{
@@ -244,10 +254,12 @@ button{font-family:inherit}
   position:sticky;top:0;z-index:80;
   /* backdrop-filter recomputes every frame the underlying content
      scrolls, so it is the single biggest scroll-time cost on the page.
-     Dropped blur 28→18 and saturate 180→150 — still reads as Tahoe
-     glass, costs about half as much per frame. The slightly more
-     opaque background (55→62%) compensates for the lower blur so
-     small text behind the bar still reads cleanly. */
+     Strategy: keep the Tahoe glass ONLY while at scrollY=0 (nothing is
+     moving, blur is cached, free cosmetic win for screenshots and the
+     hero shot). The moment the page scrolls, JS toggles .scrolled and
+     we drop to an opaque tinted bar — exactly when content under the
+     nav is moving every frame and the blur would be expensive.
+     Transition smooths the swap so the bar doesn't pop. */
   backdrop-filter:blur(18px) saturate(150%);
   -webkit-backdrop-filter:blur(18px) saturate(150%);
   background:color-mix(in oklch, var(--bg) 62%, transparent);
@@ -256,6 +268,12 @@ button{font-family:inherit}
      surfaces, makes the bar read as a translucent panel rather than
      a flat tinted strip. */
   box-shadow:inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  transition:background .25s var(--ease-out), backdrop-filter .25s var(--ease-out);
+}
+.nav.scrolled{
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  background:color-mix(in oklch, var(--bg) 92%, transparent);
 }
 /* Mobile devices struggle with backdrop-filter and the saved compositor
    budget is more useful for scrolling smoothness than for the glass
@@ -482,8 +500,12 @@ h1.hero-h .accent{
 }
 .stage-inner{
   position:relative;z-index:1;
+  /* transform-style:preserve-3d kept in case a child uses 3D transforms;
+     will-change was for a JS scroll-parallax that no longer exists
+     (was a Firefox-only fallback and the CSS counterpart was never
+     added — modern Chrome/Safari rendered a static stage anyway).
+     Removed so we don't pay GPU memory for a non-existent animation. */
   transform-style:preserve-3d;
-  will-change:transform;
   /* Must exceed the palette's natural full-5-row height. Row body
      inherits body line-height:1.55, so each row is ~65.75px, palette
      full ≈ 443px. If the palette is ever taller than stage-inner, the
@@ -2428,7 +2450,16 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   background:
     radial-gradient(ellipse 60% 40% at 50% 30%, var(--accent-glow), transparent 60%),
     radial-gradient(ellipse 40% 30% at 30% 70%, var(--accent-warm-2), transparent 65%);
-  filter:blur(60px);opacity:.7;
+  /* blur 60→40: the radial-gradients already have a soft falloff, so the
+     heavy blur was mostly compounding work the gradient stops already do.
+     40px still reads as ambient haze and the underlying ellipse shapes
+     stay invisible at .7 opacity.
+     will-change:transform promotes the glow to its own compositor layer
+     so when .mb-stage transforms (reveal animation, parallax), the
+     blurred texture is just translated rather than re-rastered every
+     frame — the single biggest win here. */
+  filter:blur(40px);opacity:.7;
+  will-change:transform;
 }
 /* Atmospheric cast shadow under the device — sits behind .glow and the
    macbook itself (z-index:-2 inside .mb-stage's stacking context, which
@@ -2555,21 +2586,24 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   container-type:inline-size;
   /* Shadow lives on .macbook-wrap so it isn't clipped by .macbook's layout box.
      Applying filter + clip-path on the same element causes WebKit to crop the filter.
-     
+
      Sized in cqi against .macbook-wrap (1cqi ≈ 10.8px at the 1080px stage cap).
-     Four layers hugging the silhouette: tight contact, near-key, wide halo, bridge. */
+     Three layers hugging the silhouette: tight contact, near-key, wide halo.
+     The 4th "bridge" layer (5cqi blur, alpha .08) was dropped — its region
+     overlaps the radial-gradient halo on .mb-stage::after, so the visual
+     loss is near-zero while we save 25% of the per-paint filter cost
+     (drop-shadow re-rasters the whole alpha mask every frame the macbook
+     is in motion — reveal, parallax, theme swap). */
   filter:
     drop-shadow(0 0.1cqi 0.3cqi rgba(0,0,0,.34))
     drop-shadow(0 0.5cqi 1.2cqi rgba(0,0,0,.26))
-    drop-shadow(0 1.5cqi 3.0cqi rgba(0,0,0,.22))
-    drop-shadow(0 3.0cqi 5.0cqi rgba(0,0,0,.08));
+    drop-shadow(0 1.5cqi 3.0cqi rgba(0,0,0,.22));
 }
 [data-theme="light"] .macbook-wrap{
   filter:
     drop-shadow(0 0.1cqi 0.3cqi rgba(26,20,16,.28))
     drop-shadow(0 0.5cqi 1.2cqi rgba(26,20,16,.20))
-    drop-shadow(0 1.5cqi 3.0cqi rgba(26,20,16,.16))
-    drop-shadow(0 3.0cqi 5.0cqi rgba(26,20,16,.07));
+    drop-shadow(0 1.5cqi 3.0cqi rgba(26,20,16,.16));
 }
 /* MacBook Pro 16" Silver — inline SVG mockup (open-lid view with
    visible base + feet). Frame aspect 619x377 = 1.642. Screen rectangle
@@ -4954,28 +4988,46 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   setInterval(tick, 30_000);
 })();
 
-// ===== Parallax on hero stage =====
-// JS fallback for browsers without scroll-driven CSS animations
-// (Safari pre-TP, etc.). Modern Chromium/Safari TP run the same effect
-// natively via @supports (animation-timeline) in the stylesheet — we
-// no-op here in that case so we don't double-drive the transform.
+// ===== Scroll-driven perf toggles =====
+// Two effects both need to know "is the user actively scrolling":
+//   1. Nav: drop backdrop-filter while scrolling — biggest scroll-time
+//      cost on the page (a sticky blur re-rasters every frame the
+//      content under it moves). Keep the Tahoe glass only at scrollY=0.
+//   2. Aurora: pause the two full-viewport blur(60px) drift animations
+//      during scroll. Their textures stay live on the GPU otherwise,
+//      eating composite budget exactly when we want it free.
+// One passive scroll listener drives both. rAF dedupes the per-frame
+// work; a 150ms idle timer flips body.scrolling off after the user
+// stops, which is when the aurora drift becomes visible again.
 (function(){
-  const stageInner = document.getElementById('stage-inner');
-  if(!stageInner) return;
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if(CSS.supports && CSS.supports('animation-timeline','scroll()')) return;
+  const nav  = document.querySelector('.nav');
+  const body = document.body;
   let rafId = null;
-  function updateParallax(){
-    const sc = window.scrollY;
-    const t = Math.max(-40, Math.min(40, sc * 0.08));
-    const rx = Math.max(-4, Math.min(4, 3 - sc*0.01));
-    stageInner.style.transform = `translateY(${-t*0.5}px) rotateX(${rx}deg)`;
+  let idleT = null;
+  let lastScrolled = false;
+  let isScrolling  = false;
+  function update(){
+    const scrolled = window.scrollY > 4;
+    if(scrolled !== lastScrolled){
+      if(nav) nav.classList.toggle('scrolled', scrolled);
+      lastScrolled = scrolled;
+    }
     rafId = null;
   }
-  window.addEventListener('scroll', () => {
-    if(!rafId) rafId = requestAnimationFrame(updateParallax);
-  }, { passive: true });
-  updateParallax();
+  function onScroll(){
+    if(!rafId) rafId = requestAnimationFrame(update);
+    if(!isScrolling){
+      isScrolling = true;
+      body.classList.add('scrolling');
+    }
+    if(idleT) clearTimeout(idleT);
+    idleT = setTimeout(() => {
+      isScrolling = false;
+      body.classList.remove('scrolling');
+    }, 150);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  update();
 })();
 
 // ===== Scroll reveals =====
