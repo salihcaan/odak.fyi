@@ -2125,9 +2125,9 @@ h2.section-h .mute{color:var(--dim)}
     radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 60%),
     linear-gradient(180deg, var(--bg-2), var(--bg));
   overflow:hidden;
-  box-shadow:0 40px 80px -20px rgba(0,0,0,.4), inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
+  box-shadow:0 24px 48px -12px rgba(0,0,0,.35), inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
 }
-[data-theme="light"] .price-card{box-shadow:0 40px 80px -20px rgba(26,20,16,.15), inset 0 1px 0 #fff}
+[data-theme="light"] .price-card{box-shadow:0 24px 48px -12px rgba(26,20,16,.15), inset 0 1px 0 #fff}
 .price-card::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(180deg, color-mix(in oklch, var(--accent) 8%, transparent), transparent 40%);
@@ -2399,7 +2399,16 @@ footer.site-foot{
 /* Hero device — break out of the 1200px page container so the frame
    reads as a hero subject, not a small inset. The macbook section is
    the only section that overrides section.block's max-width cap. */
-section.mb-section{padding-top:24px;max-width:none}
+/* padding-bottom reserves space for the macbook's atmospheric halo so
+   it can fall into mb-section's own box. Without it, the shadow extends
+   into the next section (#features) whose content-visibility:auto +
+   paint containment establishes a stacking context that crops the halo
+   at the section boundary — visible as a hard horizontal cut right
+   under the silver base. The reserved value tracks the .mb-stage::after
+   radial halo below (which extends ~50% of stage height past the base)
+   plus the largest drop-shadow's blur+offset, so the shadow always has
+   room to fully dissolve before hitting #features. */
+section.mb-section{padding-top:24px;padding-bottom:clamp(180px, 22vw, 360px);max-width:none}
 
 /* Three-way cap on the stage so the device stays a "device" instead of
    dominating the viewport on ultra-wide monitors. The vh*1.642 term
@@ -2418,6 +2427,56 @@ section.mb-section{padding-top:24px;max-width:none}
     radial-gradient(ellipse 60% 40% at 50% 30%, var(--accent-glow), transparent 60%),
     radial-gradient(ellipse 40% 30% at 30% 70%, var(--accent-warm-2), transparent 65%);
   filter:blur(60px);opacity:.7;
+}
+/* Atmospheric cast shadow under the device — sits behind .glow and the
+   macbook itself (z-index:-2 inside .mb-stage's stacking context, which
+   is established by perspective + transform-style:preserve-3d above).
+   The drop-shadow filter chain on .macbook handles the tight contact +
+   near-key shadows that hug the silhouette; this halo is the diffuse
+   far cast that gives the laptop visual weight on the page. Using a
+   radial-gradient (instead of a 5th drop-shadow layer) lets the falloff
+   stretch over a much longer distance with custom color stops, so the
+   edge dissolves into the page bg instead of ending in a Gaussian-
+   shaped contour.
+
+   Position math: pseudo box spans top:75% to top:75%+85%=160% of stage
+   height — i.e., it starts 25% above the laptop base and reaches 60%
+   below it. Gradient peak at 50% 30% of pseudo means brightest alpha
+   sits at 75% + 30%·85% = 100.5% of stage height, just under the silver
+   base. Bright peak is visible BELOW the laptop (where shadows fall in
+   real life), not hidden behind the device. Width capped at 96% so
+   body's overflow-x:clip can't slice the flank into a visible band. */
+.mb-stage::after{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:80%;
+  transform:translateX(-50%);
+  width:110%;
+  height:100%;
+  z-index:-2;
+  pointer-events:none;
+  background:radial-gradient(
+    ellipse 50% 45% at 50% 25%,
+    rgba(26,20,16,.42) 0%,
+    rgba(26,20,16,.30) 18%,
+    rgba(26,20,16,.18) 38%,
+    rgba(26,20,16,.08) 62%,
+    rgba(26,20,16,.03) 82%,
+    rgba(26,20,16,0) 98%
+  );
+  filter:blur(8px);
+}
+[data-theme="dark"] .mb-stage::after{
+  background:radial-gradient(
+    ellipse 50% 45% at 50% 25%,
+    rgba(0,0,0,.65) 0%,
+    rgba(0,0,0,.45) 18%,
+    rgba(0,0,0,.26) 38%,
+    rgba(0,0,0,.10) 62%,
+    rgba(0,0,0,.03) 82%,
+    rgba(0,0,0,0) 98%
+  );
 }
 
 .macbook{
@@ -2438,20 +2497,77 @@ section.mb-section{padding-top:24px;max-width:none}
      and reads as a "white notch" against the dark bezel.
      But the LID is only 7.8%..92.1% wide while the BASE/keyboard deck
      (path at y=352.619..374.291 = 93.53%..99.28%) and feet are nearly
-     full-width — a flat inset(0 8% 0 8%) would chop both. So we use a
-     polygon that narrows to the lid bezel above y=93.53% and flares
-     back to full width below it, with line-segment approximations of
-     the bezel's top arcs (5 points each) clipping the corner notches.
-     Mobile additionally rescales width/margin to recover the trimmed
-     side bezels — see the @media rule below. */
+     full-width — a flat inset(0 8% 0 8%) would chop both. So we use
+     clip-path: shape() to narrow to the lid bezel above y=93.53% and
+     flare back to full width below it, with TRUE elliptical arcs at
+     the top corners (rx 2% / ry 3.5%) so the bezel rounding is
+     mathematically smooth — no faceted line segments. The drop-shadow
+     filter below renders against this same silhouette, so the cast
+     shadow inherits the smooth curve too. Polygon fallback (with
+     5-segment arc approximations) covers browsers that don't support
+     shape() yet. Mobile additionally rescales width/margin to recover
+     the trimmed side bezels — see the @media rule below. */
   clip-path:polygon(
     10% 0%, 90% 0%,
-    90.77% 0.27%, 91.41% 1.03%, 91.85% 2.16%, 92% 3.5%,
-    92% 93.53%, 100% 93.53%, 100% 100%,
-    0% 100%, 0% 93.53%, 8% 93.53%,
+    90.39% 0.07%, 90.77% 0.27%, 91.13% 0.61%, 91.41% 1.03%,
+    91.65% 1.55%, 91.85% 2.16%, 91.95% 2.81%, 92% 3.5%,
+    92% 93.53%,
+    100% 93.53%, 100% 99.28%,
+    95.11% 99.28%, 95.11% 100%, 89.27% 100%, 89.27% 99.28%,
+    10.64% 99.28%, 10.64% 100%, 4.81% 100%, 4.81% 99.28%,
+    0% 99.28%, 0% 93.53%,
+    8% 93.53%,
     8% 3.5%,
-    8.15% 2.16%, 8.59% 1.03%, 9.23% 0.27%
+    8.05% 2.81%, 8.15% 2.16%, 8.35% 1.55%, 8.59% 1.03%,
+    8.87% 0.61%, 9.23% 0.27%, 9.61% 0.07%
   );
+  /* Smooth-curve override for browsers that support CSS shape() — the
+     two arc commands replace the polygon's top-corner line segments
+     with exact elliptical arcs, so the bezel rounding (and the drop-
+     shadow that follows it) reads as a single continuous curve. */
+  clip-path:shape(
+    from 10% 0%,
+    hline to 90%,
+    arc to 92% 3.5% of 2% 3.5% cw small,
+    vline to 93.53%,
+    hline to 100%,
+    vline to 99.28%,
+    hline to 95.11%,
+    vline to 100%,
+    hline to 89.27%,
+    vline to 99.28%,
+    hline to 10.64%,
+    vline to 100%,
+    hline to 4.81%,
+    vline to 99.28%,
+    hline to 0%,
+    vline to 93.53%,
+    hline to 8%,
+    vline to 3.5%,
+    arc to 10% 0% of 2% 3.5% cw small,
+    close
+  );
+}
+.macbook-wrap{
+  position:relative;width:100%;
+  container-type:inline-size;
+  /* Shadow lives on .macbook-wrap so it isn't clipped by .macbook's layout box.
+     Applying filter + clip-path on the same element causes WebKit to crop the filter.
+     
+     Sized in cqi against .macbook-wrap (1cqi ≈ 10.8px at the 1080px stage cap).
+     Four layers hugging the silhouette: tight contact, near-key, wide halo, bridge. */
+  filter:
+    drop-shadow(0 0.18cqi 0.46cqi rgba(0,0,0,.34))
+    drop-shadow(0 0.92cqi 2.04cqi rgba(0,0,0,.26))
+    drop-shadow(0 3.20cqi 5.00cqi rgba(0,0,0,.22))
+    drop-shadow(0 6.50cqi 10.00cqi rgba(0,0,0,.08));
+}
+[data-theme="light"] .macbook-wrap{
+  filter:
+    drop-shadow(0 0.18cqi 0.46cqi rgba(26,20,16,.28))
+    drop-shadow(0 0.92cqi 2.04cqi rgba(26,20,16,.20))
+    drop-shadow(0 3.20cqi 5.00cqi rgba(26,20,16,.16))
+    drop-shadow(0 6.50cqi 10.00cqi rgba(26,20,16,.07));
 }
 /* MacBook Pro 16" Silver — inline SVG mockup (open-lid view with
    visible base + feet). Frame aspect 619x377 = 1.642. Screen rectangle
@@ -2460,31 +2576,6 @@ section.mb-section{padding-top:24px;max-width:none}
 .macbook .frame{
   display:block;width:100%;height:auto;
   user-select:none;-webkit-user-drag:none;
-  /* Shadow in cqi against .macbook (1cqi ≈ 10.8px at the 1080px stage
-     cap) so the floating-off-the-page drop-shadow scales with the
-     frame on mobile instead of staying chunky under a phone-sized
-     macbook. Three layers — contact + key + far cast — sum to a
-     smooth gaussian fall-off so the shadow dissolves into the page
-     instead of ending in a visible edge. (drop-shadow has no spread
-     parameter, so layering is the only way to soften the perimeter.)
-     Far-cast layer kept light (.08 alpha): on a 1280-1440px desktop
-     with .mb-stage at 92vw the breathing room is only ~50px while the
-     blur extends ~110px, so the body's overflow-x:clip cuts the
-     shadow inside its gaussian fall-off — a heavier alpha would read
-     as a vertical band at the viewport's left/right edges. */
-  filter:
-    drop-shadow(0 0.55cqi 1.30cqi rgba(0,0,0,.22))
-    drop-shadow(0 3.20cqi 5.00cqi rgba(0,0,0,.22))
-    drop-shadow(0 6.50cqi 10.00cqi rgba(0,0,0,.08));
-  /* drop-shadow is expensive — promote to its own layer so it
-     repaints once instead of on every hover/scroll above. */
-  transform:translateZ(0);
-}
-[data-theme="light"] .macbook .frame{
-  filter:
-    drop-shadow(0 0.55cqi 1.30cqi rgba(26,20,16,.10))
-    drop-shadow(0 3.20cqi 5.00cqi rgba(26,20,16,.14))
-    drop-shadow(0 6.50cqi 10.00cqi rgba(26,20,16,.04));
 }
 /* Notch + camera overlay. Inlined SVG slice from the original
    macbook-pro-frame.svg (the notch path + camera radial gradient
@@ -3330,9 +3421,10 @@ section.mb-section{padding-top:24px;max-width:none}
      just above the device. mb-section sits directly under the hero
      and is in-viewport on most loads anyway, so the perf cost of
      omitting it is small and the visual win is unambiguous. */
-  #features      { content-visibility:auto; contain-intrinsic-size:1px 2400px; }
-  #positioning   { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
-  #pricing       { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
+  /* #features, #positioning, and #pricing are also excluded because
+     their cards cast heavy drop-shadows that extend past the section box.
+     Applying paint containment clips these shadows exactly at the padding
+     boundary, creating a harsh cut-off. */
   #faq           { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
   .site-foot     { content-visibility:auto; contain-intrinsic-size:1px 360px;  }
 }
@@ -3623,7 +3715,8 @@ section.mb-section{padding-top:24px;max-width:none}
 <section class="block mb-section">
   <div class="mb-stage reveal">
     <div class="glow"></div>
-    <div class="macbook">
+    <div class="macbook-wrap">
+      <div class="macbook">
       <svg class="frame" viewBox="0 0 619 377" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M29.7988 374.291H65.9186L63.4741 376.736C63.3047 376.905 63.075 377 62.8355 377H32.8818C32.6423 377 32.4126 376.905 32.2433 376.736L29.7988 374.291Z" fill="url(#mb-p0)"/>
         <path d="M29.7988 374.291H65.9186L63.4741 376.736C63.3047 376.905 63.075 377 62.8355 377H32.8818C32.6423 377 32.4126 376.905 32.2433 376.736L29.7988 374.291Z" fill="url(#mb-p1)" fill-opacity="0.7"/>
@@ -3988,6 +4081,7 @@ section.mb-section{padding-top:24px;max-width:none}
           </radialGradient>
         </defs>
       </svg>
+    </div>
     </div>
   </div>
 </section>
