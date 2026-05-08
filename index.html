@@ -1452,7 +1452,9 @@ h2.section-h .mute{color:var(--dim)}
      translucent vibrancy material; we approximate with a solid
      near-black so the cream light-mode page can't bleed through
      and wash it out). */
-  --mb-fill:#1c1c1f;
+  --mb-fill:var(--accent);
+  --mb-fg:var(--accent-ink);
+  --mb-fg-dim:color-mix(in oklch, var(--accent-ink) 86%, transparent);
   /* Pure black to match the notch (.ns-bezel #000) exactly — any
      color difference at the seam reads as two components instead
      of one continuous shape pulling out of the notch. */
@@ -1603,7 +1605,7 @@ h2.section-h .mute{color:var(--dim)}
      row only (popover content keeps its display/mono treatment). */
   font-family:-apple-system, system-ui, 'Inter', sans-serif;
   font-size:12px;
-  color:rgba(255,255,255,0.92);
+  color:var(--mb-fg);
   letter-spacing:-.005em;
 }
 .notch-demo .ns-mb-left{
@@ -1622,14 +1624,14 @@ h2.section-h .mute{color:var(--dim)}
   white-space:nowrap;
 }
 .notch-demo .ns-mb-right > *{flex:0 0 auto}
-.notch-demo .ns-apple svg{width:11px;height:13px;display:block;fill:rgba(255,255,255,.94)}
+.notch-demo .ns-apple svg{width:11px;height:13px;display:block;fill:var(--mb-fg)}
 .notch-demo .ns-app{font-weight:600;font-size:12.5px;letter-spacing:-.01em}
 .notch-demo .ns-menu{
   font-size:12.5px;font-weight:400;
   letter-spacing:-.005em;
-  color:rgba(255,255,255,.86);
+  color:var(--mb-fg-dim);
 }
-.notch-demo .ns-ico svg{display:block;height:11px;width:auto;color:rgba(255,255,255,.88);fill:rgba(255,255,255,.88)}
+.notch-demo .ns-ico svg{display:block;height:11px;width:auto;color:var(--mb-fg-dim);fill:var(--mb-fg-dim)}
 .notch-demo .ns-ico.cc svg{height:12px}
 .notch-demo .ns-ico.spot svg{height:12px}
 .notch-demo .ns-ico.bat svg{height:11px}
