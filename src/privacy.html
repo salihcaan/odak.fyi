@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <title>Privacy Policy — Odak</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="How Odak handles your data on the website, in the macOS app, and through purchases."/>
+<meta name="description" content="What Odak collects, what it doesn't, and where it sends what little it has — across the website, the app, and checkout."/>
 <meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)"/>
 <meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)"/>
 <meta name="robots" content="index,follow"/>
@@ -170,14 +170,14 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
 <main>
   <div class="eyebrow">Legal</div>
   <h1>Privacy Policy</h1>
-  <p class="lede">Odak collects as little as possible. This page tells you exactly what is collected, by whom, and why — across the website, the macOS app, and the purchase flow.</p>
-  <p class="meta">Effective 2026-04-25 · Last updated 2026-04-29</p>
+  <p class="lede">Odak collects as little as it can get away with. This page lists exactly what's collected, what isn't, and where the few pieces I do see end up.</p>
+  <p class="meta">Effective 2026-04-25 · Last updated 2026-05-09</p>
 
   <div class="toc" aria-label="Table of contents">
     <ol>
-      <li><a href="#who">Who we are</a></li>
-      <li><a href="#website">The website (odak.fyi)</a></li>
-      <li><a href="#app">The Odak macOS app</a></li>
+      <li><a href="#who">Who I am</a></li>
+      <li><a href="#website">The website</a></li>
+      <li><a href="#app">The macOS app</a></li>
       <li><a href="#purchases">Purchases &amp; Paddle</a></li>
       <li><a href="#support">Support email</a></li>
       <li><a href="#rights">Your rights</a></li>
@@ -187,34 +187,31 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     </ol>
   </div>
 
-  <h2 id="who">1. Who we are</h2>
-  <p>Odak is built and operated by <strong>Hasan Salih Can</strong>, a sole proprietor based in Istanbul, Turkey. In this document, "we", "us", and "Odak" refer to Hasan Salih Can. You can reach us at <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>.</p>
-  <p>For paid purchases of Odak, our authorised reseller and Merchant of Record is <strong>Paddle.com Market Limited</strong> ("Paddle"). Paddle's privacy practices are described at <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">paddle.com/legal/privacy</a>.</p>
+  <h2 id="who">1. Who I am</h2>
+  <p>Hi, I'm <strong>Hasan</strong>. I built Odak and I run it solo from Istanbul. When this page says "I", that's me — when it says "Odak", that's the app and the business.</p>
+  <p>Email me at <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>.</p>
+  <p>Checkout is handled by <strong>Paddle</strong>, my Merchant of Record. Their privacy policy: <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">paddle.com/legal/privacy</a>.</p>
 
-  <h2 id="website">2. The website (odak.fyi)</h2>
-  <p>The marketing site at <code>odak.fyi</code> is intentionally light. It does <strong>not</strong> use:</p>
+  <h2 id="website">2. The website</h2>
+  <p><code>odak.fyi</code> does not track you. I don't care who you are or how you got here.</p>
+  <p>It does not contain:</p>
   <ul>
-    <li>Analytics (no Google Analytics, Plausible, Fathom, PostHog, or similar)</li>
-    <li>Cookies for tracking</li>
-    <li>Advertising or remarketing pixels</li>
-    <li>Session replay or heatmap tools</li>
+    <li>Analytics (no Google Analytics, Plausible, Fathom, PostHog)</li>
+    <li>Tracking cookies, ad pixels, or remarketing</li>
+    <li>Session replay or heatmaps</li>
   </ul>
-  <p>What the site does store and request:</p>
-  <ul>
-    <li><strong>Theme preference</strong> — a single value (<code>odak-theme</code>) saved in your browser's <code>localStorage</code> so the site remembers light or dark mode between visits. It never leaves your browser.</li>
-    <li><strong>Web fonts</strong> — Inter and JetBrains Mono are loaded from Google Fonts. Your browser's request to Google for those fonts may be logged by Google under their own privacy policy.</li>
-    <li><strong>Server access logs</strong> — like every web server, the host serving <code>odak.fyi</code> records standard request data (IP address, user-agent, timestamp, requested path) for security and abuse prevention. These logs are retained for up to 30 days and are not used for profiling.</li>
-  </ul>
+  <p>It stores one thing in your browser: <code>odak-theme</code> in <code>localStorage</code>, so the site remembers light or dark. It never leaves your browser.</p>
+  <p>Two requests do leave your browser, neither of them mine: web fonts (Inter and JetBrains Mono) load from Google Fonts, and the server hosting <code>odak.fyi</code> writes a normal HTTP access log (IP, user-agent, path, timestamp) which I keep for up to 30 days for abuse prevention and never use for profiling.</p>
 
-  <h2 id="app">3. The Odak macOS app</h2>
-  <p>Odak runs locally on your Mac, signed with the hardened runtime and Apple-notarized. Two rules govern what the app does with data:</p>
+  <h2 id="app">3. The macOS app</h2>
+  <p>Odak runs locally on your Mac, signed with the hardened runtime and Apple-notarized. Two rules:</p>
   <div class="box">
-    <p><strong>Nothing that identifies you or your work is ever transmitted.</strong> No project names or paths, no file contents, no search queries, no window titles, no email address, no account, no IP address.</p>
-    <p><strong>Anonymous usage events and crash reports are off by default.</strong> If you opt in — once during onboarding, or any time in <strong>Settings → Privacy</strong> — Odak shares the events listed below and nothing else. The same toggle controls both events and crash reports; flipping it off stops both immediately.</p>
+    <p><strong>Nothing that identifies you or your work is ever transmitted.</strong> No project names or paths, no file contents, no search queries, no window titles, no email, no account, no IP.</p>
+    <p><strong>Anonymous usage events and crash reports are off by default.</strong> Opt in once during onboarding (or any time in <strong>Settings → Privacy</strong>) and Odak will share the events listed below — and nothing else. Flipping the toggle off stops both events and crashes immediately.</p>
   </div>
 
   <h3>Stays on your device</h3>
-  <p>The following never leaves your Mac. It lives in macOS application support directories on disk and syncs nowhere:</p>
+  <p>None of the following ever leaves your Mac. It lives in macOS application support directories and syncs nowhere:</p>
   <ul>
     <li>Project list, paths, branch names, and which projects you've opened</li>
     <li>Search queries you type into the search panel</li>
@@ -224,14 +221,14 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   </ul>
 
   <h3>Anonymous usage analytics — only if you opt in</h3>
-  <p>Odak uses <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> as a data processor. The PostHog SDK is configured for the strongest privacy mode it offers:</p>
+  <p>Odak uses <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> as a data processor, configured for the strictest privacy mode it offers:</p>
   <ul>
-    <li><strong>No person profiles</strong> are created (<code>personProfiles = .never</code>) — events have no user record attached, on PostHog or anywhere else</li>
-    <li><strong>No <code>identify()</code> call is ever made</strong> — your email address is never sent to PostHog, not even after you activate a license</li>
-    <li><strong>No automatic capture</strong> of application lifecycle, screen views, or session replay — only the explicit events listed below</li>
-    <li><strong>No IP collection</strong> at the project level</li>
+    <li><strong>No person profiles</strong> (<code>personProfiles = .never</code>) — events carry no user record</li>
+    <li><strong>No <code>identify()</code></strong> — your email is never sent to PostHog, not even after activating a license</li>
+    <li><strong>No automatic capture</strong> — no lifecycle, no screen views, no session replay; only the explicit events below</li>
+    <li><strong>No IP collection</strong></li>
   </ul>
-  <p>The complete list of events Odak can ever transmit, with the data attached to each:</p>
+  <p>The complete list of events Odak can ever send, and the data attached:</p>
   <ul>
     <li><code>search_opened</code>, <code>actions_panel_opened</code> — no properties</li>
     <li><code>filter_applied</code> — the kind of filter (e.g. <em>folder</em>, <em>ide</em>, <em>uncommitted</em>, <em>tech_stack_swift</em>)</li>
@@ -242,32 +239,31 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     <li><code>remote_repo_opened</code> — git host bucketed into one of <em>github_com</em>, <em>gitlab_com</em>, <em>bitbucket_org</em>, <em>azure_devops</em>, <em>codeberg</em>, <em>sourcehut</em>, <em>self_hosted</em>, or <em>unknown</em>. <strong>Self-hosted hostnames are never sent.</strong></li>
     <li><strong>License events</strong> (<code>license_activated</code>, <code>license_deactivated</code>, <code>license_activation_failed</code>, <code>trial_started</code>) — carry only non-identifying counters and coded reasons. <strong>Never your email, name, or license code.</strong></li>
   </ul>
-  <p>PostHog acts as a data processor on our behalf and may log standard request metadata (user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>. Our PostHog project has IP collection disabled.</p>
+  <p>PostHog may log standard request metadata (user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>. The PostHog project has IP collection disabled.</p>
 
   <h3>Anonymous crash reports — only if you opt in</h3>
-  <p>When telemetry is on, Odak uses PostHog's error-tracking module to capture uncaught exceptions, Mach exceptions, and POSIX signals. Crash reports are persisted to disk and sent as anonymous <code>$exception</code> events on the next launch. Each report contains a symbolicated stack trace, the app version, and the macOS version. It does not contain user code, project content, file paths from outside the Odak bundle, or any identifier that ties the crash back to you. The same <strong>Settings → Privacy</strong> toggle controls both events and crash reports.</p>
+  <p>With telemetry on, Odak uses PostHog's error-tracking module to capture uncaught exceptions, Mach exceptions, and POSIX signals. Reports are written to disk and sent as anonymous <code>$exception</code> events on the next launch. Each one contains a symbolicated stack trace, the app version, and the macOS version — and nothing that ties the crash back to you (no user code, no project content, no paths outside the Odak bundle). The same <strong>Settings → Privacy</strong> toggle controls events and crashes together.</p>
 
   <h3>Update checks (Sparkle)</h3>
-  <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework to check for updates. Periodically (typically once per day when the app is running), it fetches <code>https://odak.fyi/appcast.xml</code>. The host serving that file logs standard request metadata as described in section 2. Sparkle does not transmit any information about you, your projects, or your usage of the app — only the HTTP request itself, which is necessary to download the file.</p>
-  <p>Update binaries are downloaded from GitHub Releases. GitHub may log the download under its own privacy policy.</p>
+  <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework to check for updates. Roughly once a day while the app is running, it fetches <code>odak.fyi/appcast.xml</code>. That hits the same access log described in section 2. Sparkle sends nothing about you, your projects, or your usage — just the HTTP request needed to download the file. Update binaries come from GitHub Releases, which logs the download under GitHub's own policy.</p>
 
   <h2 id="purchases">4. Purchases &amp; Paddle</h2>
-  <p>When you buy Odak, the checkout is handled by <strong>Paddle</strong>, our Merchant of Record. Paddle collects what is necessary to process your payment and meet tax and accounting obligations:</p>
+  <p>When you buy Odak, checkout is run by <strong>Paddle</strong>, my Merchant of Record. Paddle collects what payment and tax law require:</p>
   <ul>
-    <li>Name and email address</li>
+    <li>Name and email</li>
     <li>Billing address and country (for tax)</li>
-    <li>Payment method details (handled by Paddle's PCI-compliant systems — we never see your card number)</li>
+    <li>Payment method details (handled by Paddle's PCI-compliant systems — I never see your card number)</li>
     <li>IP address (for fraud prevention)</li>
   </ul>
-  <p>Paddle is the controller of your payment data and processes it under <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">its own privacy policy</a>. After a successful purchase, Paddle shares with us a limited transaction record — typically your name, email address, country, and the products you bought — so that we can deliver your license key, provide support, and send you essential transactional emails (license delivery, receipts, important update notices). We do not receive your card details.</p>
+  <p>Paddle is the controller of your payment data under <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">its own privacy policy</a>. After a successful purchase, Paddle shares a limited record with me — your name, email, country, and what you bought — so I can deliver your license key, answer support, and send essential transactional emails (license delivery, receipts, important update notices). I never receive your card details.</p>
 
   <h2 id="support">5. Support email</h2>
-  <p>If you write to us at <a href="mailto:support@odak.fyi">support@odak.fyi</a> or <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>, your email and its contents are stored in our mailbox so we can reply. We don't add support correspondents to any marketing list.</p>
+  <p>If you write to <a href="mailto:support@odak.fyi">support@odak.fyi</a> or <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>, your email sits in my mailbox until I reply. I don't add anyone to a marketing list — there isn't one.</p>
 
   <h2 id="rights">6. Your rights</h2>
-  <p>Depending on where you live, you may have rights under the <strong>EU/UK GDPR</strong>, the <strong>California Consumer Privacy Act</strong> (CCPA/CPRA), Turkey's <strong>KVKK</strong>, or similar laws. These typically include the right to:</p>
+  <p>Depending on where you live, you may have rights under the <strong>EU/UK GDPR</strong>, the <strong>California Consumer Privacy Act</strong> (CCPA/CPRA), Turkey's <strong>KVKK</strong>, or similar laws. These usually include the right to:</p>
   <ul>
-    <li>Access the personal data we hold about you</li>
+    <li>Access the personal data I hold about you</li>
     <li>Correct inaccurate data</li>
     <li>Delete your data ("right to be forgotten")</li>
     <li>Object to or restrict certain processing</li>
@@ -275,17 +271,17 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     <li>Withdraw consent where processing is based on consent</li>
     <li>Lodge a complaint with your local data-protection authority</li>
   </ul>
-  <p>To exercise any of these rights for data we hold, email <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>. For payment data held by Paddle, contact Paddle directly via <a href="https://paddle.net" target="_blank" rel="noopener">paddle.net</a>.</p>
+  <p>To exercise any of these for data I hold, email <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>. For payment data held by Paddle, contact Paddle at <a href="https://paddle.net" target="_blank" rel="noopener">paddle.net</a>.</p>
 
   <h2 id="retention">7. Retention</h2>
   <ul>
     <li>Server access logs: up to 30 days.</li>
-    <li>Purchase records (name, email, transaction ID, license): kept for as long as required by tax and accounting law (typically 5–10 years), then deleted.</li>
-    <li>Support email: kept until no longer useful for support, generally up to 24 months after the last reply.</li>
+    <li>Purchase records (name, email, transaction ID, license): kept as long as tax and accounting law require (typically 5–10 years), then deleted.</li>
+    <li>Support email: kept until it's no longer useful, generally up to 24 months after the last reply.</li>
   </ul>
 
   <h2 id="changes">8. Changes</h2>
-  <p>We may update this policy when the product or our processors change. The "Last updated" date at the top of this page reflects the most recent revision. Material changes affecting paying customers will be communicated by email.</p>
+  <p>I'll update this page when the product or my processors change. The "Last updated" date at the top reflects the latest revision. Material changes that affect paying customers go out by email.</p>
 
   <h2 id="contact">9. Contact</h2>
   <div class="box">
