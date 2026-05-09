@@ -151,7 +151,7 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
   </ul>
 
   <h2 id="app">3. The Odak macOS app</h2>
-  <p>Odak runs locally on your Mac, sandboxed and Apple-notarized. Two rules govern what the app does with data:</p>
+  <p>Odak runs locally on your Mac, signed with the hardened runtime and Apple-notarized. Two rules govern what the app does with data:</p>
   <div class="box">
     <p><strong>Nothing that identifies you or your work is ever transmitted.</strong> No project names or paths, no file contents, no search queries, no window titles, no email address, no account, no IP address.</p>
     <p><strong>Anonymous usage events and crash reports are off by default.</strong> If you opt in — once during onboarding, or any time in <strong>Settings → Privacy</strong> — Odak shares the events listed below and nothing else. The same toggle controls both events and crash reports; flipping it off stops both immediately.</p>
@@ -178,13 +178,13 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
   <p>The complete list of events Odak can ever transmit, with the data attached to each:</p>
   <ul>
     <li><code>search_opened</code>, <code>actions_panel_opened</code> — no properties</li>
-    <li><code>filter_applied</code> — the kind of filter (e.g. <em>recent</em>, <em>favourites</em>)</li>
+    <li><code>filter_applied</code> — the kind of filter (e.g. <em>folder</em>, <em>ide</em>, <em>uncommitted</em>, <em>tech_stack_swift</em>)</li>
     <li><code>project_opened</code> — IDE name, query length as a number, and detected tech stacks (e.g. <em>swift</em>, <em>rust</em>)</li>
     <li><code>action_executed</code> — action kind (<em>open_in_app</em>, <em>open_url</em>, <em>run_script</em>) and, for scripts, the language and output mode. <strong>Custom action names are never sent.</strong></li>
     <li><code>action_imported</code> — count of imported actions</li>
     <li><code>window_switched</code> — IDE name only (e.g. <em>cursor</em>, <em>vscode</em>). <strong>Window titles are never sent.</strong></li>
-    <li><code>remote_repo_opened</code> — git host bucketed into one of <em>github_com</em>, <em>gitlab_com</em>, <em>bitbucket_org</em>, <em>azure_devops</em>, <em>codeberg</em>, <em>sourcehut</em>, or <em>self_hosted</em>. <strong>Self-hosted hostnames are never sent.</strong></li>
-    <li><code>license_activated</code>, <code>license_deactivated</code>, <code>license_activation_failed</code>, <code>trial_started</code> — license seat counts, trial day count, and a coded failure reason (e.g. <em>network</em>, <em>device_limit</em>, <em>expired</em>). Never your email, name, or license code.</li>
+    <li><code>remote_repo_opened</code> — git host bucketed into one of <em>github_com</em>, <em>gitlab_com</em>, <em>bitbucket_org</em>, <em>azure_devops</em>, <em>codeberg</em>, <em>sourcehut</em>, <em>self_hosted</em>, or <em>unknown</em>. <strong>Self-hosted hostnames are never sent.</strong></li>
+    <li><strong>License events</strong> (<code>license_activated</code>, <code>license_deactivated</code>, <code>license_activation_failed</code>, <code>trial_started</code>) — carry only non-identifying counters and coded reasons. <strong>Never your email, name, or license code.</strong></li>
   </ul>
   <p>PostHog acts as a data processor on our behalf and may log standard request metadata (user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>. Our PostHog project has IP collection disabled.</p>
 
