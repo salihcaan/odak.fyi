@@ -1251,10 +1251,12 @@ actions:          # required
       // comments first — anything from a leading-hash to end of line
       let m = line.match(/^(\s*)(#.*)$/);
       if(m) return m[1] + '<span class="tc">' + m[2] + '</span>';
+      // Double-quoted strings first — must run BEFORE the key pass, otherwise
+      // the `"tk"` inside the just-inserted `<span class="tk">` matches and the
+      // attribute gets shredded into nested broken markup.
+      let r = line.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, '<span class="ts">"$1"</span>');
       // YAML key (only if `key:` near line start)
-      let r = line.replace(KEY_RE, (_, lead, k, c) => lead + '<span class="tk">' + k + '</span>' + c);
-      // double-quoted strings
-      r = r.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, '<span class="ts">"$1"</span>');
+      r = r.replace(KEY_RE, (_, lead, k, c) => lead + '<span class="tk">' + k + '</span>' + c);
       return r;
     });
     code.innerHTML = out.join('\n');
