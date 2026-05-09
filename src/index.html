@@ -875,7 +875,7 @@ h2.section-h .mute{color:var(--dim)}
 .f-tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:6px}
 
 /* Progress fill under the active tab. JS sets --f-advance on the
-   carousel; the bar animation runs once per cycle and pauses on hover. */
+   carousel; the bar animation runs once per cycle. */
 .f-tab .bar{
   position:absolute;left:0;bottom:-1px;
   height:2px;width:100%;
@@ -886,15 +886,12 @@ h2.section-h .mute{color:var(--dim)}
   pointer-events:none;
 }
 /* Bar only fills while the carousel is actively cycling — JS sets
-   .running once the carousel is in view and not paused. Without this
-   gate, the first tab's bar would empty out before the user scrolls
-   to it, leaving no progress signal on first sight. */
+   .running once the carousel is in view. Without this gate, the first
+   tab's bar would empty out before the user scrolls to it, leaving no
+   progress signal on first sight. Once the user clicks any tab the
+   class is removed and the bar stops with the auto-advance. */
 .f-carousel.running .f-tab.active .bar{
   animation:f-bar-fill var(--f-advance, 7000ms) linear forwards;
-}
-.f-carousel.running:hover .f-tab.active .bar,
-.f-carousel.running:focus-within .f-tab.active .bar{
-  animation-play-state:paused;
 }
 @keyframes f-bar-fill{
   from{transform:scaleX(0)}
@@ -6037,10 +6034,12 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
 })();
 
 /* ============================================================
-   FEATURE CAROUSEL — auto-advancing tabs over the three feature
-   panels. Pauses on hover/focus, resumes on leave; only runs when
-   the carousel is in view; disabled on mobile (CSS hides the tabs)
-   and when prefers-reduced-motion is set.
+   FEATURE CAROUSEL — auto-advancing tabs over the feature panels.
+   Auto-advances continuously while in view; hover does NOT pause.
+   The first user click (or arrow-key) on any tab is treated as
+   engagement and permanently stops auto-advance for the session.
+   Disabled on mobile (CSS hides the tabs) and when
+   prefers-reduced-motion is set.
    ============================================================ */
 (function(){
   const carousel = document.querySelector('.f-carousel');
@@ -6058,7 +6057,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   let currentIdx = 0;
   let timer = null;
   let inView = false;
-  let userPaused = false;
+  let userStopped = false;
 
   function activate(idx){
     currentIdx = idx;
@@ -6090,34 +6089,31 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   function clearTimer(){
     if(timer){ clearInterval(timer); timer = null; }
   }
-  // Sync timer + .running class with the latest state. Hover/focus
-  // only pauses the timer (CSS pauses the bar fill via :hover); going
-  // off-screen or hitting reduced-motion drops .running entirely.
+  // Sync timer + .running class with the latest state. Going off-screen,
+  // hitting reduced-motion, or the user engaging via click/arrow-key
+  // drops .running entirely (the bar stops with it).
   function sync(){
-    if(reducedMotion || !inView){
+    if(reducedMotion || !inView || userStopped){
       clearTimer();
       carousel.classList.remove('running');
       return;
     }
     carousel.classList.add('running');
-    if(userPaused){
-      clearTimer();
-    } else if(!timer){
+    if(!timer){
       timer = setInterval(next, ADVANCE_MS);
     }
   }
-  // Restart the timer fresh — used when the user manually picks a
-  // tab, so the next auto-advance is a full ADVANCE_MS away rather
-  // than firing immediately because the previous interval was nearly up.
-  function restart(){
-    clearTimer();
+  // First user interaction stops auto-advance for the rest of the
+  // session — they're driving now.
+  function stop(){
+    userStopped = true;
     sync();
   }
 
   tabs.forEach((tab, i) => {
     tab.addEventListener('click', () => {
       activate(i);
-      restart();
+      stop();
     });
     tab.addEventListener('keydown', (e) => {
       // Arrow-key navigation between tabs, per WAI-ARIA tablist pattern.
@@ -6127,15 +6123,10 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
         const nextIdx = (i + dir + tabs.length) % tabs.length;
         tabs[nextIdx].focus();
         activate(nextIdx);
-        restart();
+        stop();
       }
     });
   });
-
-  carousel.addEventListener('mouseenter', () => { userPaused = true; sync(); });
-  carousel.addEventListener('mouseleave', () => { userPaused = false; sync(); });
-  carousel.addEventListener('focusin',    () => { userPaused = true; sync(); });
-  carousel.addEventListener('focusout',   () => { userPaused = false; sync(); });
 
   if('IntersectionObserver' in window){
     new IntersectionObserver((entries) => {
