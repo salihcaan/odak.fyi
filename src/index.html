@@ -443,16 +443,6 @@ h1.hero-h .accent{
   font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.01em;
 }
 .hero-fine .dot{width:3px;height:3px;border-radius:50%;background:var(--faint)}
-.trust-seal{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--dim);
-  padding:3px 9px;border:1px solid var(--border);border-radius:999px;background:var(--surface);
-}
-.trust-seal::before{
-  content:'';width:5px;height:5px;border-radius:50%;
-  background:color-mix(in oklch, var(--accent) 80%, transparent);
-}
 
 /* Feature pills (kept as a class — used by the carousel f-copy blocks).
    Hero no longer surfaces these; the carousel does. */
@@ -3745,8 +3735,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
       <div class="hero-fine">
         <span>14-day trial · no card</span>
         <span class="dot"></span>
-        <span class="trust-seal">Apple-notarized</span>
-        <span class="dot"></span>
         <span>macOS 26+ · Apple Silicon + Intel</span>
       </div>
     </div>
@@ -4845,7 +4833,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
       <p class="lead">Save fifteen seconds finding the right window, twenty times a day. Do the math.</p>
       <p>Developers pay for tools that earn their place on the keyboard. We don't think that relationship should renew every month.</p>
       <div class="seals">
-        <span class="seal">Apple-notarized</span>
         <span class="seal">Sandboxed</span>
         <span class="seal">Universal 2</span>
         <span class="seal">Telemetry opt-out</span>
