@@ -151,7 +151,11 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
   </ul>
 
   <h2 id="app">3. The Odak macOS app</h2>
-  <p>Odak runs locally on your Mac, sandboxed and Apple-notarized. The data the app touches falls into two buckets: what stays on your device (everything that identifies you or your work) and a stream of anonymous usage signals we collect so we can see which features earn their keep.</p>
+  <p>Odak runs locally on your Mac, sandboxed and Apple-notarized. Two rules govern what the app does with data:</p>
+  <div class="box">
+    <p><strong>Nothing that identifies you or your work is ever transmitted.</strong> No project names or paths, no file contents, no search queries, no window titles, no email address, no account, no IP address.</p>
+    <p><strong>Anonymous usage events and crash reports are off by default.</strong> If you opt in — once during onboarding, or any time in <strong>Settings → Privacy</strong> — Odak shares the events listed below and nothing else. The same toggle controls both events and crash reports; flipping it off stops both immediately.</p>
+  </div>
 
   <h3>Stays on your device</h3>
   <p>The following never leaves your Mac. It lives in macOS application support directories on disk and syncs nowhere:</p>
@@ -163,33 +167,33 @@ hr{border:none;border-top:1px solid var(--border);margin:48px 0}
     <li>All settings and preferences</li>
   </ul>
 
-  <h3>Anonymous usage analytics</h3>
-  <p>Odak uses <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> as our analytics processor to collect anonymous, aggregated signals about how the app is used — for example, how often the search panel opens, which built-in actions get fired, and which onboarding steps cause people to drop off. We use it to decide what to build next.</p>
-  <p>What's collected:</p>
+  <h3>Anonymous usage analytics — only if you opt in</h3>
+  <p>Odak uses <a href="https://posthog.com" target="_blank" rel="noopener">PostHog</a> as a data processor. The PostHog SDK is configured for the strongest privacy mode it offers:</p>
   <ul>
-    <li>Anonymous event names like <em>"search panel opened"</em> or <em>"action fired"</em></li>
-    <li>Application lifecycle events (launch, foreground, background, quit)</li>
-    <li>App version, macOS version, locale, and device type (e.g. "MacBook Pro")</li>
-    <li>An anonymous device-scoped identifier generated locally — not tied to your Apple ID, email, or any account</li>
+    <li><strong>No person profiles</strong> are created (<code>personProfiles = .never</code>) — events have no user record attached, on PostHog or anywhere else</li>
+    <li><strong>No <code>identify()</code> call is ever made</strong> — your email address is never sent to PostHog, not even after you activate a license</li>
+    <li><strong>No automatic capture</strong> of application lifecycle, screen views, or session replay — only the explicit events listed below</li>
+    <li><strong>No IP collection</strong> at the project level</li>
   </ul>
-  <p>What's <strong>never</strong> collected:</p>
+  <p>The complete list of events Odak can ever transmit, with the data attached to each:</p>
   <ul>
-    <li>Your project names, paths, or repo contents</li>
-    <li>Search queries</li>
-    <li>Window titles, file names, or anything you type, copy, or select</li>
-    <li>The names of the actions you define in <code>~/.odak/config.yaml</code></li>
+    <li><code>search_opened</code>, <code>actions_panel_opened</code> — no properties</li>
+    <li><code>filter_applied</code> — the kind of filter (e.g. <em>recent</em>, <em>favourites</em>)</li>
+    <li><code>project_opened</code> — IDE name, query length as a number, and detected tech stacks (e.g. <em>swift</em>, <em>rust</em>)</li>
+    <li><code>action_executed</code> — action kind (<em>open_in_app</em>, <em>open_url</em>, <em>run_script</em>) and, for scripts, the language and output mode. <strong>Custom action names are never sent.</strong></li>
+    <li><code>action_imported</code> — count of imported actions</li>
+    <li><code>window_switched</code> — IDE name only (e.g. <em>cursor</em>, <em>vscode</em>). <strong>Window titles are never sent.</strong></li>
+    <li><code>remote_repo_opened</code> — git host bucketed into one of <em>github_com</em>, <em>gitlab_com</em>, <em>bitbucket_org</em>, <em>azure_devops</em>, <em>codeberg</em>, <em>sourcehut</em>, or <em>self_hosted</em>. <strong>Self-hosted hostnames are never sent.</strong></li>
+    <li><code>license_activated</code>, <code>license_deactivated</code>, <code>license_activation_failed</code>, <code>trial_started</code> — license seat counts, trial day count, and a coded failure reason (e.g. <em>network</em>, <em>device_limit</em>, <em>expired</em>). Never your email, name, or license code.</li>
   </ul>
-  <p>PostHog acts as a data processor on our behalf and may log standard request metadata (IP address, user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>.</p>
+  <p>PostHog acts as a data processor on our behalf and may log standard request metadata (user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>. Our PostHog project has IP collection disabled.</p>
 
-  <h3>Your choice</h3>
-  <p>Telemetry is <strong>on by default</strong>. The first-launch onboarding flow surfaces the toggle so you can see and change it before sending anything, and you can flip it any time at <strong>Settings → Privacy → Share anonymous usage data</strong>. When the toggle is off, the PostHog SDK is opted out before it captures anything; nothing leaves your Mac on subsequent launches.</p>
+  <h3>Anonymous crash reports — only if you opt in</h3>
+  <p>When telemetry is on, Odak uses PostHog's error-tracking module to capture uncaught exceptions, Mach exceptions, and POSIX signals. Crash reports are persisted to disk and sent as anonymous <code>$exception</code> events on the next launch. Each report contains a symbolicated stack trace, the app version, and the macOS version. It does not contain user code, project content, file paths from outside the Odak bundle, or any identifier that ties the crash back to you. The same <strong>Settings → Privacy</strong> toggle controls both events and crash reports.</p>
 
   <h3>Update checks (Sparkle)</h3>
   <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework to check for updates. Periodically (typically once per day when the app is running), it fetches <code>https://odak.fyi/appcast.xml</code>. The host serving that file logs standard request metadata as described in section 2. Sparkle does not transmit any information about you, your projects, or your usage of the app — only the HTTP request itself, which is necessary to download the file.</p>
   <p>Update binaries are downloaded from GitHub Releases. GitHub may log the download under its own privacy policy.</p>
-
-  <h3>Crash reports</h3>
-  <p>Odak does not include a third-party crash-reporting SDK. Crash reports generated by macOS are handled by Apple per your system "Analytics &amp; Improvements" settings, not by us.</p>
 
   <h2 id="purchases">4. Purchases &amp; Paddle</h2>
   <p>When you buy Odak, the checkout is handled by <strong>Paddle</strong>, our Merchant of Record. Paddle collects what is necessary to process your payment and meet tax and accounting obligations:</p>
