@@ -206,9 +206,10 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <h2 id="app">3. The macOS app</h2>
   <p>Odak runs locally on your Mac, signed with the hardened runtime and Apple-notarized. Two rules:</p>
   <div class="box">
-    <p><strong>Nothing that identifies you or your work is ever transmitted.</strong> No project names or paths, no file contents, no search queries, no window titles, no email, no account, no IP.</p>
+    <p><strong>Nothing about your work ever leaves your Mac.</strong> No project names or paths, no file contents, no search queries, no window titles. Not on the analytics path, not on the license path, not anywhere.</p>
     <p><strong>Anonymous usage events and crash reports are off by default.</strong> Opt in once during onboarding (or any time in <strong>Settings → Privacy</strong>) and Odak will share the events listed below — and nothing else. Flipping the toggle off stops both events and crashes immediately.</p>
   </div>
+  <p>There are exactly four moments when Odak makes a network request: anonymous events (only if you opted in), anonymous crash reports (same toggle), the daily Sparkle update check, and trial activation / license check. Each is described below.</p>
 
   <h3>Stays on your device</h3>
   <p>None of the following ever leaves your Mac. It lives in macOS application support directories and syncs nowhere:</p>
@@ -246,6 +247,19 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
 
   <h3>Update checks (Sparkle)</h3>
   <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework to check for updates. Roughly once a day while the app is running, it fetches <code>odak.fyi/appcast.xml</code>. That hits the same access log described in section 2. Sparkle sends nothing about you, your projects, or your usage — just the HTTP request needed to download the file. Update binaries come from GitHub Releases, which logs the download under GitHub's own policy.</p>
+
+  <h3>Trial activation &amp; license check</h3>
+  <p>Two moments need to talk to my license server at <code>license.odak.fyi</code>: starting the 14-day trial, and activating / re-validating a paid license. The point of these calls is to keep one trial per Mac and to enforce the 3-Mac limit on each license — they happen with or without telemetry consent because they're how the license itself works.</p>
+  <p>The full set of fields that ever reaches the license server, across all four endpoints (<code>/trial-start</code>, <code>/activate</code>, <code>/deactivate</code>, <code>/revalidate</code>):</p>
+  <ul>
+    <li><strong>Device ID</strong> — your Mac's <code>IOPlatformUUID</code>, a logic-board identifier that doesn't change when you reinstall macOS. Used to anchor a trial to a Mac and to count machines per license.</li>
+    <li><strong>Device name</strong> — what your Mac is called in System Settings → General → About (often something like "Mira's MacBook Pro"). Shown back to you in the "deactivate which Mac?" sheet so you can recognise your own machines. Rename your Mac if you don't want a personal name on it.</li>
+    <li><strong>macOS version</strong> — e.g. <code>macOS 26.1.0</code>.</li>
+    <li><strong>Your license code</strong> — only when you click Activate or Deactivate; never sent during trial start or routine revalidation.</li>
+  </ul>
+  <p>Things the license server receives by virtue of being an HTTP server: your <strong>IP address</strong> and a standard <code>User-Agent</code>. These are kept in normal access logs for up to 30 days for abuse prevention and never used for profiling.</p>
+  <p>What the license server <strong>never</strong> receives, and never could: project names or paths, file contents, search queries, window titles, telemetry events, crash reports.</p>
+  <p>After successful activation, the server returns a signed JWT containing your license email and the device ID; the JWT is stored locally and used to gate paid features offline. Routine revalidation sends only the JWT — no fresh deviceId or deviceName.</p>
 
   <h2 id="purchases">4. Purchases &amp; Paddle</h2>
   <p>When you buy Odak, checkout is run by <strong>Paddle</strong>, my Merchant of Record. Paddle collects what payment and tax law require:</p>

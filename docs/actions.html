@@ -533,13 +533,17 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     <hr/>
 
     <h2 id="per-project-configuration">Per-project configuration <a href="#per-project-configuration" class="anchor">#</a></h2>
-    <p>Drop a <code>.odak</code> file at any project root to override defaults and define custom variables per-project. All fields optional.</p>
-<pre><code>ide: Cursor
-terminal: Warp
-gitGUI: Tower
-variables:
-  apiURL: https://staging.example.com
-  team: platform</code></pre>
+    <p>Drop a <code>.odak</code> JSON file at any project root to override defaults and define custom variables per-project. All fields optional.</p>
+<pre><code>{
+  "ide": "Cursor",
+  "terminal": "Warp",
+  "gitGUI": "Tower",
+  "variables": {
+    "apiURL": "https://staging.example.com",
+    "team": "platform"
+  }
+}</code></pre>
+<p>Valid values for <code>ide</code> are <code>"Cursor"</code>, <code>"Visual Studio Code"</code>, <code>"IntelliJ IDEA"</code>, and <code>"GoLand"</code>. To open a project in Xcode (or any other editor), define a custom action with the appropriate <code>app:</code> field instead.</p>
     <p>Now <code>{apiURL}</code> and <code>{team}</code> resolve in any action run on this project, and scripts also see <code>$ODAK_APIURL</code> and <code>$ODAK_TEAM</code>.</p>
     <p>Condition matching can reference these too:</p>
 <pre><code>- name: Deploy
