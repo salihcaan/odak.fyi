@@ -2063,51 +2063,141 @@ h2.section-h .mute{color:var(--dim)}
 /* ==========================================================
    POSITIONING DIAGRAM — 3 column
    ========================================================== */
-.pos-diagram{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px;
-}
-.pos-card{
-  padding:32px 28px;
+/* ==========================================================
+   POSITIONING — feature-by-feature comparison table
+   Lunar.fyi-style grid: rows = capability, columns = Odak vs
+   three other launchers. Odak column is highlighted with an
+   accent band; mobile transposes to per-feature stacked cards.
+   ========================================================== */
+.pos-compare{
+  --cols: minmax(0,1.5fr) repeat(4, minmax(0,1fr));
+  position:relative;
+  margin-top:24px;
   border:1px solid var(--border);
   border-radius:18px;
   background:var(--surface);
-  position:relative;overflow:hidden;
-  min-height:280px;
-  display:flex;flex-direction:column;
+  overflow:hidden;
 }
-.pos-card.us{
-  border-color:color-mix(in oklch, var(--accent) 40%, var(--border));
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 60%),
-    var(--surface);
+/* Vertical accent band behind the Odak column. The grid is
+   1.5fr + 4 × 1fr = 5.5fr, so the Odak column starts at
+   1.5/5.5 and is 1/5.5 wide. Recalculated against actual
+   column width via attr-free percentage math. */
+.pos-compare::before{
+  content:'';position:absolute;top:0;bottom:0;pointer-events:none;
+  left:calc(100% * 1.5 / 5.5);
+  width:calc(100% * 1 / 5.5);
+  background:linear-gradient(180deg,
+    color-mix(in oklch, var(--accent) 8%, transparent),
+    color-mix(in oklch, var(--accent) 3%, transparent) 60%,
+    transparent 100%);
 }
-.pos-card.us::before{
-  content:'';position:absolute;inset:-1px;border-radius:18px;pointer-events:none;
-  background:linear-gradient(180deg, color-mix(in oklch, var(--accent) 60%, transparent), transparent 50%);
-  -webkit-mask:linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  padding:1px;opacity:.6;
+.pos-compare-thead{
+  display:grid;grid-template-columns:var(--cols);
+  align-items:end;gap:0;
+  padding:18px 20px 16px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, color-mix(in oklch, var(--bg-2) 60%, transparent), transparent);
+  position:relative;
 }
-.pos-card .role{
+.pos-compare-thead .h-feat{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);
-  margin-bottom:14px;
 }
-.pos-card.us .role{color:var(--accent)}
-.pos-card .name{
-  font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 10px;
+.pos-compare-thead .h-col{
+  font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--fg-2);
+  text-align:center;
 }
-.pos-card .tag{font-size:15px;color:var(--fg-2);line-height:1.45;margin:0 0 22px;letter-spacing:-.005em}
-.pos-card .scope{display:flex;flex-direction:column;gap:8px;margin-top:auto}
-.pos-card .scope-row{
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.02em;
+.pos-compare-thead .h-col.us{color:var(--accent)}
+.pos-compare-thead .h-col.us::after{
+  content:'';display:block;margin:8px auto 0;
+  width:28px;height:2px;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 10px var(--accent-glow);
 }
-.pos-card .scope-row .mk{
-  width:10px;height:10px;border-radius:2px;flex-shrink:0;
-  background:var(--border-2);
+
+.pos-row{
+  display:grid;grid-template-columns:var(--cols);
+  align-items:center;
+  padding:14px 20px;
+  border-top:1px solid var(--border);
+  position:relative;
 }
-.pos-card .scope-row.y .mk{background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
-.pos-card .scope-row.y{color:var(--fg)}
+.pos-row .feat{font-size:14.5px;color:var(--fg-2);letter-spacing:-.005em;line-height:1.35}
+.pos-row .cells{display:contents}
+.pos-row .cell{
+  display:flex;justify-content:center;align-items:center;
+}
+.pos-row .cell .lbl{display:none}
+.pos-row .cell .mk{
+  width:20px;height:20px;border-radius:50%;
+  display:inline-flex;justify-content:center;align-items:center;
+  background:var(--surface-2);border:1px solid var(--border);
+  position:relative;
+}
+.pos-row .cell.y .mk{
+  background:color-mix(in oklch, var(--accent) 18%, transparent);
+  border-color:color-mix(in oklch, var(--accent) 55%, var(--border));
+  box-shadow:0 0 12px color-mix(in oklch, var(--accent) 28%, transparent);
+}
+.pos-row .cell.y .mk svg{
+  width:11px;height:11px;stroke:var(--accent);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.pos-row .cell.n .mk::after{
+  content:'';width:8px;height:1.5px;background:var(--mute);border-radius:1px;
+}
+.pos-row .cell.p .mk{
+  background:color-mix(in oklch, var(--accent) 8%, transparent);
+  border-color:color-mix(in oklch, var(--accent) 30%, var(--border));
+}
+.pos-row .cell.p .mk::after{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:color-mix(in oklch, var(--accent) 50%, transparent);
+}
+.pos-row .cell.us.y .mk{
+  background:color-mix(in oklch, var(--accent) 28%, transparent);
+}
+
+.pos-compare-foot{
+  padding:14px 20px;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--mute);
+  display:flex;flex-wrap:wrap;gap:18px;justify-content:center;
+}
+.pos-compare-foot .lg{display:inline-flex;align-items:center;gap:6px}
+.pos-compare-foot .lg .mk{
+  width:12px;height:12px;border-radius:50%;
+  display:inline-flex;justify-content:center;align-items:center;
+}
+.pos-compare-foot .lg.y .mk{background:color-mix(in oklch, var(--accent) 22%, transparent);border:1px solid color-mix(in oklch, var(--accent) 55%, var(--border))}
+.pos-compare-foot .lg.p .mk{background:color-mix(in oklch, var(--accent) 8%, transparent);border:1px solid color-mix(in oklch, var(--accent) 30%, var(--border));position:relative}
+.pos-compare-foot .lg.p .mk::after{content:'';width:5px;height:5px;border-radius:50%;background:color-mix(in oklch, var(--accent) 50%, transparent)}
+.pos-compare-foot .lg.n .mk{background:var(--surface-2);border:1px solid var(--border);position:relative}
+.pos-compare-foot .lg.n .mk::after{content:'';width:5px;height:1px;background:var(--mute);border-radius:1px}
+
+@media (max-width:760px){
+  .pos-compare::before{display:none}
+  .pos-compare-thead{display:none}
+  .pos-row{
+    display:flex;flex-direction:column;align-items:stretch;gap:10px;
+    padding:14px 14px;
+  }
+  .pos-row .feat{font-weight:600;color:var(--fg);font-size:14px;line-height:1.35}
+  .pos-row .cells{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+  }
+  .pos-row .cell{
+    flex-direction:column;gap:6px;padding:10px 4px;
+    border:1px solid var(--border);border-radius:10px;
+    background:var(--surface);
+  }
+  .pos-row .cell.us{
+    border-color:color-mix(in oklch, var(--accent) 35%, var(--border));
+    background:color-mix(in oklch, var(--accent) 6%, var(--surface));
+  }
+  .pos-row .cell .lbl{
+    display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--mute);text-align:center;
+  }
+  .pos-row .cell.us .lbl{color:var(--accent)}
+}
 
 /* ==========================================================
    PRICING
@@ -3476,7 +3566,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   .f-split,.f-split.rev{grid-template-columns:minmax(0, 1fr);gap:40px}
   .f-split.rev .f-copy,.f-split.rev .f-stage{order:initial}
   .f-copy{position:static}
-  .pos-diagram{grid-template-columns:1fr}
   .pricing{grid-template-columns:1fr}
   .faq-grid{grid-template-columns:1fr;gap:24px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
@@ -3506,8 +3595,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      mobile, so their fixed radii read as ~2× too round proportionally.
      Pull the corners back to keep roughly the same panel-to-corner ratio. */
   .price-card{border-radius:18px}
-  .pos-card{border-radius:14px}
-  .pos-card.us::before{border-radius:14px}
   /* Cap the chosen-window at ~0.82× on mobile so it doesn't bleed past the
      hero, but keep the rise+grow delta so the entrance still animates
      (desktop goes .88→1 + -44%→-50%). */
@@ -4740,43 +4827,128 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      ========================================================== -->
 <section class="block" id="positioning">
   <div class="section-head reveal">
-    <div class="eyebrow">Positioning</div>
-    <h2 class="section-h">Why not just <span class="accent">use Raycast?</span></h2>
-    <p class="section-sub">Three tools, three jobs. Odak is the one that knows what a <em style="color:var(--accent);font-style:normal">project</em> is.</p>
+    <div class="eyebrow">Comparison</div>
+    <h2 class="section-h">Odak, <span class="accent">side by side.</span></h2>
+    <p class="section-sub">Different tools, different jobs. Odak is the one that knows what a <em style="color:var(--accent);font-style:normal">project</em> is.</p>
   </div>
 
-  <div class="pos-diagram">
-    <div class="pos-card reveal">
-      <div class="role">Swiss-army launcher</div>
-      <div class="name">Raycast</div>
-      <div class="tag">Fires anything — calculator, clipboard, snippets, emoji, AI. Powerful. General-purpose.</div>
-      <div class="scope">
-        <div class="scope-row"><span class="mk"></span>Knows apps</div>
-        <div class="scope-row"><span class="mk"></span>Knows commands</div>
-        <div class="scope-row"><span class="mk"></span>Doesn't know what a project is</div>
+  <!-- Detail comparison: feature-by-feature grid against the launchers
+       a developer is most likely already using. Rows are scoped to
+       project-awareness claims; we don't pretend Odak is a Raycast
+       replacement (it isn't). -->
+  <div class="pos-compare reveal">
+    <div class="pos-compare-thead">
+      <div class="h-feat">Capability</div>
+      <div class="h-col us">Odak</div>
+      <div class="h-col">Raycast</div>
+      <div class="h-col">AltTab</div>
+      <div class="h-col">Spotlight</div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Knows what a project is</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
       </div>
     </div>
 
-    <div class="pos-card us reveal">
-      <div class="role">Project switcher</div>
-      <div class="name">Odak</div>
-      <div class="tag">One job. It knows your projects, which editors have them open, and what each one wants you to do next.</div>
-      <div class="scope">
-        <div class="scope-row y"><span class="mk"></span>Knows your projects</div>
-        <div class="scope-row y"><span class="mk"></span>Knows which editor has them</div>
-        <div class="scope-row y"><span class="mk"></span>Per-project actions</div>
+    <div class="pos-row">
+      <div class="feat">Groups open windows by project</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
       </div>
     </div>
 
-    <div class="pos-card reveal">
-      <div class="role">Window switcher</div>
-      <div class="name">AltTab</div>
-      <div class="tag">Every window in the OS, in a flat list. Great at that — but it can't tell that two Cursor windows belong to the same project.</div>
-      <div class="scope">
-        <div class="scope-row"><span class="mk"></span>Knows windows</div>
-        <div class="scope-row"><span class="mk"></span>Doesn't group by project</div>
-        <div class="scope-row"><span class="mk"></span>Can't open what isn't open</div>
+    <div class="pos-row">
+      <div class="feat">Opens projects that aren't already open</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell p"><span class="mk"></span><span class="lbl">Spotlight</span></div>
       </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Per-project commands (<code>.odak</code> file)</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Knows which editor has the project open</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Git branch + dirty state on the result row</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Live project status in the notch</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Works fully offline, no sign-in</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
+        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">One-time price, no subscription</div>
+      <div class="cells">
+        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
+        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-row">
+      <div class="feat">Open source</div>
+      <div class="cells">
+        <div class="cell us n"><span class="mk"></span><span class="lbl">Odak</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
+        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
+        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
+      </div>
+    </div>
+
+    <div class="pos-compare-foot">
+      <span class="lg y"><span class="mk"></span>Yes</span>
+      <span class="lg p"><span class="mk"></span>Partial / via extension</span>
+      <span class="lg n"><span class="mk"></span>No</span>
     </div>
   </div>
 </section>
@@ -4788,7 +4960,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   <div class="section-head reveal">
     <div class="eyebrow">Pricing</div>
     <h2 class="section-h">$15. Once. <span class="accent">Yours.</span></h2>
-    <p class="section-sub">No seats, no subscription, no usage tiers. Pay once, keep it forever. Updates are free for two years.</p>
+    <p class="section-sub">No seats, no subscription, no usage tiers. Pay once, keep it forever.</p>
   </div>
 
   <div class="pricing">
@@ -4800,11 +4972,11 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
       <div class="amount">
         <span class="curr">$</span>15<span class="per">once</span>
       </div>
-      <div class="amount-sub">3 Macs · 2 years of updates</div>
+      <div class="amount-sub">3 Macs · lifetime license</div>
       <ul>
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span><b>Every feature, unlocked.</b> No pro tier, no add-ons.</span></li>
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span>Use on <b>3 Macs</b> — desktop, laptop, work machine.</span></li>
-        <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span><b>Two years of updates</b> included. After that, keep the version you have.</span></li>
+        <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span><b>Lifetime license.</b> Bug fixes, security patches, and new features — free.</span></li>
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span>14-day free trial. No credit card.</span></li>
       </ul>
       <div class="buy-row">
