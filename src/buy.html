@@ -24,6 +24,7 @@
   --accent: oklch(68% 0.16 55);
   --accent-2: oklch(58% 0.18 55);
   --accent-ink: #fffbf5;
+  --surface: rgba(26,20,16,.03);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -36,6 +37,7 @@
     --accent: oklch(78% 0.14 75);
     --accent-2: oklch(72% 0.16 65);
     --accent-ink: #1a1410;
+    --surface: rgba(255,248,238,.04);
   }
 }
 * { box-sizing: border-box; }
@@ -47,10 +49,67 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in oklch, var(--bg) 80%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+  color: var(--fg);
+  text-decoration: none;
+}
+.nav-brand .mark {
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.nav-brand .mark img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(26,20,16,.18));
+}
+@media (prefers-color-scheme: dark) {
+  .nav-brand .mark img {
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  }
+}
+.nav-back {
+  font-size: 13.5px;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  transition: color 150ms, background 150ms;
+}
+.nav-back:hover {
+  color: var(--fg);
+  background: var(--surface);
+}
 .wrap {
   max-width: 480px;
   margin: 0 auto;
-  padding: clamp(48px, 10vw, 96px) 24px;
+  padding: clamp(40px, 8vw, 72px) 24px clamp(48px, 10vw, 96px);
 }
 .logo {
   width: 56px;
@@ -58,6 +117,10 @@ body {
   border-radius: 12px;
   margin-bottom: 24px;
   display: block;
+  filter: drop-shadow(0 4px 12px rgba(26,20,16,.12));
+}
+@media (prefers-color-scheme: dark) {
+  .logo { filter: drop-shadow(0 4px 12px rgba(0,0,0,.4)); }
 }
 h1 {
   font-size: clamp(28px, 5vw, 36px);
@@ -206,8 +269,17 @@ form { margin: 0; }
 </style>
 </head>
 <body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <span class="mark"><img src="assets/logo/odak.png" alt="" width="22" height="22"/></span>
+      <span>Odak</span>
+    </a>
+    <a href="/" class="nav-back">← Back to odak.fyi</a>
+  </div>
+</nav>
 <main class="wrap">
-  <a href="/"><img class="logo" src="assets/logo/odak.png" alt="Odak"/></a>
+  <img class="logo" src="assets/logo/odak.png" alt="Odak"/>
   <h1>Buy Odak</h1>
   <p class="lede">One-time purchase. Free updates on v1.x for life.</p>
 
