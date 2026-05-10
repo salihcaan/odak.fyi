@@ -10,10 +10,33 @@
 <meta name="robots" content="index,follow"/>
 <link rel="icon" type="image/png" href="/assets/logo/odak.png"/>
 <link rel="apple-touch-icon" href="/assets/logo/odak.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="font" type="font/woff2" href="/assets/bundled/inter-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/bundled/jetbrains-mono-latin.woff2" crossorigin>
 <style>
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 /* tokens — mirror index.html */
 :root{
   --bg:#0a0908;--bg-2:#121010;--bg-3:#1b1816;
@@ -188,7 +211,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   </div>
 
   <h2 id="who">1. Who I am</h2>
-  <p>Hi, I'm <strong>Hasan</strong>. I built Odak and I run it solo from Istanbul. When this page says "I", that's me — when it says "Odak", that's the app and the business.</p>
+  <p>Hi, I'm <strong>Salih Can</strong>. I built Odak and I run it solo from Istanbul. When this page says "I", that's me — when it says "Odak", that's the app and the business.</p>
   <p>Email me at <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>.</p>
   <p>Checkout is handled by <strong>Paddle</strong>, my Merchant of Record. Their privacy policy: <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">paddle.com/legal/privacy</a>.</p>
 
@@ -201,7 +224,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     <li>Session replay or heatmaps</li>
   </ul>
   <p>It stores one thing in your browser: <code>odak-theme</code> in <code>localStorage</code>, so the site remembers light or dark. It never leaves your browser.</p>
-  <p>Two requests do leave your browser, neither of them mine: web fonts (Inter and JetBrains Mono) load from Google Fonts, and the server hosting <code>odak.fyi</code> writes a normal HTTP access log (IP, user-agent, path, timestamp) which I keep for up to 30 days for abuse prevention and never use for profiling.</p>
+  <p>Fonts (Inter and JetBrains Mono) are self-hosted on <code>odak.fyi</code>, so loading the page never reaches a third-party CDN. The server does write a normal HTTP access log (IP, user-agent, path, timestamp) which I keep for up to 30 days for abuse prevention and never use for profiling.</p>
 
   <h2 id="app">3. The macOS app</h2>
   <p>Odak runs locally on your Mac, signed with the hardened runtime and Apple-notarized. Two rules:</p>

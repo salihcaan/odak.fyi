@@ -17,14 +17,8 @@
      /assets/bundled so the H1 doesn't flicker through a system fallback
      while Google Fonts roundtrips. Preload guarantees the woff2 starts
      downloading before CSS parses the @font-face. -->
-<link rel="preload" as="font" type="font/woff2" href="assets/bundled/inter-700-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/bundled/jetbrains-mono-600-latin.woff2" crossorigin>
-<!-- Body weights (400/500/600 Inter, 400/500 JetBrains Mono) still come
-     from Google Fonts — deferred via preload→onload so they don't block. -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+<link rel="preload" as="font" type="font/woff2" href="assets/bundled/inter-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/bundled/jetbrains-mono-latin.woff2" crossorigin>
 <style>
 /* ==========================================================
    TOKENS — dual theme, warm-not-cool
@@ -125,40 +119,34 @@
   font-weight:400;font-style:italic;font-display:swap;
 }
 
-/* Bundled Inter 700 — the hero H1, section headings, and any bold copy
-   above the fold. Self-hosted so first paint of the H1 lands in Inter
-   immediately instead of swapping in after a Google Fonts roundtrip.
-   Latin + latin-ext cover the page's English content; other Inter 700
-   subsets (cyrillic/greek/vietnamese) are bundled but not wired up
-   because no copy needs them today. unicode-range mirrors the canonical
-   Google Fonts subset boundaries so the browser only fetches the file
-   it actually needs. */
+/* Bundled Inter and JetBrains Mono — variable fonts (one file per
+   subset covers the full 100–900 weight range). Self-hosted so no
+   visitor IP ever reaches Google's CDN. unicode-range mirrors the
+   canonical Google Fonts subset boundaries so the browser only fetches
+   the file it actually needs; latin and latin-ext cover the page's
+   English content. */
 @font-face{
   font-family:'Inter';
-  src:url('assets/bundled/inter-700-latin.woff2') format('woff2');
-  font-weight:700;font-style:normal;font-display:swap;
+  src:url('assets/bundled/inter-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face{
   font-family:'Inter';
-  src:url('assets/bundled/inter-700-latin-ext.woff2') format('woff2');
-  font-weight:700;font-style:normal;font-display:swap;
+  src:url('assets/bundled/inter-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
-/* Bundled JetBrains Mono 600 — hero pills, key caps, the live ⌥ Space
-   chord. Same rationale as Inter 700: visible above the fold, so we
-   self-host to avoid the first-paint swap. */
 @font-face{
   font-family:'JetBrains Mono';
-  src:url('assets/bundled/jetbrains-mono-600-latin.woff2') format('woff2');
-  font-weight:600;font-style:normal;font-display:swap;
+  src:url('assets/bundled/jetbrains-mono-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
   unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face{
   font-family:'JetBrains Mono';
-  src:url('assets/bundled/jetbrains-mono-600-latin-ext.woff2') format('woff2');
-  font-weight:600;font-style:normal;font-display:swap;
+  src:url('assets/bundled/jetbrains-mono-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
   unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
