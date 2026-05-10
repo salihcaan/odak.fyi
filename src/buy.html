@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Buy Odak — $15 one-time</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Buy a license for Odak. $15 one-time. Activates on up to 3 Macs. Free updates on v1.x for life."/>
+<meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)"/>
+<meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)"/>
+<meta property="og:title" content="Buy Odak — $15 one-time"/>
+<meta property="og:description" content="One-time purchase. Free updates on v1.x for life."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://odak.fyi/buy"/>
+<link rel="icon" type="image/png" href="assets/logo/odak.png"/>
+<link rel="apple-touch-icon" href="assets/logo/odak.png"/>
+<style>
+:root {
+  --bg: #f7f4ef;
+  --bg-2: #eee8dc;
+  --fg: #1a1410;
+  --dim: rgba(26,20,16,.58);
+  --mute: rgba(26,20,16,.4);
+  --border: rgba(26,20,16,.12);
+  --accent: oklch(68% 0.16 55);
+  --accent-2: oklch(58% 0.18 55);
+  --accent-ink: #fffbf5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0908;
+    --bg-2: #121010;
+    --fg: #f5ede0;
+    --dim: rgba(245,237,224,.62);
+    --mute: rgba(245,237,224,.4);
+    --border: rgba(255,248,238,.10);
+    --accent: oklch(78% 0.14 75);
+    --accent-2: oklch(72% 0.16 65);
+    --accent-ink: #1a1410;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: clamp(48px, 10vw, 96px) 24px;
+}
+.logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: block;
+}
+h1 {
+  font-size: clamp(28px, 5vw, 36px);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  line-height: 1.1;
+}
+.lede {
+  color: var(--dim);
+  margin: 0 0 32px 0;
+  font-size: 17px;
+}
+.env-banner {
+  display: none;
+  padding: 12px 14px;
+  background: rgba(255, 170, 0, 0.10);
+  border: 1px solid rgba(255, 170, 0, 0.4);
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 24px;
+  color: #8a5800;
+}
+@media (prefers-color-scheme: dark) {
+  .env-banner { color: #ffcc44; }
+}
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 28px 0;
+}
+.price-num {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  line-height: 1;
+}
+.price-suf {
+  color: var(--dim);
+  font-size: 15px;
+}
+.benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.benefits li {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.benefits li:last-child { border-bottom: none; }
+.benefits li::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fffbf5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E");
+  background-size: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+form { margin: 0; }
+.email-field {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-2);
+  color: var(--fg);
+  font-size: 15px;
+  font-family: inherit;
+  margin-bottom: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.email-field:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.email-field::placeholder { color: var(--mute); }
+.btn {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+.btn:hover { background: var(--accent-2); }
+.btn:active { transform: scale(0.99); }
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--accent);
+}
+.fine {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--mute);
+  text-align: center;
+}
+.fine a {
+  color: var(--dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+.fine a:hover { color: var(--fg); }
+.success {
+  display: none;
+  padding: 24px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+.success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  font-size: 22px;
+}
+.success h2 { margin: 0 0 6px 0; font-size: 20px; font-weight: 700; }
+.success p { margin: 0; font-size: 14px; color: var(--dim); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a href="/"><img class="logo" src="assets/logo/odak.png" alt="Odak"/></a>
+  <h1>Buy Odak</h1>
+  <p class="lede">One-time purchase. Free updates on v1.x for life.</p>
+
+  <div id="env-banner" class="env-banner">
+    <strong>Sandbox checkout</strong> — no real charge. Use any test card; the activation code only works in stage builds of Odak.
+  </div>
+
+  <div class="price">
+    <span class="price-num">$15</span>
+    <span class="price-suf">one&#8209;time · up to 3&nbsp;Macs</span>
+  </div>
+
+  <ul class="benefits">
+    <li>Open any project in any IDE in under a second</li>
+    <li>Option+Tab across IDE windows</li>
+    <li>Custom actions and project&#8209;scoped shortcuts</li>
+    <li>Free lifetime updates on v1.x</li>
+  </ul>
+
+  <form id="checkout-form">
+    <input
+      id="email-input"
+      class="email-field"
+      type="email"
+      placeholder="your@email.com"
+      required
+      autocomplete="email"
+      inputmode="email"
+    />
+    <button id="checkout-btn" class="btn" type="submit">Buy Odak — $15</button>
+  </form>
+
+  <div id="success-state" class="success" role="status" aria-live="polite">
+    <div class="success-icon">✓</div>
+    <h2>You're set!</h2>
+    <p>We've sent your activation code to your email. Open Odak → Settings → License → paste the code.</p>
+  </div>
+
+  <p class="fine">
+    Secure checkout by Paddle · <a href="/refund">Refund policy</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
+  </p>
+</main>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+(function () {
+  // Env detection — sandbox unless we're served from the apex prod hostname
+  // AND a live token has been wired in. The live Paddle account doesn't exist
+  // yet, so we fall through to sandbox everywhere. When the live account is
+  // ready, fill LIVE_TOKEN + LIVE_PRICE_ID and flip IS_LIVE_AVAILABLE to true.
+  var hostname = window.location.hostname;
+  var isLiveHost = hostname === "odak.fyi";
+
+  var LIVE_TOKEN = "REPLACE_WHEN_LIVE";
+  var LIVE_PRICE_ID = "REPLACE_WHEN_LIVE";
+  var IS_LIVE_AVAILABLE = false;
+
+  var SANDBOX_TOKEN = "test_e6166f8eb97687335a0722a87a8";
+  var SANDBOX_PRICE_ID = "pri_01kr8bb5d61wm2435rs402m79j";
+
+  var useLive = isLiveHost && IS_LIVE_AVAILABLE;
+  var token = useLive ? LIVE_TOKEN : SANDBOX_TOKEN;
+  var priceId = useLive ? LIVE_PRICE_ID : SANDBOX_PRICE_ID;
+
+  if (!useLive) {
+    document.getElementById("env-banner").style.display = "block";
+    Paddle.Environment.set("sandbox");
+  }
+
+  Paddle.Initialize({
+    token: token,
+    eventCallback: function (event) {
+      if (event && event.name === "checkout.completed") {
+        showSuccess();
+      }
+    }
+  });
+
+  function showSuccess() {
+    document.getElementById("checkout-form").style.display = "none";
+    document.getElementById("success-state").style.display = "block";
+  }
+
+  // Pre-fill email if app passed it via ?email=
+  var params = new URLSearchParams(window.location.search);
+  var emailParam = params.get("email");
+  if (emailParam) {
+    document.getElementById("email-input").value = emailParam;
+  }
+
+  // Fallback success path — Paddle redirects here after purchase if eventCallback
+  // doesn't fire (e.g., 3DS challenges that navigate the parent window).
+  if (params.get("success") === "1") {
+    showSuccess();
+    history.replaceState(null, "", "/buy");
+  }
+
+  document.getElementById("checkout-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email-input").value.trim();
+    if (!email) return;
+
+    Paddle.Checkout.open({
+      items: [{ priceId: priceId, quantity: 1 }],
+      customer: { email: email },
+      settings: {
+        displayMode: "overlay",
+        theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+        successUrl: window.location.origin + "/buy?success=1"
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

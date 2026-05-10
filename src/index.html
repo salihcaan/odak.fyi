@@ -502,10 +502,7 @@ h1.hero-h .accent{
    ========================================================== */
 .palette{
   position:relative;
-  background:
-    linear-gradient(180deg,
-      color-mix(in oklch, var(--bg-2) 95%, var(--fg) 0%) 0%,
-      color-mix(in oklch, var(--bg) 90%, var(--fg) 0%) 100%);
+  background:linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
   border:1px solid var(--border-2);
   border-radius:var(--radius-lg);
   box-shadow:
@@ -3027,6 +3024,15 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      radius below tracks (outer − ul padding) so inner corners nest
      cleanly inside the palette curve. */
   border-radius:clamp(7px, 3cqi, 14px);
+  /* Lift the palette one shade above bg-2 in dark mode so it reads as
+     a clearly opaque app window against the warm brown desktop
+     wallpaper. The carousel palette sits on the dark page bg where
+     bg-2 reads as solid; in the macbook context bg-2 disappears into
+     the lighter brown wallpaper and looks transparent. */
+  background:linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+}
+[data-theme="light"] .mb-palette-wrap .palette{
+  background:linear-gradient(180deg, #ffffff 0%, #f7f4ef 100%);
 }
 .mb-palette-wrap .palette .search-bar{
   height:9.17cqi;padding:1.67cqi 2.92cqi;gap:2.08cqi;
