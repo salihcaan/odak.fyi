@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Buy Odak — $15 one-time</title>
+<title>Buy Odak — $19 one-time</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="Buy a license for Odak. $15 one-time. Activates on up to 3 Macs. Free lifetime updates."/>
+<meta name="description" content="Buy a license for Odak. $19 one-time. Activates on up to 3 Macs. Free lifetime updates."/>
 <meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)"/>
 <meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)"/>
-<meta property="og:title" content="Buy Odak — $15 one-time"/>
+<meta property="og:title" content="Buy Odak — $19 one-time"/>
 <meta property="og:description" content="One-time purchase. Free lifetime updates."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://odak.fyi/buy"/>
@@ -51,23 +51,41 @@ body {
   -webkit-font-smoothing: antialiased;
   transition: background .4s ease, color .4s ease;
 }
+/* NAV — identical shell to the home/privacy/terms pages so the bar
+   reads as one component across every URL. Same blur, transparency,
+   z-index, padding, and scrolled-state behaviour. */
 .nav {
   position: sticky;
   top: 0;
-  z-index: 10;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: color-mix(in oklch, var(--bg) 80%, transparent);
+  z-index: 80;
+  line-height: 1.55;
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  background: color-mix(in oklch, var(--bg) 62%, transparent);
   border-bottom: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  transition: background .25s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter .25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav.scrolled {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: color-mix(in oklch, var(--bg) 92%, transparent);
+}
+@media (max-width: 760px) {
+  .nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: color-mix(in oklch, var(--bg) 88%, transparent);
+  }
 }
 .nav-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 14px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 24px;
 }
 .nav-brand {
   display: flex;
@@ -299,12 +317,12 @@ form { margin: 0; }
         <picture>
           <source type="image/avif" srcset="/assets/logo/odak-dark.avif">
           <source type="image/webp" srcset="/assets/logo/odak-dark.webp">
-          <img class="icon-dark" src="/assets/logo/odak-dark.png" alt="" width="22" height="22" decoding="async" fetchpriority="high">
+          <img class="icon-dark" src="/assets/logo/odak-dark.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
         </picture>
         <picture>
           <source type="image/avif" srcset="/assets/logo/odak.avif">
           <source type="image/webp" srcset="/assets/logo/odak.webp">
-          <img class="icon-light" src="/assets/logo/odak.png" alt="" width="22" height="22" decoding="async" fetchpriority="high">
+          <img class="icon-light" src="/assets/logo/odak.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
         </picture>
       </span>
       <span>Odak</span>
@@ -338,7 +356,7 @@ form { margin: 0; }
   </div>
 
   <div class="price">
-    <span class="price-num">$15</span>
+    <span class="price-num">$19</span>
     <span class="price-suf">one&#8209;time · activates on up to 3&nbsp;Macs</span>
   </div>
 
@@ -359,7 +377,7 @@ form { margin: 0; }
       autocomplete="email"
       inputmode="email"
     />
-    <button id="checkout-btn" class="btn" type="submit">Buy Odak — $15</button>
+    <button id="checkout-btn" class="btn" type="submit">Buy Odak — $19</button>
   </form>
 
   <div id="success-state" class="success" role="status" aria-live="polite">
@@ -368,12 +386,30 @@ form { margin: 0; }
     <p>We've sent your activation code to your email. Open Odak, go to Settings &rarr; License, and paste the code.</p>
   </div>
 
+  <div id="prelaunch-state" class="success" role="status" aria-live="polite">
+    <div class="success-icon">⏳</div>
+    <h2>Purchases open soon.</h2>
+    <p>While payment setup wraps up, the <strong>14-day trial</strong> is fully unlocked — every feature, no credit card.</p>
+    <a class="btn" style="text-decoration:none;text-align:center;display:block;margin-top:14px" href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">Download free trial</a>
+  </div>
+
   <p class="fine">
     Secure checkout by Paddle · <a href="/refund">Refund policy</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
   </p>
 </main>
 
 <script>
+// Toggle .scrolled on the nav once the page leaves scrollY=0 — mirrors
+// the home/privacy/terms behaviour so the bar reads as one component
+// across every URL.
+(function(){
+  const nav = document.querySelector('.nav');
+  if(!nav) return;
+  let last = false, raf = null;
+  function update(){ const s = window.scrollY > 4; if(s !== last){ nav.classList.toggle('scrolled', s); last = s } raf = null }
+  window.addEventListener('scroll', () => { if(!raf) raf = requestAnimationFrame(update) }, { passive: true });
+  update();
+})();
 // Theme: persist across reloads, default to dark — mirrors the rest of
 // the site so a manual choice on /, /refund, /terms etc. carries over
 // here. Keep this block above the Paddle init so the theme attribute is
@@ -404,25 +440,39 @@ form { margin: 0; }
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script>
 (function () {
-  // Env detection — sandbox unless we're served from the apex prod hostname
-  // AND a live token has been wired in. The live Paddle account doesn't exist
-  // yet, so we fall through to sandbox everywhere. When the live account is
-  // ready, fill LIVE_TOKEN + LIVE_PRICE_ID and flip IS_LIVE_AVAILABLE to true.
-  var hostname = window.location.hostname;
-  var isLiveHost = hostname === "odak.fyi";
+  // Two URL surfaces:
+  //   /buy        → live Paddle. Linked from Release builds and the
+  //                  marketing site. Until LIVE_TOKEN + LIVE_PRICE_ID are
+  //                  wired in, /buy renders a pre-launch holding state and
+  //                  never falls back to sandbox — real customers must not
+  //                  be able to mistake a test flow for a real purchase.
+  //   /buy-stage  → sandbox Paddle, always. Linked from Debug builds for QA.
+  var isStage = window.location.pathname === "/buy-stage";
 
   var LIVE_TOKEN = "REPLACE_WHEN_LIVE";
   var LIVE_PRICE_ID = "REPLACE_WHEN_LIVE";
-  var IS_LIVE_AVAILABLE = false;
 
   var SANDBOX_TOKEN = "test_e6166f8eb97687335a0722a87a8";
   var SANDBOX_PRICE_ID = "pri_01kr8bb5d61wm2435rs402m79j";
 
-  var useLive = isLiveHost && IS_LIVE_AVAILABLE;
+  var liveReady = LIVE_TOKEN !== "REPLACE_WHEN_LIVE";
+
+  // Pre-launch on public /buy: hide selling surfaces, show trial CTA, skip
+  // Paddle entirely. Defense against silent sandbox checkouts confusing real
+  // customers between site deploy and live token wire-in.
+  if (!isStage && !liveReady) {
+    document.querySelector(".price").style.display = "none";
+    document.querySelector(".benefits").style.display = "none";
+    document.getElementById("checkout-form").style.display = "none";
+    document.getElementById("prelaunch-state").style.display = "block";
+    return;
+  }
+
+  var useLive = !isStage && liveReady;
   var token = useLive ? LIVE_TOKEN : SANDBOX_TOKEN;
   var priceId = useLive ? LIVE_PRICE_ID : SANDBOX_PRICE_ID;
 
-  if (!useLive) {
+  if (isStage) {
     document.getElementById("env-banner").style.display = "block";
     Paddle.Environment.set("sandbox");
   }
@@ -452,7 +502,7 @@ form { margin: 0; }
   // doesn't fire (e.g., 3DS challenges that navigate the parent window).
   if (params.get("success") === "1") {
     showSuccess();
-    history.replaceState(null, "", "/buy");
+    history.replaceState(null, "", window.location.pathname);
   }
 
   document.getElementById("checkout-form").addEventListener("submit", function (e) {

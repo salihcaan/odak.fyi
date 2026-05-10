@@ -753,7 +753,7 @@ h2.section-h{
   margin:0 0 18px;
   /* 22ch lets longer headings ("Why not just use Raycast?") wrap on
      a natural breakpoint instead of getting chopped at the accent
-     span; shorter ones ($15. Once. Yours.) still hold their shape. */
+     span; shorter ones ($19. Once. Yours.) still hold their shape. */
   max-width:22ch;
 }
 h2.section-h .accent{color:var(--accent)}
@@ -3019,11 +3019,11 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      Text-bearing rules use clamp() floors so typography stays legible
      on phone-sized macbooks. */
   padding-top:9.17cqi;
-  /* Outer radius scales with the wrap and is capped at 14px so the
-     panel doesn't read as puffy on mobile-sized macbooks. The row
-     radius below tracks (outer − ul padding) so inner corners nest
-     cleanly inside the palette curve. */
-  border-radius:clamp(7px, 3cqi, 14px);
+  /* Outer radius matches carousel-1's 26px panel curve at desktop wraps,
+     scaling down on smaller macbooks. The row radius below tracks
+     (outer − ul padding) so inner corners nest cleanly inside the
+     palette curve. */
+  border-radius:clamp(12px, 5.4cqi, 26px);
   /* Lift the palette one shade above bg-2 in dark mode so it reads as
      a clearly opaque app window against the warm brown desktop
      wallpaper. The carousel palette sits on the dark page bg where
@@ -3045,7 +3045,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   box-shadow:0 0 clamp(4px, 1.66cqi, 8px) var(--prod-blue-glow);
 }
 .mb-palette-wrap .palette .search-bar .input .open-hint{font-size:clamp(8.5px, 2.71cqi, 13px)}
-.mb-palette-wrap .palette .search-bar .top-ide{width:5.83cqi;height:5.83cqi;border-radius:1.25cqi}
+.mb-palette-wrap .palette .search-bar .top-ide{width:5.83cqi;height:5.83cqi;border-radius:clamp(5px, 1.67cqi, 8px)}
 /* Bottom padding is generous so the last (or only) visible row never
    reads as flush against the footer's border on desktop or the palette's
    rounded edge on mobile (footer is hidden there). Top + sides stay at
@@ -3054,9 +3054,10 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
 .mb-palette-wrap .palette li{
   padding:1.67cqi 1.88cqi;gap:1.67cqi;max-height:11.67cqi;
   /* Row radius = outer radius − ul padding (1.04cqi). Tracks the outer
-     3cqi formula above with the same offset so the row's rounded
-     corners stay parallel to the palette's curve at every width. */
-  border-radius:clamp(2px, calc(3cqi - 1.04cqi), 9px);
+     5.4cqi formula above with the same offset so the row's rounded
+     corners stay parallel to the palette's curve at every width.
+     Cap matches carousel-1's 17px row radius. */
+  border-radius:clamp(6px, calc(5.4cqi - 1.04cqi), 17px);
 }
 .mb-palette-wrap .palette li .lang{width:4.58cqi;height:4.58cqi;font-size:clamp(7px, 1.88cqi, 9px);border-radius:clamp(4px, 1.25cqi, 6px)}
 .mb-palette-wrap .palette li .title-row{font-size:clamp(8.5px, 2.40cqi, 11.5px);gap:1.25cqi}
@@ -3159,13 +3160,13 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   color:#fff;
 }
 .mb-actions-filter{
-  display:flex;align-items:center;gap:1.47cqi;
-  padding:1.47cqi 2.21cqi;
+  display:flex;align-items:center;gap:1.67cqi;
+  padding:1.85cqi 2.5cqi;
   border-top:1px solid var(--border);
-  font-family:var(--mono);font-size:2.03cqi;color:var(--mute);
+  font-family:var(--mono);font-size:2.2cqi;color:var(--mute);
 }
 .mb-actions-filter svg.q{
-  width:2.03cqi;height:2.03cqi;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0;
+  width:2.4cqi;height:2.4cqi;stroke:var(--mute);fill:none;stroke-width:1.6;flex-shrink:0;
 }
 /* Filter input — flex row that holds the typed query, blinking caret,
    and a fallback placeholder. .typing toggles on while the JS demo is
@@ -3174,15 +3175,15 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
    doesn't read like an empty focused field. */
 .mb-actions-filter .filter-input{
   flex:1;display:flex;align-items:center;min-width:0;
-  height:2.4cqi;line-height:2.4cqi;
+  height:2.83cqi;line-height:2.83cqi;
   color:var(--fg);
 }
 .mb-actions-filter .filter-input .typed{white-space:pre;color:var(--fg)}
 .mb-actions-filter .filter-input .placeholder{color:var(--mute)}
 .mb-actions-filter .filter-input .caret{
-  display:inline-block;width:1.5px;height:1.85cqi;
+  display:inline-block;width:clamp(1px, 0.35cqi, 1.6px);height:2.2cqi;
   background:var(--prod-blue);
-  box-shadow:0 0 6px var(--prod-blue-glow);
+  box-shadow:0 0 clamp(4px, 1.4cqi, 7px) var(--prod-blue-glow);
   margin-left:1px;align-self:center;
   opacity:0;
   animation:blink 1.1s steps(2) infinite;
@@ -4966,7 +4967,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
 <section class="block" id="pricing">
   <div class="section-head reveal">
     <div class="eyebrow">Pricing</div>
-    <h2 class="section-h">$15. Once. <span class="accent">Yours.</span></h2>
+    <h2 class="section-h">$19. Once. <span class="accent">Yours.</span></h2>
     <p class="section-sub">No seats, no subscription, no usage tiers. Pay once, keep it forever.</p>
   </div>
 
@@ -4977,7 +4978,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
         <div class="trial-badge">14 days free</div>
       </div>
       <div class="amount">
-        <span class="curr">$</span>15<span class="per">once</span>
+        <span class="curr">$</span>19<span class="per">once</span>
       </div>
       <div class="amount-sub">3 Macs · lifetime license</div>
       <ul>
@@ -4987,7 +4988,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
         <li><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg><span>14-day free trial. No credit card.</span></li>
       </ul>
       <div class="buy-row">
-        <a href="/buy" class="buy">Buy Odak — $15</a>
+        <a href="/buy" class="buy">Buy Odak — $19</a>
         <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-link">Try free for 14 days <span class="arrow" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg></span></a>
       </div>
       <p class="price-fine">One-time payment · instant activation · Sparkle auto-updates · <a href="/refund.html">14-day refund</a></p>
