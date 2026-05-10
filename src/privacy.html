@@ -199,7 +199,6 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <div class="toc" aria-label="Table of contents">
     <ol>
       <li><a href="#who">Who I am</a></li>
-      <li><a href="#website">The website</a></li>
       <li><a href="#app">The macOS app</a></li>
       <li><a href="#purchases">Purchases &amp; Paddle</a></li>
       <li><a href="#support">Support email</a></li>
@@ -215,18 +214,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <p>I'm <strong>Salih Can</strong>. I built Odak and run it solo from Istanbul. "I" is me; "Odak" is the app and the business. Email: <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>.</p>
   <p>Checkout runs through <strong>Paddle</strong>, my Merchant of Record (their privacy policy: <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">paddle.com/legal/privacy</a>).</p>
 
-  <h2 id="website">2. The website</h2>
-  <p><strong>The website doesn't track you.</strong></p>
-  <p>Not on the page:</p>
-  <ul>
-    <li>Analytics (no Google Analytics, Plausible, Fathom, PostHog)</li>
-    <li>Tracking cookies, ad pixels, remarketing</li>
-    <li>Session replay or heatmaps</li>
-  </ul>
-  <p>One thing stored in your browser: <code>odak-theme</code> in <code>localStorage</code>, so the page remembers light/dark. Never leaves your machine.</p>
-  <p>Fonts (Inter, JetBrains Mono) are self-hosted, so the page never calls a third-party CDN. The server writes a standard HTTP access log (IP, user-agent, path, timestamp), kept up to 30 days for abuse prevention, never used for profiling.</p>
-
-  <h2 id="app">3. The macOS app</h2>
+  <h2 id="app">2. The macOS app</h2>
   <p><strong>Local by default. Telemetry only if you opt in.</strong></p>
   <div class="box">
     <p><strong>Nothing about your work ever leaves your Mac.</strong> No project names or paths, no file contents, no search queries, no window titles. Not on the analytics path, not on the license path, not anywhere.</p>
@@ -249,19 +237,17 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <ul>
     <li><strong>No person profiles</strong> (<code>personProfiles = .never</code>) — events carry no user record</li>
     <li><strong>No <code>identify()</code></strong> — your email is never sent to PostHog, not even after activating a license</li>
-    <li><strong>No automatic capture</strong> — no lifecycle, no screen views, no session replay; only the explicit events below</li>
+    <li><strong>No automatic capture</strong> — no lifecycle, no screen views, no session replay; only explicit events</li>
     <li><strong>No IP collection</strong></li>
   </ul>
-  <p>The complete list of events Odak can ever send, and the data attached:</p>
+  <p>Events cover feature usage — which features you reach for, with non-identifying parameters like IDE name, filter kind, or a git host bucketed into a fixed set. The exact event set evolves with the app; the envelope below does not.</p>
+  <p><strong>Never sent in any event:</strong></p>
   <ul>
-    <li><code>search_opened</code>, <code>actions_panel_opened</code> — no properties</li>
-    <li><code>filter_applied</code> — the kind of filter (e.g. <em>folder</em>, <em>ide</em>, <em>uncommitted</em>, <em>tech_stack_swift</em>)</li>
-    <li><code>project_opened</code> — IDE name, query length as a number, and detected tech stacks (e.g. <em>swift</em>, <em>rust</em>)</li>
-    <li><code>action_executed</code> — action kind (<em>open_in_app</em>, <em>open_url</em>, <em>run_script</em>) and, for scripts, the language and output mode. <strong>Custom action names are never sent.</strong></li>
-    <li><code>action_imported</code> — count of imported actions</li>
-    <li><code>window_switched</code> — IDE name only (e.g. <em>cursor</em>, <em>vscode</em>). <strong>Window titles are never sent.</strong></li>
-    <li><code>remote_repo_opened</code> — git host bucketed into one of <em>github_com</em>, <em>gitlab_com</em>, <em>bitbucket_org</em>, <em>azure_devops</em>, <em>codeberg</em>, <em>sourcehut</em>, <em>self_hosted</em>, or <em>unknown</em>. <strong>Self-hosted hostnames are never sent.</strong></li>
-    <li><strong>License events</strong> (<code>license_activated</code>, <code>license_deactivated</code>, <code>license_activation_failed</code>, <code>trial_started</code>) — carry only non-identifying counters and coded reasons. <strong>Never your email, name, or license code.</strong></li>
+    <li>Project names or paths, file contents, or search query text</li>
+    <li>Window titles or any data from the Accessibility permission</li>
+    <li>Custom action names you've created</li>
+    <li>Self-hosted git hostnames (only the <em>self_hosted</em> bucket)</li>
+    <li>Your email, name, or license code</li>
   </ul>
   <p>PostHog may log standard request metadata (user-agent) under <a href="https://posthog.com/privacy" target="_blank" rel="noopener">its own privacy policy</a>. The PostHog project has IP collection disabled.</p>
 
@@ -269,7 +255,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <p>Captured via PostHog's error-tracking module: uncaught exceptions, Mach exceptions, POSIX signals. Each report is a symbolicated stack trace plus app version and macOS version — nothing that ties the crash back to you (no user code, no project content, no paths outside the Odak bundle). Same <strong>Settings → Privacy</strong> toggle controls events and crashes together.</p>
 
   <h3>Update checks (Sparkle)</h3>
-  <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework. Roughly once a day, it fetches <code>odak.fyi/appcast.xml</code> — same access log as section 2. Sparkle sends nothing about you, your projects, or your usage. Update binaries come from GitHub Releases (GitHub's own policy applies to the download).</p>
+  <p>Odak uses the open-source <a href="https://sparkle-project.org" target="_blank" rel="noopener">Sparkle</a> framework. Roughly once a day, it fetches <code>odak.fyi/appcast.xml</code> — logged in standard HTTP access logs (IP, user-agent, timestamp), kept up to 30 days, never used for profiling. Sparkle sends nothing about you, your projects, or your usage. Update binaries come from GitHub Releases (GitHub's own policy applies to the download).</p>
 
   <h3>Trial activation &amp; license check</h3>
   <p><strong>License calls are necessary; they don't carry your work.</strong> Two moments talk to <code>license.odak.fyi</code>: starting the 14-day trial, and activating / re-validating a paid license. They happen regardless of telemetry consent because they're how the license itself works (one trial per Mac, 3-Mac limit per license).</p>
@@ -284,7 +270,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   <p>What the license server <strong>never</strong> receives, and never could: project names or paths, file contents, search queries, window titles, telemetry events, crash reports.</p>
   <p>After successful activation, the server returns a signed JWT containing your license email and the device ID; the JWT is stored locally and used to gate paid features offline. Routine revalidation sends only the JWT — no fresh deviceId or deviceName.</p>
 
-  <h2 id="purchases">4. Purchases &amp; Paddle</h2>
+  <h2 id="purchases">3. Purchases &amp; Paddle</h2>
   <p><strong>Paddle handles checkout. I never see your card.</strong></p>
   <p>Paddle is the controller of your payment data under <a href="https://www.paddle.com/legal/privacy" target="_blank" rel="noopener">its own privacy policy</a>. They collect what payment and tax law require:</p>
   <ul>
@@ -295,11 +281,11 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   </ul>
   <p>After a successful purchase, Paddle shares a limited record with me — name, email, country, what you bought — so I can deliver your license key, answer support, and send essential transactional emails (license delivery, receipts, important update notices).</p>
 
-  <h2 id="support">5. Support email</h2>
+  <h2 id="support">4. Support email</h2>
   <p><strong>Your email sits in my inbox until I reply.</strong></p>
   <p>Write to <a href="mailto:support@odak.fyi">support@odak.fyi</a> or <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>. I don't add anyone to a marketing list — there isn't one.</p>
 
-  <h2 id="rights">6. Your rights</h2>
+  <h2 id="rights">5. Your rights</h2>
   <p><strong>You can ask me to see, fix, or delete what I hold.</strong></p>
   <p>Depending on where you live (<strong>EU/UK GDPR</strong>, <strong>California CCPA/CPRA</strong>, Turkey's <strong>KVKK</strong>, or similar), you may have the right to:</p>
   <ul>
@@ -313,7 +299,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
   </ul>
   <p>Email <a href="mailto:hello@odak.fyi">hello@odak.fyi</a> to exercise any of these for data I hold. For payment data, contact Paddle at <a href="https://paddle.net" target="_blank" rel="noopener">paddle.net</a>.</p>
 
-  <h2 id="retention">7. Retention</h2>
+  <h2 id="retention">6. Retention</h2>
   <p><strong>Kept only as long as needed.</strong></p>
   <ul>
     <li>Server access logs: up to 30 days.</li>
@@ -321,11 +307,11 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
     <li>Support email: kept until it's no longer useful, generally up to 24 months after the last reply.</li>
   </ul>
 
-  <h2 id="changes">8. Changes</h2>
+  <h2 id="changes">7. Changes</h2>
   <p><strong>I update this page when things change.</strong></p>
   <p>The "Last updated" date at the top reflects the latest revision. Material changes that affect paying customers go out by email.</p>
 
-  <h2 id="contact">9. Contact</h2>
+  <h2 id="contact">8. Contact</h2>
   <div class="box">
     <p><strong>Hasan Salih Can</strong> (sole proprietor)<br/>
     Istanbul, Turkey<br/>
