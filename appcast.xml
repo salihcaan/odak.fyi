@@ -109,5 +109,40 @@ When two projects share a name (e.g. an `odak.fyi` checkout in `~/code/` and ano
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.4/Odak-0.1.4.dmg" length="7844952" type="application/x-apple-diskimage" sparkle:edSignature="wO4JuIpnEnEVMuzJMAJsFi/C2jm6JXnu/dlYWvV+XJj2NcgId8ZJ22VcN00G56eT7a3Ei8P6YMIqJu072tjvCQ=="/>
         </item>
+            <item>
+            <title>Version 0.1.5</title>
+            <pubDate>Sun, 10 May 2026 20:20:25 +0000</pubDate>
+            <sparkle:version>8</sparkle:version>
+            <sparkle:shortVersionString>0.1.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.5 — paid licensing, smoother onboarding, better notch & switcher
+
+This release brings the licensing flow online (Paddle Billing checkout, in-app license activation), tightens onboarding around the Accessibility prompt, and fixes a long list of papercuts across the notch, switcher, and search.
+
+### New
+- **Paddle Billing checkout.** Buy a license directly from the in-app paywall — debug builds hit the staging URL, releases hit `/buy`, so you can't accidentally land on the wrong page. The Settings → License tab has been redesigned with a hero card and per-device row.
+- **Dedicated Settings tab for the notch.** The Dynamic Island now has its own tab in Settings with a modifier-key picker and a live enable toggle, so you can change behavior without quitting the app.
+- **Detect non-git projects.** The scanner now picks up projects without a `.git` folder using a tiered marker scheme (`package.json`, `Package.swift`, `Cargo.toml`, `pyproject.toml`, etc.), so JetBrains scratch projects and language workspaces show up alongside your repos.
+
+### Improvements
+- **Smoother onboarding for Accessibility.** The AX-grant step now survives relaunches and revoke cycles cleanly — no more half-stuck states after granting and re-denying.
+- **Search starts faster.** Removed a 40ms keystroke debounce that was making the first character feel laggy. Searching now reacts as you type.
+- **Search field shows a Settings hint.** When the search field is empty, the hint bar surfaces a clickable `⌘,  Settings` shortcut so first-time users have an obvious way in.
+- **Reliable Option+Space on launch.** Fixes a race where the global hotkey occasionally wouldn't register on first launch, and the search field would flash an I-beam before showing.
+- **Cleaner Settings copy.** Friendlier shortcut labels, better button text in Actions and Projects tabs, no scrollbar flash on tab switch.
+- **Palette-matched search icon.** Replaced the system magnifying glass with the brand mark — fewer visual conflicts with macOS's Spotlight.
+- **Switcher pins same-name windows to the right folder.** Two `index.tsx` open in two different projects now route to the correct project row based on which file is open.
+
+### Privacy
+- **Max-privacy PostHog config.** Anonymous-only mode is on by default — no email identification, all event properties sanitized at the SDK boundary. Coded reasons replace free-form strings in license error events.
+
+### Fixes
+- **Paywall stays on-screen.** The buy/license windows no longer drift partially off the display when opened from a corner.
+- **Notch hover surfaces the AX prompt** when permissions are missing, instead of silently doing nothing.
+- **Privacy → Enable button alignment** in onboarding now matches the rest of the step.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.5/Odak-0.1.5.dmg" length="8460901" type="application/x-apple-diskimage" sparkle:edSignature="4nkIajRtm2xw2xzEdad/TDUpgawH7m8WiX0YteXn8xkqemKVh48H8Q3VrzXPu5FaOZ07/xZ5MCGMbYKak/puCg=="/>
+        </item>
     </channel>
 </rss>
