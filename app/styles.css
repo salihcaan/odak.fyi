@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Odak's full CSS lives in odak-original.css and is imported separately
+   from main.tsx after this file. That ordering keeps Tailwind preflight
+   first, then Odak overrides. Inlining as @import here breaks because
+   PostCSS requires @import to precede other rules.
+   Note: font @font-face url() paths in odak-original.css were normalized
+   from "assets/bundled/..." to "/assets/bundled/..." so they resolve
+   correctly when bundled into /assets/index-XXX.css. */
+
+/* shadcn-flavored CSS variables that the Button primitive expects.
+   Mapped onto Odak's existing warm tokens so shadcn components stay on
+   brand without duplicating colors. */
+:root {
+  --background: 0 0% 96%;
+  --foreground: 30 25% 12%;
+  --primary: 30 25% 12%;
+  --primary-foreground: 38 30% 96%;
+  --secondary: 38 30% 90%;
+  --secondary-foreground: 30 25% 12%;
+  --accent: 38 30% 92%;
+  --accent-foreground: 30 25% 12%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 38 30% 96%;
+  --muted: 38 25% 88%;
+  --muted-foreground: 30 15% 35%;
+  --border: 30 15% 85%;
+  --input: 30 15% 85%;
+  --ring: 38 50% 60%;
+  --radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 24 12% 5%;
+    --foreground: 38 30% 92%;
+    --primary: 38 30% 92%;
+    --primary-foreground: 24 12% 5%;
+    --secondary: 24 8% 12%;
+    --secondary-foreground: 38 30% 92%;
+    --accent: 24 8% 14%;
+    --accent-foreground: 38 30% 92%;
+    --destructive: 0 60% 45%;
+    --destructive-foreground: 38 30% 92%;
+    --muted: 24 8% 12%;
+    --muted-foreground: 38 15% 60%;
+    --border: 24 8% 18%;
+    --input: 24 8% 18%;
+    --ring: 38 50% 55%;
+  }
+}

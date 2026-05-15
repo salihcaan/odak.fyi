@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Odak — The keyboard launcher for developer projects</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="A keyboard-driven project launcher for developers on macOS 26 Tahoe. Press a hotkey, type a few letters, land in the right window across every editor." />
+    <meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)" />
+    <meta property="og:title" content="Odak — The keyboard launcher for developer projects" />
+    <meta property="og:description" content="Press a hotkey, type a few letters, land in the right window. Built for macOS 26 Tahoe." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://odak.fyi/" />
+    <link rel="icon" type="image/png" href="/assets/logo/odak.png" />
+    <link rel="apple-touch-icon" href="/assets/logo/odak.png" />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/bundled/inter-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/bundled/jetbrains-mono-latin.woff2" crossorigin />
+    <script type="speculationrules">
+      {
+        "prerender": [
+          {
+            "urls": ["/privacy.html", "/terms.html", "/refund.html", "/changelog.html", "/docs/actions.html"],
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body data-theme="dark">
+    <div id="root"></div>
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
