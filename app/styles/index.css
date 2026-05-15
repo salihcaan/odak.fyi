@@ -63,21 +63,27 @@
 }
 
 [data-theme="light"]{
+  /* Light tokens retuned 2026-05: hero copy was reading too pale, accent
+     desaturated against the warm cream, surfaces too faint to delineate
+     cards. Body fg-2 .78→.86, dim .58→.68 (still hierarchical, no longer
+     gray-on-gray). Surface tints lifted so cards actually separate.
+     Accent saturation pushed harder (hue 55→50, chroma .17→.19) so the
+     terracotta reads as terracotta against the cream, not peach-tan. */
   --bg:         #f7f4ef;
   --bg-2:       #eee8dc;
   --bg-3:       #e5ddcc;
-  --surface:    rgba(26,20,16,.03);
-  --surface-2:  rgba(26,20,16,.05);
-  --border:     rgba(26,20,16,.08);
-  --border-2:   rgba(26,20,16,.14);
-  --fg:         #1a1410;
-  --fg-2:       rgba(26,20,16,.78);
-  --dim:        rgba(26,20,16,.58);
-  --mute:       rgba(26,20,16,.4);
-  --faint:      rgba(26,20,16,.2);
-  --accent:     oklch(58% 0.17 55);
-  --accent-2:   oklch(48% 0.19 45);
-  --accent-glow: oklch(58% 0.22 55 / .35);
+  --surface:    rgba(26,20,16,.05);
+  --surface-2:  rgba(26,20,16,.08);
+  --border:     rgba(26,20,16,.10);
+  --border-2:   rgba(26,20,16,.16);
+  --fg:         #15110d;
+  --fg-2:       rgba(21,17,13,.86);
+  --dim:        rgba(21,17,13,.68);
+  --mute:       rgba(21,17,13,.46);
+  --faint:      rgba(21,17,13,.22);
+  --accent:     oklch(52% 0.19 50);
+  --accent-2:   oklch(42% 0.20 40);
+  --accent-glow: oklch(58% 0.22 55 / .50);
   --accent-ink: #fff6e8;
   --accent-warm-2: oklch(48% 0.18 25 / .22);
 }
@@ -175,8 +181,10 @@ button{font-family:inherit}
   opacity:.45;
   animation:aur2 32s ease-in-out infinite alternate;
 }
-[data-theme="light"] .aurora::before{opacity:.35}
-[data-theme="light"] .aurora::after{opacity:.25}
+/* Light mode: aurora is barely-visible warmth (cream-on-cream just adds
+   noise above .25). Pull both blobs back so the page reads as paper. */
+[data-theme="light"] .aurora::before{opacity:.18}
+[data-theme="light"] .aurora::after{opacity:.14}
 @keyframes aur1{
   0%{transform:translate(0,0) scale(1)}
   100%{transform:translate(15vw,8vh) scale(1.15)}
@@ -201,7 +209,8 @@ body.scrolling .aurora::after{
   position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.18;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.46 0 0 0 0 0.4 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
-[data-theme="light"] .grain{opacity:.1;mix-blend-mode:multiply}
+/* Light mode: grain reads as dirt over cream on retina. Drop it. */
+[data-theme="light"] .grain{opacity:.05;mix-blend-mode:multiply}
 
 /* ----- subtle dot-grid ----- */
 .grid-bg{
@@ -759,24 +768,27 @@ h2.section-h .mute{color:var(--dim)}
 }
 .f-copy h3 .accent{color:var(--accent)}
 .f-copy .lead{font-size:18px;color:var(--fg-2);line-height:1.5;margin:0 0 28px;letter-spacing:-.005em}
-.f-copy .bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:16px}
+/* Bullets are flat now: no card border, no hover translate. The
+   bordered chrome competed visually with the live demo next to them
+   and the page already has plenty of bordered surfaces (carousel
+   tabs, pricing card, comparison table). Whitespace + an accent-tinted
+   icon does the grouping work. */
+.f-copy .bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
 .f-copy .bullets li{
-  display:flex;align-items:flex-start;gap:14px;padding:14px 16px;
-  border:1px solid var(--border);border-radius:12px;background:var(--surface);
-  transition:border-color .2s, background .2s, transform .2s;
+  display:flex;align-items:flex-start;gap:12px;padding:0;
+  background:none;border:0;
 }
-.f-copy .bullets li:hover{border-color:var(--border-2);background:var(--surface-2);transform:translateX(4px)}
 .f-copy .bullets li .ico{
-  width:24px;height:24px;flex-shrink:0;border-radius:6px;
-  background:color-mix(in oklch, var(--accent) 16%, transparent);
-  border:1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  width:22px;height:22px;flex-shrink:0;border-radius:6px;
+  background:color-mix(in oklch, var(--accent) 14%, transparent);
   display:grid;place-items:center;
   color:var(--accent);
+  margin-top:2px;
 }
 .f-copy .bullets li .ico svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .f-copy .bullets li .txt{flex:1}
-.f-copy .bullets li .txt b{display:block;font-weight:600;font-size:15px;margin-bottom:3px;letter-spacing:-.005em}
-.f-copy .bullets li .txt span{color:var(--dim);font-size:14px;line-height:1.45}
+.f-copy .bullets li .txt b{display:block;font-weight:600;font-size:15px;margin-bottom:2px;letter-spacing:-.005em;color:var(--fg)}
+.f-copy .bullets li .txt span{color:var(--dim);font-size:14px;line-height:1.5}
 
 .f-stage{
   position:relative;min-height:540px;
@@ -802,39 +814,36 @@ h2.section-h .mute{color:var(--dim)}
 .f-tab{
   flex:1;
   background:none;border:0;border-radius:0;
-  padding:18px 22px 20px;
+  /* Padding trimmed: 18/22/20 → 14/16/16. The tab strip was carrying too
+     much chrome (eyebrow + label + bordered kbd chip + underline + bar).
+     Tighter padding lets the underline + accent color do the work. */
+  padding:14px 16px 16px;
   cursor:pointer;
   position:relative;
   color:var(--mute);
   font:inherit;
-  font-size:16px;font-weight:500;
+  font-size:15.5px;font-weight:500;
   letter-spacing:-.005em;
   text-align:center;
-  display:flex;align-items:center;justify-content:center;gap:10px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
   transition:color .25s var(--ease-smooth);
   font-family:var(--display);
 }
 .f-tab .kbd-hint{
-  display:inline-flex;gap:3px;
+  /* Demoted from bordered chip to plain mono span. The active tab's
+     accent color carries the same signal. */
+  display:inline-flex;gap:2px;
   font-family:var(--mono);font-size:11px;color:var(--mute);
   letter-spacing:.02em;font-weight:500;
-  padding:3px 7px;
-  border:1px solid var(--border);border-radius:5px;
-  background:var(--surface);
-  transition:color .25s var(--ease-smooth),
-             border-color .25s var(--ease-smooth),
-             background .25s var(--ease-smooth);
+  padding:0;border:0;background:none;
+  transition:color .25s var(--ease-smooth);
 }
 /* Compact label is mobile-only; default desktop hides it. */
 .f-tab .lbl-short{display:none}
 .f-tab:hover{color:var(--fg-2)}
-.f-tab:hover .kbd-hint{color:var(--fg-2);border-color:var(--border-2)}
+.f-tab:hover .kbd-hint{color:var(--fg-2)}
 .f-tab.active{color:var(--fg)}
-.f-tab.active .kbd-hint{
-  color:var(--accent);
-  border-color:color-mix(in oklch, var(--accent) 36%, var(--border-2));
-  background:color-mix(in oklch, var(--accent) 8%, var(--surface));
-}
+.f-tab.active .kbd-hint{color:var(--accent)}
 .f-tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:6px}
 
 /* Progress fill under the active tab. JS sets --f-advance on the
@@ -859,6 +868,15 @@ h2.section-h .mute{color:var(--dim)}
 @keyframes f-bar-fill{
   from{transform:scaleX(0)}
   to{transform:scaleX(1)}
+}
+/* After the user has watched the carousel cycle through every tab
+   once, JS sets data-cycled on the carousel root. The bar then stops
+   filling so the page can settle visually. The carousel itself keeps
+   auto-advancing — only the progress indicator quiets down. */
+.f-carousel[data-cycled] .f-tab .bar{
+  animation:none;
+  opacity:0;
+  transition:opacity .4s var(--ease-out);
 }
 
 /* Panels stack via CSS grid so they share the same cell — the
@@ -2155,17 +2173,20 @@ h2.section-h .mute{color:var(--dim)}
     padding:14px 14px;
   }
   .pos-row .feat{font-weight:600;color:var(--fg);font-size:14px;line-height:1.35}
+  /* Mobile: drop the bordered cell chrome — after the row cuts every
+     row reads Odak-yes vs everyone-no, so 4 outlined cards per row
+     was carrying way too much visual weight. Plain row of marker+label
+     stays scannable, and the .us accent treatment still pops. */
   .pos-row .cells{
     display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
   }
   .pos-row .cell{
-    flex-direction:column;gap:6px;padding:10px 4px;
-    border:1px solid var(--border);border-radius:10px;
-    background:var(--surface);
+    flex-direction:column;gap:6px;padding:8px 4px;
+    background:none;border:0;
   }
   .pos-row .cell.us{
-    border-color:color-mix(in oklch, var(--accent) 35%, var(--border));
-    background:color-mix(in oklch, var(--accent) 6%, var(--surface));
+    background:color-mix(in oklch, var(--accent) 7%, transparent);
+    border-radius:10px;
   }
   .pos-row .cell .lbl{
     display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;
@@ -2192,10 +2213,9 @@ h2.section-h .mute{color:var(--dim)}
   box-shadow:0 24px 48px -12px rgba(0,0,0,.35), inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
 }
 [data-theme="light"] .price-card{box-shadow:0 24px 48px -12px rgba(26,20,16,.15), inset 0 1px 0 #fff}
-.price-card::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg, color-mix(in oklch, var(--accent) 8%, transparent), transparent 40%);
-}
+/* Removed: the redundant ::before top-down gradient overlay. The radial
+   accent in the corner already sells the warm tint; stacking a linear
+   on top made the card look like it had a faded banner across the top. */
 .price-card .head-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;position:relative;z-index:1;gap:12px;flex-wrap:wrap}
 .price-card .tier{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
 .price-card .trial-badge{
@@ -2207,8 +2227,12 @@ h2.section-h .mute{color:var(--dim)}
   white-space:nowrap;
 }
 .price-card .amount{
-  font-family:var(--display);font-size:clamp(72px, 9vw, 110px);line-height:.95;
-  letter-spacing:-.04em;font-weight:700;margin:0;position:relative;z-index:1;
+  /* Capped at 88px (was 110px). At 110px the $19 became the single
+     loudest element on the page below the hero — louder than the
+     section heading directly above it. 88px keeps it dominant within
+     the card without breaking the page-level hierarchy. */
+  font-family:var(--display);font-size:clamp(64px, 7.4vw, 88px);line-height:.95;
+  letter-spacing:-.035em;font-weight:700;margin:0;position:relative;z-index:1;
   display:flex;align-items:flex-start;gap:8px;
 }
 .price-card .amount .curr{font-size:.42em;color:var(--dim);margin-top:8px;font-weight:600}
@@ -2248,7 +2272,10 @@ h2.section-h .mute{color:var(--dim)}
 .price-fine a{color:var(--fg-2);border-bottom:1px solid var(--border-2);padding-bottom:1px;transition:color .15s, border-color .15s}
 .price-fine a:hover{color:var(--accent);border-bottom-color:var(--accent)}
 
-.price-aside h3{font-family:var(--display);font-size:32px;font-weight:700;letter-spacing:-.03em;margin:0 0 16px;line-height:1.04}
+/* Demoted from 32/700 to 22/600 — it sat at competing headline weight
+   next to the $19 amount, splitting attention on desktop. Now reads as
+   the lead-paragraph it actually is. */
+.price-aside h3{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:-.02em;margin:0 0 14px;line-height:1.2}
 .price-aside h3 .accent{color:var(--accent)}
 .price-aside p{color:var(--fg-2);line-height:1.55;margin:0 0 16px;font-size:15px;letter-spacing:-.005em}
 .price-aside p.lead{font-size:18px;color:var(--fg);margin-bottom:20px}
@@ -2259,22 +2286,61 @@ h2.section-h .mute{color:var(--dim)}
 }
 
 /* ==========================================================
-   FAQ
+   FAQ — native <details> accordion. First item open by default.
+   Each summary is a click target ≥44px tall (padding + line height).
+   The chevron rotates 180° when open; the answer paragraph reveals
+   via reserved row + opacity, no height animation (no CLS).
    ========================================================== */
 .faq-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:32px 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px 48px;
   max-width:1000px;margin:0 auto;
 }
 .faq-item{
   border-top:1px solid var(--border);
-  padding-top:20px;
+  padding:0;
 }
-.faq-item h3{
-  font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:-.015em;
-  margin:0 0 10px;color:var(--fg);line-height:1.3;
+.faq-item summary{
+  list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:18px 0;
+  cursor:pointer;
+  font-family:var(--display);font-size:17px;font-weight:600;
+  letter-spacing:-.015em;color:var(--fg);line-height:1.3;
+  user-select:none;
+  /* Touch target ≥44 via vertical padding */
 }
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::marker{content:""}
+.faq-item summary .q{flex:1;min-width:0}
+.faq-item summary .chev{
+  flex-shrink:0;width:24px;height:24px;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--mute);
+  transition:transform var(--dur-snappy) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.faq-item summary .chev svg{
+  width:12px;height:12px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.faq-item[open] summary .chev{transform:rotate(180deg);color:var(--accent)}
+.faq-item summary:hover{color:var(--accent)}
+.faq-item summary:hover .chev{color:var(--accent)}
+.faq-item summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
 .faq-item p{
-  margin:0;color:var(--fg-2);font-size:15px;line-height:1.55;letter-spacing:-.005em;
+  margin:0 0 18px;
+  padding-right:38px;
+  color:var(--fg-2);font-size:15px;line-height:1.55;letter-spacing:-.005em;
+  /* Subtle reveal — native <details> open is instant; the fade-in
+     softens the swap without animating block-size (which would CLS). */
+  animation:faq-reveal .22s var(--ease-out);
+}
+@keyframes faq-reveal{
+  from{opacity:0;transform:translateY(-4px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@media (prefers-reduced-motion: reduce){
+  .faq-item p{animation:none}
+  .faq-item summary .chev{transition:none}
 }
 .faq-item p a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in oklch, var(--accent) 50%, transparent)}
 .faq-item p a:hover{border-bottom-color:var(--accent)}
@@ -2284,7 +2350,7 @@ h2.section-h .mute{color:var(--dim)}
   background:var(--surface-2);border:1px solid var(--border);
   color:var(--fg-2);
 }
-.faq-item h3 code{font-size:.92em;background:transparent;border:none;padding:0;color:var(--accent)}
+.faq-item summary code{font-size:.92em;background:transparent;border:none;padding:0;color:var(--accent)}
 
 /* ==========================================================
    FOOTER
@@ -3542,7 +3608,15 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
 }
 
 @media (prefers-reduced-motion: reduce){
-  .aurora::before,.aurora::after,.palette .search-bar .input .caret,.hint-pill .dot-live{animation:none !important}
+  /* Reduced-motion: kill every continuous decorative animation on the
+     page so users who opt in get a static page with hover/press states
+     still working. Reveals snap to visible. Caret blinks stop. Carousel
+     progress bar disappears. Bullets, palette demos, notch demos: the
+     JS layer already short-circuits on prefers-reduced-motion. */
+  .aurora::before,.aurora::after,
+  .palette .search-bar .input .caret,
+  .hint-pill .dot-live,
+  .f-tab .bar{animation:none !important}
   .reveal{opacity:1;transform:none;transition:none}
   html{scroll-behavior:auto}
 }
@@ -3652,4 +3726,61 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   .palette li .path .branch,
   .palette li .path .dirty,
   .palette li .path .sep{display:none}
+}
+
+/* ==========================================================
+   SMALL PHONES — 320–480px
+   ----------------------------------------------------------
+   Filling the gap between the 760px tablet rules and the
+   420px iPhone-mini rules. Catches iPhone 13/14/15 standard
+   (390) and Pro Max (430). Drops over-sized headlines, makes
+   the pricing amount stop dominating, single-columns feature
+   pills so they don't orphan-wrap, and reduces footer to
+   brand + a single combined links column.
+   ========================================================== */
+@media (max-width:480px){
+  h2.section-h{
+    font-size:clamp(28px, 8.4vw, 40px);
+    letter-spacing:-.03em;
+  }
+  .section-sub{font-size:16px}
+  .f-copy h3{
+    font-size:clamp(26px, 7.4vw, 34px);
+    letter-spacing:-.025em;
+  }
+  /* Hero already responds via its own clamp, but at 480 the title
+     was holding closer to the upper clamp than it should — narrow the
+     band so a long word fits without two-line wrap. */
+  h1.hero-h{font-size:clamp(34px, 11.2vw, 56px)}
+  .hero-sub{font-size:16px}
+
+  /* Feature pills stop wrapping with awkward orphans. */
+  .feature-pills{flex-direction:column;align-items:stretch}
+  .feature-pills .fp{justify-content:flex-start}
+
+  /* Pricing amount: the upper clamp at 110px is louder than anything
+     else on the page on a 390-wide phone. Cap proportionally. */
+  .price-card .amount{font-size:clamp(56px, 14vw, 72px)}
+  .price-card .amount .per{padding-bottom:14px;font-size:12px}
+  .price-aside h3{font-size:20px;font-weight:600;letter-spacing:-.015em}
+
+  /* Footer: brand + two link columns becomes brand stacked above a
+     single combined links grid. The 4-col → 2-col fallback at 960px
+     becomes 1-col + 2-col here so nothing squishes below 160px wide. */
+  .foot-grid{grid-template-columns:1fr;gap:24px}
+  .foot-brand .mission{max-width:none}
+
+  /* Section vertical rhythm: equalize so phones don't get cramped
+     intra-section + huge inter-section gaps. */
+  main > section{padding-left:var(--gutter);padding-right:var(--gutter)}
+
+  /* Compact bullets cards on phones — see Finding 24. */
+  .f-copy .bullets{gap:10px}
+  .f-copy .bullets li{padding:10px 12px}
+
+  /* Smaller f-cap track on phones — see Finding 9. The narrator pill
+     is a "nice-to-have" that costs 64px of vertical real estate per
+     panel; on phones that's a meaningful chunk of the fold. */
+  .f-cap-track{margin-top:16px;height:32px}
+  .f-cap{font-size:12px;padding:5px 10px;gap:6px}
 }

@@ -1113,7 +1113,17 @@
       bar.style.animation = '';
     }
   }
-  function next(){ activate((currentIdx + 1) % tabs.length); }
+  // Mark the carousel as having completed one full cycle the first time
+   // we wrap back to the start. CSS uses this (.f-carousel[data-cycled])
+   // to fade out the per-tab progress bar — the user has seen all four
+   // panels, so the "still cycling" signal becomes visual noise.
+  function next(){
+    const nextIdx = (currentIdx + 1) % tabs.length;
+    if(nextIdx === 0 && !carousel.dataset.cycled){
+      carousel.dataset.cycled = '1';
+    }
+    activate(nextIdx);
+  }
 
   function clearTimer(){
     if(timer){ clearInterval(timer); timer = null; }

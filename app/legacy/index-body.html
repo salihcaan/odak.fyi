@@ -1052,16 +1052,6 @@
     </div>
 
     <div class="pos-row">
-      <div class="feat">Opens projects that aren't already open</div>
-      <div class="cells">
-        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
-        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
-        <div class="cell p"><span class="mk"></span><span class="lbl">Spotlight</span></div>
-      </div>
-    </div>
-
-    <div class="pos-row">
       <div class="feat">Per-project commands (<code>.odak</code> file)</div>
       <div class="cells">
         <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
@@ -1082,16 +1072,6 @@
     </div>
 
     <div class="pos-row">
-      <div class="feat">Git branch + dirty state on the result row</div>
-      <div class="cells">
-        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
-        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
-      </div>
-    </div>
-
-    <div class="pos-row">
       <div class="feat">Live project status in the notch</div>
       <div class="cells">
         <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
@@ -1099,42 +1079,6 @@
         <div class="cell n"><span class="mk"></span><span class="lbl">AltTab</span></div>
         <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
       </div>
-    </div>
-
-    <div class="pos-row">
-      <div class="feat">Works fully offline, no sign-in</div>
-      <div class="cells">
-        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
-        <div class="cell p"><span class="mk"></span><span class="lbl">Raycast</span></div>
-        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
-        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Spotlight</span></div>
-      </div>
-    </div>
-
-    <div class="pos-row">
-      <div class="feat">One-time price, no subscription</div>
-      <div class="cells">
-        <div class="cell us y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Odak</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
-        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
-        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">Spotlight</span></div>
-      </div>
-    </div>
-
-    <div class="pos-row">
-      <div class="feat">Open source</div>
-      <div class="cells">
-        <div class="cell us n"><span class="mk"></span><span class="lbl">Odak</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">Raycast</span></div>
-        <div class="cell y"><span class="mk"><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg></span><span class="lbl">AltTab</span></div>
-        <div class="cell n"><span class="mk"></span><span class="lbl">Spotlight</span></div>
-      </div>
-    </div>
-
-    <div class="pos-compare-foot">
-      <span class="lg y"><span class="mk"></span>Yes</span>
-      <span class="lg p"><span class="mk"></span>Partial / via extension</span>
-      <span class="lg n"><span class="mk"></span>No</span>
     </div>
   </div>
 </section>
@@ -1152,7 +1096,6 @@
   <div class="pricing">
     <div class="price-card reveal">
       <div class="head-row">
-        <div class="tier">Odak · one-time</div>
         <div class="trial-badge">14 days free</div>
       </div>
       <div class="amount">
@@ -1192,44 +1135,43 @@
   <div class="section-head reveal">
     <div class="eyebrow">FAQ</div>
     <h2 class="section-h">Quick <span class="accent">answers.</span></h2>
-    <p class="section-sub">The things people ask before they try it.</p>
   </div>
 
   <div class="faq-grid">
-    <div class="faq-item reveal">
-      <h3>Will this run on my Mac?</h3>
+    <details class="faq-item reveal" open>
+      <summary><span class="q">Will this run on my Mac?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>macOS 26 Tahoe or later, Apple Silicon only. The Liquid Glass UI uses macOS 26 APIs that don't backport, and Tahoe dropped Intel — so neither does Odak.</p>
-    </div>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>I already use Raycast — why this?</h3>
+    <details class="faq-item reveal">
+      <summary><span class="q">I already use Raycast — why this?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>Raycast knows apps and commands; Odak knows projects (which editors have them open, what each one wants you to do next). Use them side by side.</p>
-    </div>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>Which editors does it support?</h3>
+    <details class="faq-item reveal">
+      <summary><span class="q">Which editors does it support?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>Cursor, VS Code, IntelliJ IDEA, and GoLand out of the box. Xcode and anything else via Settings — pick the .app and Odak grabs the bundle ID for you.</p>
-    </div>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>What goes in <code>.odak</code> vs <code>~/.odak/config.yaml</code>?</h3>
+    <details class="faq-item reveal">
+      <summary><span class="q">What goes in <code>.odak</code> vs <code>~/.odak/config.yaml</code>?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>The <code>.odak</code> file in a project is tiny — just the IDE to use and a few variables. Your actions live globally in <code>~/.odak/config.yaml</code>; write them once, they apply everywhere. <a href="/docs/actions.html">Read the full reference →</a></p>
-    </div>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>What does Odak send back?</h3>
+    <details class="faq-item reveal">
+      <summary><span class="q">What does Odak send back?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>By default, <strong>nothing</strong> — projects, queries, and settings never leave your Mac. If you opt in, Odak shares anonymous events and crash reports (no email, no IP, no project names, no window titles). <a href="/privacy.html#app">Full details →</a></p>
-    </div>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>What happens after the 14-day trial?</h3>
-      <p>Every feature is unlocked during the trial. After 14 days, buy it for $15 (one time) or stop using it. No card up front, no cancellation flow.</p>
-    </div>
+    <details class="faq-item reveal">
+      <summary><span class="q">What happens after the 14-day trial?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
+      <p>Every feature is unlocked during the trial. After 14 days, buy it for $19 (one time) or stop using it. No card up front, no cancellation flow.</p>
+    </details>
 
-    <div class="faq-item reveal">
-      <h3>Refunds?</h3>
+    <details class="faq-item reveal">
+      <summary><span class="q">Refunds?</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3"/></svg></span></summary>
       <p>14 days, no questions. Email <a href="mailto:support@odak.fyi">support@odak.fyi</a>.</p>
-    </div>
+    </details>
   </div>
 </section>
 
