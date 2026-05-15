@@ -1,3 +1,4 @@
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useScrollNav } from "@/hooks/useScrollNav";
 import { useTheme } from "@/hooks/useTheme";
 import { Mark } from "./Logo";
@@ -14,6 +15,11 @@ const MOON_PATH = (
 
 function ThemeButton() {
   const { theme, toggleTheme } = useTheme();
+  const reduced = useReducedMotion();
+  // Crossfade the sun/moon glyph on theme flip. Each glyph is its own
+  // <motion.svg> keyed by theme, so AnimatePresence runs the exit on the
+  // old one while the new one enters with a slight rotate-in. Reduced-
+  // motion: collapse to instant swap with zero transform.
   return (
     <button
       className="icon-btn"
@@ -21,10 +27,40 @@ function ThemeButton() {
       title="Toggle theme"
       aria-label="Toggle theme"
       onClick={toggleTheme}
+      style={{ position: "relative", overflow: "hidden" }}
     >
-      <svg viewBox="0 0 16 16" id="theme-icon">
-        {theme === "dark" ? MOON_PATH : SUN_PATH}
-      </svg>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.svg
+          key={theme}
+          viewBox="0 0 16 16"
+          id="theme-icon"
+          initial={
+            reduced
+              ? { opacity: 0 }
+              : { opacity: 0, rotate: theme === "dark" ? -60 : 60, scale: 0.7 }
+          }
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={
+            reduced
+              ? { opacity: 0 }
+              : { opacity: 0, rotate: theme === "dark" ? 60 : -60, scale: 0.7 }
+          }
+          transition={
+            reduced
+              ? { duration: 0.12 }
+              : { duration: 0.32, ease: [0.22, 1, 0.36, 1] }
+          }
+          style={{
+            position: "absolute",
+            inset: 0,
+            margin: "auto",
+            width: 14,
+            height: 14,
+          }}
+        >
+          {theme === "dark" ? MOON_PATH : SUN_PATH}
+        </motion.svg>
+      </AnimatePresence>
     </button>
   );
 }

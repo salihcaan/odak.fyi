@@ -1,13 +1,46 @@
+import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { usePageEnter } from "@/components/site/PageEnter";
+
+// Single release article. Animates in when its top edge crosses ~12% of
+// the viewport (matches the legacy .reveal IntersectionObserver
+// threshold). Reduced-motion: snap to visible.
+function Release({
+  id,
+  children,
+}: {
+  id: string;
+  children: ReactNode;
+}) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.article
+      className="release rel"
+      id={id}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={
+        reduced
+          ? { duration: 0.22 }
+          : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+      }
+    >
+      {children}
+    </motion.article>
+  );
+}
 
 export function Changelog() {
+  const { item } = usePageEnter();
   return (
     <>
       <Aurora />
       <Nav currentPath="/changelog.html" />
-      <main>
+      <motion.main variants={item(0.05)} initial="hidden" animate="show">
         <div className="eyebrow">Changelog</div>
         <h1>What's new</h1>
         <p className="lede">
@@ -27,7 +60,7 @@ export function Changelog() {
           </a>
         </p>
 
-        <article className="release rel" id="v0-1-4">
+        <Release id="v0-1-4">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.4</span>
@@ -85,9 +118,9 @@ export function Changelog() {
               View on GitHub
             </a>
           </div>
-        </article>
+        </Release>
 
-        <article className="release rel" id="v0-1-3">
+        <Release id="v0-1-3">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.3</span>
@@ -145,9 +178,9 @@ export function Changelog() {
               View on GitHub
             </a>
           </div>
-        </article>
+        </Release>
 
-        <article className="release rel" id="v0-1-2">
+        <Release id="v0-1-2">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.2</span>
@@ -188,9 +221,9 @@ export function Changelog() {
               View on GitHub
             </a>
           </div>
-        </article>
+        </Release>
 
-        <article className="release rel" id="v0-1-1">
+        <Release id="v0-1-1">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.1</span>
@@ -259,9 +292,9 @@ export function Changelog() {
               View on GitHub
             </a>
           </div>
-        </article>
+        </Release>
 
-        <article className="release rel" id="v0-1-0">
+        <Release id="v0-1-0">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.0</span>
@@ -325,7 +358,7 @@ export function Changelog() {
               View on GitHub
             </a>
           </div>
-        </article>
+        </Release>
 
         <div className="subscribe">
           <p style={{ margin: 0 }}>
@@ -335,7 +368,7 @@ export function Changelog() {
             at the <a href="/appcast.xml">appcast</a>.
           </p>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </>
   );

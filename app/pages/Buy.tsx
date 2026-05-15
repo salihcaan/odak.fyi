@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { Mark } from "@/components/site/Logo";
 import { NavBuy } from "@/components/site/Nav";
 import { useTheme } from "@/hooks/useTheme";
+import { usePageEnter } from "@/components/site/PageEnter";
 
 // Two URL surfaces:
 //   /buy        → live Paddle. Until LIVE_TOKEN is wired in, /buy renders a
@@ -63,6 +65,7 @@ function loadPaddle(): Promise<Paddle> {
 
 export function Buy() {
   const { theme } = useTheme();
+  const { item } = usePageEnter();
   const [view, setView] = useState<"form" | "success" | "prelaunch">("form");
   const [email, setEmail] = useState("");
   const [isStage, setIsStage] = useState(false);
@@ -138,7 +141,12 @@ export function Buy() {
   return (
     <>
       <NavBuy />
-      <main className="wrap">
+      <motion.main
+        className="wrap"
+        variants={item(0.05)}
+        initial="hidden"
+        animate="show"
+      >
         <span className="logo">
           <Mark size={56} loading="eager" fetchPriority="high" />
         </span>
@@ -246,7 +254,7 @@ export function Buy() {
           Secure checkout by Paddle · <a href="/refund">Refund policy</a> ·{" "}
           <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
         </p>
-      </main>
+      </motion.main>
     </>
   );
 }

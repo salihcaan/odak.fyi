@@ -1,0 +1,137 @@
+/* ==========================================================
+   POLISH — site-wide motion refinements
+   ----------------------------------------------------------
+   Loaded after each page's main stylesheet, so it overrides
+   without forking the per-page sheets. All durations stay
+   within the established --dur-fast / --ease-out budget.
+   ========================================================== */
+
+/* ----- Buttons: add a real press state alongside the lift hover.
+         transform composites cheaply; layered with the existing
+         hover so the press lands inside the same transition. ----- */
+.btn-primary{
+  /* keep prior transform/box-shadow transition; just retune cubic */
+  transition:transform var(--dur-fast, 180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             box-shadow var(--dur-fast, 180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             background var(--dur-fast, 180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.btn-primary:active{
+  transform:translateY(0) scale(.97);
+  /* shrink shadow on press — looks like the button settles into the surface */
+  box-shadow:0 2px 8px -4px color-mix(in oklch, var(--fg) 30%, transparent);
+  transition-duration:90ms;
+}
+
+/* Generic CTA button used on /buy. */
+.btn{transition:transform var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+                box-shadow var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+                background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1))}
+.btn:active{transform:scale(.98);transition-duration:90ms}
+
+/* ----- Icon buttons (theme toggle, nav-cta chips). Pressed state
+         dips them a hair — same idiom as macOS toolbar buttons. ----- */
+.icon-btn{
+  transition:background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             transform var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.icon-btn:active{transform:scale(.92);transition-duration:90ms}
+.icon-btn svg{
+  /* SVG inside the toggle can transition opacity / rotate when we
+     swap symbols in React — class hooks are added below. */
+  transition:opacity 220ms var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             transform 320ms var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- Nav links: tighten the hover transition with the global
+         ease-out token so they match the rest of the chrome. ----- */
+.nav-links a{
+  transition:color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- Footer links: previously snapped on hover. Smooth the
+         color shift so the column hierarchy reads as alive. ----- */
+.foot-col a{
+  transition:color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- Inline body links in /privacy /terms /refund /changelog
+         (the content-area <a>s that pick up var(--accent) on hover).
+         They currently lack any transition. ----- */
+main a:not(.btn):not(.btn-primary):not(.nav-back):not(.nav-brand){
+  transition:color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             border-color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- /buy email field. Subtle focus polish. ----- */
+.email-field{
+  transition:border-color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             box-shadow var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.email-field:focus,
+.email-field:focus-visible{
+  outline:none;
+  border-color:color-mix(in oklch, var(--accent, #c7895e) 55%, var(--border));
+  box-shadow:0 0 0 3px color-mix(in oklch, var(--accent, #c7895e) 18%, transparent);
+}
+
+/* ----- Changelog release foot links. ----- */
+.rel-foot a{
+  transition:color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             border-color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- Theme-toggle icon swap is handled by motion AnimatePresence
+         in Nav.tsx (crossfade + rotate-in). CSS just ensures the
+         wrapper isolates the animated SVG so the button doesn't grow
+         during the swap. ----- */
+.icon-btn#theme-toggle{
+  overflow:hidden;
+}
+
+/* ----- Nav .scrolled swap: extend the transition so the backdrop
+         dropping out doesn't feel like a hard pop on slow scrolls. ----- */
+.nav{
+  transition:background .35s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             backdrop-filter .35s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             -webkit-backdrop-filter .35s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             border-color .35s var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+
+/* ----- Smooth anchor scrolling (already on root in some pages but
+         not universally; reduced-motion check below disables it). ----- */
+html{scroll-behavior:smooth}
+
+/* ----- Focus rings: keep them visible everywhere, but soft. ----- */
+:focus-visible{
+  outline:2px solid color-mix(in oklch, var(--accent, #c7895e) 80%, transparent);
+  outline-offset:3px;
+  border-radius:2px;
+}
+.btn-primary:focus-visible,
+.btn:focus-visible{
+  outline-offset:3px;
+}
+
+/* ----- Reduced-motion: strip the new transitions cleanly. ----- */
+@media (prefers-reduced-motion: reduce){
+  .btn-primary,
+  .btn,
+  .icon-btn,
+  .icon-btn svg,
+  .nav,
+  .nav-links a,
+  .foot-col a,
+  .rel-foot a,
+  .email-field,
+  main a:not(.btn):not(.btn-primary):not(.nav-back):not(.nav-brand){
+    transition:none !important;
+  }
+  .btn-primary:active,
+  .btn:active,
+  .icon-btn:active{transform:none}
+  html{scroll-behavior:auto}
+}

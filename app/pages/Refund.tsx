@@ -1,13 +1,16 @@
+import { motion } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { usePageEnter } from "@/components/site/PageEnter";
 
 export function Refund() {
+  const { item } = usePageEnter();
   return (
     <>
       <Aurora />
       <Nav />
-      <main>
+      <motion.main variants={item(0.05)} initial="hidden" animate="show">
         <div className="eyebrow">Legal</div>
         <h1>Refund Policy</h1>
         <p className="lede">
@@ -113,7 +116,7 @@ export function Refund() {
             General: <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>
           </p>
         </div>
-      </main>
+      </motion.main>
       <Footer />
     </>
   );
