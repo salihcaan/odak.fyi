@@ -2696,12 +2696,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
 .macbook-wrap{
   position:relative;width:100%;
   container-type:inline-size;
-  /* Hinge for the scroll-driven lid animation (see @supports block at the
-     end of this section). Bottom-center mimics the real laptop's keyboard-
-     deck hinge, so rotating around it reads as the lid tilting open/closed
-     rather than the whole device flipping. Set unconditionally — at 0deg
-     it's invisible. */
-  transform-origin:bottom center;
   /* Shadow lives on .macbook-wrap so it isn't clipped by .macbook's layout box.
      Applying filter + clip-path on the same element causes WebKit to crop the filter.
 
@@ -2716,52 +2710,6 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
     drop-shadow(0 0.1cqi 0.3cqi rgba(0,0,0,.34))
     drop-shadow(0 0.5cqi 1.2cqi rgba(0,0,0,.26))
     drop-shadow(0 1.5cqi 3.0cqi rgba(0,0,0,.22));
-}
-
-/* ----- Scroll-driven lid animation -------------------------------
-   As the macbook enters the viewport from below, the lid is tilted
-   back (rotateX -22deg → "wide open"). As scroll continues and the
-   device settles into view, the lid rotates upright (0deg → resting
-   position). Uses the same `animation-timeline: view()` pattern as
-   .reveal further down in this file — Chromium 115+ / Safari TP
-   support it natively; older browsers see the macbook upright the
-   whole time, no JS fallback needed.
-
-   Animation lives on .macbook-wrap so the drop-shadow rotates with
-   the device. .mb-stage above already sets perspective:2400px and
-   transform-style:preserve-3d, so the rotation reads as a real 3D
-   hinge instead of a flat skew.
-
-   prefers-reduced-motion: skip the animation entirely; the macbook
-   sits at the resting state (rotateX 0) from first paint. ----- */
-@supports (animation-timeline: view()){
-  @media (prefers-reduced-motion: no-preference){
-    .macbook-wrap{
-      animation:mb-lid-settle linear both;
-      animation-timeline:view();
-      /* Range tuned so:
-         - at page-load scroll the lid is meaningfully OPEN (the macbook
-           is already in cover phase before any scroll, since it sits
-           right under the hero fold)
-         - the closed/upright state lands when the device is centered in
-           the viewport — NOT when it's already scrolling off the top.
-         cover 20% → cover 50% pairs with the scale-down in the keyframes
-         so the macbook is fully framed (the screen visible from menubar
-         to base) in its resting state. */
-      animation-range:cover 20% cover 50%;
-    }
-  }
-}
-@keyframes mb-lid-settle{
-  /* From: lid upright at 90° from base (SVG's natural pose), framed full-
-     size — what the user sees on page load. The macbook looks like a
-     standing-open laptop with the screen perpendicular to camera.
-     To:   lid wide open, ~65° tilted back over the keyboard — as the
-     user scrolls down the lid keeps opening up, revealing more of the
-     deck. Slight scale-up + lift so the tilted-back state still reads
-     as one connected device, not just shrinking. */
-  from{transform:translateY(0) scale(0.92) rotateX(0deg)}
-  to  {transform:translateY(-40px) scale(1) rotateX(-65deg)}
 }
 [data-theme="light"] .macbook-wrap{
   filter:
