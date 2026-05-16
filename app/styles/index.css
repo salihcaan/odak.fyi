@@ -2753,16 +2753,15 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   }
 }
 @keyframes mb-lid-settle{
-  /* From: lid wide open, far past comfortable — leaning back ~65° so the
-     viewer is looking down onto the keyboard deck and the screen reads
-     as nearly horizontal. Scaled up slightly (1.04) so the open state
-     feels closer and more present.
-     To:   lid upright at 90° from the base (the SVG's natural front-on
-     pose), scaled down to 0.85 so the full macbook (notch + screen +
-     base + feet) fits the viewport in its settled state. translateY
-     lifts it 40px so it centers, not sits low. */
-  from{transform:translateY(0) scale(1.04) rotateX(-65deg)}
-  to  {transform:translateY(-40px) scale(0.85) rotateX(0deg)}
+  /* From: lid upright at 90° from base (SVG's natural pose), framed full-
+     size — what the user sees on page load. The macbook looks like a
+     standing-open laptop with the screen perpendicular to camera.
+     To:   lid wide open, ~65° tilted back over the keyboard — as the
+     user scrolls down the lid keeps opening up, revealing more of the
+     deck. Slight scale-up + lift so the tilted-back state still reads
+     as one connected device, not just shrinking. */
+  from{transform:translateY(0) scale(0.92) rotateX(0deg)}
+  to  {transform:translateY(-40px) scale(1) rotateX(-65deg)}
 }
 [data-theme="light"] .macbook-wrap{
   filter:
