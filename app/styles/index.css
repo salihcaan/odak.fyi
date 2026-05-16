@@ -2739,21 +2739,29 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
     .macbook-wrap{
       animation:mb-lid-settle linear both;
       animation-timeline:view();
-      /* Range tuned so the lid is meaningfully OPEN at page-load scroll
-         (the macbook sits just below the hero — it's already in cover
-         phase before any scroll happens). cover 20% → 60% places the
-         max-open state right around scrollY=0 and lets the lid close
-         over the next ~600px of scroll. */
-      animation-range:cover 20% cover 60%;
+      /* Range tuned so:
+         - at page-load scroll the lid is meaningfully OPEN (the macbook
+           is already in cover phase before any scroll, since it sits
+           right under the hero fold)
+         - the closed/upright state lands when the device is centered in
+           the viewport — NOT when it's already scrolling off the top.
+         cover 20% → cover 50% pairs with the scale-down in the keyframes
+         so the macbook is fully framed (the screen visible from menubar
+         to base) in its resting state. */
+      animation-range:cover 20% cover 50%;
     }
   }
 }
 @keyframes mb-lid-settle{
-  /* Wide-open tilt (-32deg with the hinge at the bottom) — the lid leans
-     back over the keyboard deck, exposing more of the front edge. Settles
-     to upright (0deg) by the time the device is centered in the viewport. */
-  from{transform:rotateX(-32deg)}
-  to  {transform:rotateX(0deg)}
+  /* From: wide-open tilt, full size — lid leans back over the keyboard
+     deck so the user sees the screen at a downward angle (like peering
+     over the device on a desk).
+     To:   lid upright at 90° from the base, scaled down ~15% so the
+     full macbook (screen + base + feet) fits inside a typical viewport
+     instead of bleeding off the bottom. translateY shifts it slightly
+     up so the settled frame reads as nicely centered, not bottom-heavy. */
+  from{transform:translateY(0) scale(1) rotateX(-32deg)}
+  to  {transform:translateY(-40px) scale(0.85) rotateX(0deg)}
 }
 [data-theme="light"] .macbook-wrap{
   filter:
