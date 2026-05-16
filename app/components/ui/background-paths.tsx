@@ -80,12 +80,13 @@ export function FloatingPaths({
 // Decoration-only layer. Two variants:
 //   "absolute" (default) — scoped to a position:relative parent, used to
 //     sit the paths behind a specific section (e.g. the original hero).
-//   "fixed"    — viewport-pinned, sits at z-index:-1 alongside the aurora
-//     and grid-bg so the curves bleed seamlessly through every section of
-//     the page (hero → macbook stage → features → pricing → faq) instead
-//     of getting clipped at the hero's overflow:hidden edge. Same z as
-//     aurora; rendered later in the DOM so the crisp paths paint on top
-//     of the warm radial blur.
+//   "fixed"    — viewport-pinned. Sits at z-index:0 (pointer-events:none
+//     so it never intercepts) and is rendered EARLY in the DOM so later
+//     content (Nav at z:80, hero, sections) paints on top via source
+//     order. We avoid z-index:-1 because the html element has
+//     `background:var(--bg); overflow-x:clip` (index.css:139), and that
+//     combination puts a negative-z fixed layer behind the canvas
+//     background in some browsers — the layer existed but was invisible.
 export function BackgroundPathsLayer({
   className,
   variant = "absolute",

@@ -138,7 +138,12 @@
 html,body{margin:0;padding:0}
 html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
 body{
-  background:var(--bg);
+  /* No background here on purpose — html already paints --bg. Adding a
+     body bg covers fixed z-index:-1 ambient layers (BackgroundPaths,
+     aurora siblings) because body's bg paints at body's own z-level
+     which is above negative z-index descendants of the root stacking
+     context. Aurora pseudos used to escape this via will-change on
+     their compositor layers; the paths SVG layer can't rely on that. */
   color:var(--fg);
   font-family:var(--sans);
   font-size:15px;
