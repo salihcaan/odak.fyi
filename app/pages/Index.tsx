@@ -50,19 +50,15 @@ export function Index() {
       <SvgSprite />
       <Aurora />
       <div className="grid-bg" />
+      {/* Ambient curves run the full viewport, not just the hero — so the
+          sweep bleeds seamlessly through the macbook stage and every
+          section below instead of getting cropped at the hero edge. */}
+      <BackgroundPathsLayer variant="fixed" />
 
       <Nav showBuy hashHrefs />
 
-      <section
-        className="hero"
-        id="hero"
-        style={{ position: "relative", overflow: "hidden" }}
-      >
-        <BackgroundPathsLayer />
-        <div
-          className="hero-text"
-          style={{ position: "relative", zIndex: 10 }}
-        >
+      <section className="hero" id="hero" style={{ position: "relative" }}>
+        <div className="hero-text">
           <motion.a
             className="hero-bar"
             href="/changelog.html#v0-1-4"

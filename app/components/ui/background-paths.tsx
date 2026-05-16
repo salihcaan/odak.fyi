@@ -15,7 +15,18 @@ import { Button } from "@/components/ui/button";
 // letter stagger collapses to a single fade. We keep the visual layer
 // because removing it entirely shifts the layout; we just stop motion.
 
-export function FloatingPaths({ position }: { position: number }) {
+export function FloatingPaths({
+  position,
+  fill = false,
+}: {
+  position: number;
+  // When true, the SVG uses preserveAspectRatio="xMidYMid slice" so the
+  // curves fill the entire container even on portrait viewports — the
+  // sweep gets cropped left/right instead of letterboxed top/bottom.
+  // Used by the fixed-variant ambient layer so the paths cover the full
+  // viewport regardless of aspect ratio.
+  fill?: boolean;
+}) {
   const prefersReducedMotion = useReducedMotion();
 
   const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -29,6 +40,7 @@ export function FloatingPaths({ position }: { position: number }) {
       <svg
         className="h-full w-full text-[#4a3828] dark:text-[#f5ede0]"
         viewBox="0 0 696 316"
+        preserveAspectRatio={fill ? "xMidYMid slice" : "xMidYMid meet"}
         fill="none"
       >
         <title>Background Paths</title>
@@ -65,10 +77,34 @@ export function FloatingPaths({ position }: { position: number }) {
   );
 }
 
-// Decoration-only layer. Use this when you want the animated paths to sit
-// behind your own hero markup. Parent must establish position: relative so
-// the absolute layer is scoped to the hero, not the viewport.
-export function BackgroundPathsLayer({ className }: { className?: string }) {
+// Decoration-only layer. Two variants:
+//   "absolute" (default) — scoped to a position:relative parent, used to
+//     sit the paths behind a specific section (e.g. the original hero).
+//   "fixed"    — viewport-pinned, sits at z-index:-1 alongside the aurora
+//     and grid-bg so the curves bleed seamlessly through every section of
+//     the page (hero → macbook stage → features → pricing → faq) instead
+//     of getting clipped at the hero's overflow:hidden edge. Same z as
+//     aurora; rendered later in the DOM so the crisp paths paint on top
+//     of the warm radial blur.
+export function BackgroundPathsLayer({
+  className,
+  variant = "absolute",
+}: {
+  className?: string;
+  variant?: "absolute" | "fixed";
+}) {
+  if (variant === "fixed") {
+    return (
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none overflow-hidden ${className ?? ""}`}
+        style={{ position: "fixed", inset: 0, zIndex: -1 }}
+      >
+        <FloatingPaths position={1} fill />
+        <FloatingPaths position={-1} fill />
+      </div>
+    );
+  }
   return (
     <div
       aria-hidden="true"
