@@ -5,3 +5,6 @@ dist/
 .vite/
 design-system/
 
+
+# Playwright MCP debug logs/snapshots
+.playwright-mcp/

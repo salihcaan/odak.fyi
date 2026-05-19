@@ -1,69 +1,5 @@
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useScrollNav } from "@/hooks/useScrollNav";
-import { useTheme } from "@/hooks/useTheme";
 import { Mark } from "./Logo";
-
-const SUN_PATH = (
-  <>
-    <path d="M8 2v1m0 10v1m6-6h-1M3 8H2m10.2-4.2l-.7.7M4.5 11.5l-.7.7m8.4 0l-.7-.7M4.5 4.5l-.7-.7" />
-    <circle cx="8" cy="8" r="3" />
-  </>
-);
-const MOON_PATH = (
-  <path d="M13 9.5a5 5 0 1 1-6.5-6.5 5 5 0 0 0 6.5 6.5z" />
-);
-
-function ThemeButton() {
-  const { theme, toggleTheme } = useTheme();
-  const reduced = useReducedMotion();
-  // Crossfade the sun/moon glyph on theme flip. Each glyph is its own
-  // <motion.svg> keyed by theme, so AnimatePresence runs the exit on the
-  // old one while the new one enters with a slight rotate-in. Reduced-
-  // motion: collapse to instant swap with zero transform.
-  return (
-    <button
-      className="icon-btn"
-      id="theme-toggle"
-      title="Toggle theme"
-      aria-label="Toggle theme"
-      onClick={toggleTheme}
-      style={{ position: "relative", overflow: "hidden" }}
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.svg
-          key={theme}
-          viewBox="0 0 16 16"
-          id="theme-icon"
-          initial={
-            reduced
-              ? { opacity: 0 }
-              : { opacity: 0, rotate: theme === "dark" ? -60 : 60, scale: 0.7 }
-          }
-          animate={{ opacity: 1, rotate: 0, scale: 1 }}
-          exit={
-            reduced
-              ? { opacity: 0 }
-              : { opacity: 0, rotate: theme === "dark" ? 60 : -60, scale: 0.7 }
-          }
-          transition={
-            reduced
-              ? { duration: 0.12 }
-              : { duration: 0.32, ease: [0.22, 1, 0.36, 1] }
-          }
-          style={{
-            position: "absolute",
-            inset: 0,
-            margin: "auto",
-            width: 14,
-            height: 14,
-          }}
-        >
-          {theme === "dark" ? MOON_PATH : SUN_PATH}
-        </motion.svg>
-      </AnimatePresence>
-    </button>
-  );
-}
 
 // Full-site nav with the page links menu. Used by index, changelog,
 // privacy, refund, terms.
@@ -109,7 +45,6 @@ export function Nav({
           </a>
         </div>
         <div className="nav-cta">
-          <ThemeButton />
           <a
             href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
             className="btn-primary"
@@ -145,7 +80,6 @@ export function NavBuy() {
           <span>Odak</span>
         </a>
         <div className="nav-cta">
-          <ThemeButton />
           <a href="/" className="nav-back">
             ← Back to odak.fyi
           </a>

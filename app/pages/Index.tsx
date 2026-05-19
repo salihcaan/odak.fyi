@@ -2,18 +2,19 @@ import { useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Footer } from "@/components/site/Footer";
+import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
 import { SvgSprite } from "@/components/site/SvgSprite";
-import { BackgroundPathsLayer } from "@/components/ui/background-paths";
 import indexBody from "../legacy/index-body.html?raw";
 
 // Index = home. Renders chrome (sprite, aurora, nav, hero, footer) as React;
-// hero gets motion + BackgroundPaths layered behind. Everything below the
-// hero (mb-stage through faq, ~1290 lines) is injected as the original HTML
-// verbatim — too much markup for a faithful JSX translation in one pass, and
-// the inline-JS demo loops in legacy/index-runtime.js target stable DOM IDs
-// in that exact markup. The runtime script is loaded after first paint via
-// useEffect so React's commit beats it to the DOM.
+// hero text gets motion; the MacbookCarousel below it cycles four
+// product recordings inside a macbook frame with scroll-grow on entry.
+// Everything below it (positioning, pricing, faq) is still injected as
+// the original HTML — dense markup with stable DOM IDs that the inline-
+// JS demos in legacy/index-runtime.js target. The runtime script is
+// loaded after first paint via useEffect so React's commit beats it to
+// the DOM.
 
 export function Index() {
   const prefersReducedMotion = useReducedMotion();
@@ -50,10 +51,6 @@ export function Index() {
       <SvgSprite />
       <Aurora />
       <div className="grid-bg" />
-      {/* Ambient curves run the full viewport, not just the hero — so the
-          sweep bleeds seamlessly through the macbook stage and every
-          section below instead of getting cropped at the hero edge. */}
-      <BackgroundPathsLayer variant="fixed" />
 
       <Nav showBuy hashHrefs />
 
@@ -76,7 +73,8 @@ export function Index() {
           </motion.a>
 
           <motion.h1 className="hero-h" {...enter(0.09)}>
-            Any project. <span className="accent">Two keys.</span>
+            Any project.<br />
+            <span className="accent">Two keys.</span>
           </motion.h1>
 
           <motion.p className="hero-sub" {...enter(0.18)}>
@@ -116,6 +114,8 @@ export function Index() {
           </motion.div>
         </div>
       </section>
+
+      <MacbookCarousel />
 
       <div dangerouslySetInnerHTML={{ __html: indexBody }} />
 

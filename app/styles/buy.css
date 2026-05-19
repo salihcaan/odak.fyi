@@ -12,19 +12,6 @@
   --surface: rgba(255,248,238,.04);
   --surface-2: rgba(255,248,238,.07);
 }
-[data-theme="light"] {
-  --bg: #f7f4ef;
-  --bg-2: #eee8dc;
-  --fg: #1a1410;
-  --dim: rgba(26,20,16,.58);
-  --mute: rgba(26,20,16,.4);
-  --border: rgba(26,20,16,.12);
-  --accent: oklch(68% 0.16 55);
-  --accent-2: oklch(58% 0.18 55);
-  --accent-ink: #fffbf5;
-  --surface: rgba(26,20,16,.03);
-  --surface-2: rgba(26,20,16,.05);
-}
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 html { background: var(--bg); }
@@ -95,12 +82,6 @@ body {
   display: block;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
 }
-.nav-brand .mark .icon-light { display: none; }
-[data-theme="light"] .nav-brand .mark .icon-dark { display: none; }
-[data-theme="light"] .nav-brand .mark .icon-light { display: block; }
-[data-theme="light"] .nav-brand .mark img {
-  filter: drop-shadow(0 2px 6px rgba(26,20,16,.18));
-}
 .nav-cta { display: flex; align-items: center; gap: 8px; }
 .nav-back {
   font-size: 13.5px;
@@ -142,10 +123,6 @@ body {
   display: block;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
 }
-[data-theme="light"] .logo { filter: drop-shadow(0 4px 12px rgba(26,20,16,.12)); }
-.logo .icon-light { display: none; }
-[data-theme="light"] .logo .icon-dark { display: none; }
-[data-theme="light"] .logo .icon-light { display: block; }
 .logo img { width: 100%; height: 100%; display: block; border-radius: inherit; }
 h1 {
   font-size: clamp(28px, 5vw, 36px);
@@ -169,7 +146,6 @@ h1 {
   margin-bottom: 24px;
   color: #ffcc44;
 }
-[data-theme="light"] .env-banner { color: #8a5800; }
 .price {
   display: flex;
   align-items: baseline;
@@ -215,9 +191,6 @@ h1 {
   background-size: 12px;
   background-repeat: no-repeat;
   background-position: center;
-}
-[data-theme="light"] .benefits li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fffbf5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E");
 }
 form { margin: 0; }
 .email-field {

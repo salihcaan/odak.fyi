@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Mark } from "@/components/site/Logo";
 import { NavBuy } from "@/components/site/Nav";
-import { useTheme } from "@/hooks/useTheme";
 import { usePageEnter } from "@/components/site/PageEnter";
 
 // Two URL surfaces:
@@ -64,7 +63,6 @@ function loadPaddle(): Promise<Paddle> {
 }
 
 export function Buy() {
-  const { theme } = useTheme();
   const { item } = usePageEnter();
   const [view, setView] = useState<"form" | "success" | "prelaunch">("form");
   const [email, setEmail] = useState("");
@@ -132,7 +130,7 @@ export function Buy() {
       customer: { email: value },
       settings: {
         displayMode: "overlay",
-        theme: theme === "dark" ? "dark" : "light",
+        theme: "dark",
         successUrl: window.location.origin + "/buy?success=1",
       },
     });
