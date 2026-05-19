@@ -25,10 +25,10 @@
 }
 /* tokens — mirror index.html */
 :root{
-  --bg:#0a0908;--bg-2:#121010;--bg-3:#1b1816;
-  --surface:rgba(255,248,238,.04);--surface-2:rgba(255,248,238,.07);
-  --border:rgba(255,248,238,.08);--border-2:rgba(255,248,238,.14);
-  --fg:#f5ede0;--fg-2:rgba(245,237,224,.78);--dim:rgba(245,237,224,.56);--mute:rgba(245,237,224,.38);
+  --bg:#0f0f0f;--bg-2:#161618;--bg-3:#1c1c1f;
+  --surface:rgba(255,255,255,.03);--surface-2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.08);--border-2:rgba(255,255,255,.14);
+  --fg:#ffffff;--fg-2:rgba(255,255,255,.78);--dim:rgba(255,255,255,.55);--mute:rgba(255,255,255,.38);
   --accent:oklch(78% 0.14 75);--accent-2:oklch(68% 0.16 55);--accent-glow:oklch(78% 0.18 75 / .55);--accent-ink:#1a1410;
   --sans:'Inter',-apple-system,system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;

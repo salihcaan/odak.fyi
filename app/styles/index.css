@@ -1,29 +1,30 @@
 /* ==========================================================
-   TOKENS — warm-not-cool
+   TOKENS — cool charcoal shell, single warm accent
    ========================================================== */
 :root{
-  --bg:         #0a0908;
-  --bg-2:       #121010;
-  --bg-3:       #1b1816;
-  --surface:    rgba(255,248,238,.04);
-  --surface-2:  rgba(255,248,238,.07);
-  --border:     rgba(255,248,238,.08);
-  --border-2:   rgba(255,248,238,.14);
-  --fg:         #f5ede0;
-  --fg-2:       rgba(245,237,224,.78);
-  --dim:        rgba(245,237,224,.56);
-  --mute:       rgba(245,237,224,.38);
-  --faint:      rgba(245,237,224,.2);
+  --bg:         #0f0f0f;
+  --bg-2:       #161618;
+  --bg-3:       #1c1c1f;
+  --surface:    rgba(255,255,255,.03);
+  --surface-2:  rgba(255,255,255,.06);
+  --border:     rgba(255,255,255,.08);
+  --border-2:   rgba(255,255,255,.14);
+  --fg:         #ffffff;
+  --fg-2:       rgba(255,255,255,.78);
+  --dim:        rgba(255,255,255,.55);
+  --mute:       rgba(255,255,255,.38);
+  --faint:      rgba(255,255,255,.18);
 
-  /* accent — warm amber-gold. Muted for dark (brand layer) */
+  /* accent — kept amber-gold so the brand colour survives, but it now
+     lands on a neutral shell instead of a warm one, so it has to do all
+     the warm work alone. Used rarely on purpose. */
   --accent:     oklch(78% 0.14 75);
   --accent-2:   oklch(68% 0.16 55);
-  --accent-glow: oklch(78% 0.18 75 / .55);
-  --accent-ink: #1a1410;
-  /* warm-red companion for ambient blobs (aurora, hero stage glow,
-     mb-stage glow). One source of truth across the page so the warm
-     halo reads as the same light source everywhere. */
-  --accent-warm-2: oklch(55% 0.18 25 / .32);
+  --accent-glow: oklch(78% 0.18 75 / .35);
+  --accent-ink: #161210;
+  /* second ambient blob — dropped to near-transparent so the hero reads
+     as a single warm halo instead of a wash. */
+  --accent-warm-2: oklch(55% 0.18 25 / .14);
 
   /* product layer — the real app's default "Classic" accent #2B5AAA */
   --prod-blue:   #2B5AAA;
@@ -145,16 +146,19 @@ button{font-family:inherit}
   content:'';position:absolute;border-radius:50%;filter:blur(60px);
   will-change:transform;
 }
+/* Aurora dialled way back. We kept a faint warm halo so the brand
+   amber still has a presence behind the hero, but it no longer washes
+   the whole page — Bridgemind-style discipline. */
 .aurora::before{
   width:60vw;height:60vw;top:-20vw;left:-10vw;
   background:radial-gradient(circle, var(--accent-glow), transparent 60%);
-  opacity:.55;
+  opacity:.18;
   animation:aur1 26s ease-in-out infinite alternate;
 }
 .aurora::after{
   width:70vw;height:70vw;top:30vh;right:-25vw;
   background:radial-gradient(circle, var(--accent-warm-2), transparent 60%);
-  opacity:.45;
+  opacity:.10;
   animation:aur2 32s ease-in-out infinite alternate;
 }
 @keyframes aur1{
@@ -176,10 +180,11 @@ body.scrolling .aurora::after{
   animation-play-state:paused;
 }
 
-/* grain */
+/* grain — was warm-tinted (0.5/0.46/0.4 → beige); now neutral gray so
+   the noise reads as Bridgemind-style charcoal grain, not warm dust. */
 .grain{
   position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.18;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.46 0 0 0 0 0.4 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 /* Light mode: grain reads as dirt over cream on retina. Drop it. */
 
@@ -280,13 +285,16 @@ body.scrolling .aurora::after{
    ========================================================== */
 .hero{
   max-width:var(--maxw);margin:0 auto;
-  padding:88px var(--gutter) 48px;
+  /* Tightened so the macbook demo lands near the fold instead of
+     ~150px below it. Was 88/48; the hero has plenty of negative space
+     even at 48/28 because we centre on a max-width container. */
+  padding:48px var(--gutter) 28px;
   position:relative;
   text-align:center;
 }
 a.hero-bar{
   display:inline-flex;align-items:center;gap:8px;
-  padding:4px 12px 4px 5px;margin-bottom:40px;
+  padding:4px 12px 4px 5px;margin-bottom:24px;
   background:var(--surface);border:1px solid var(--border);
   border-radius:999px;
   font-family:var(--mono);font-size:10.5px;letter-spacing:.01em;
@@ -332,20 +340,20 @@ h1.hero-h{
   line-height:.98;
   letter-spacing:-.045em;
   font-weight:700;
-  margin:0 0 28px;
+  margin:0 0 18px;
   /* clamp the H1 to the centered column on narrow viewports so the
      line wraps inside the gutter instead of bleeding off the right. */
   max-width:100%;
 }
 h1.hero-h .accent{
-  color:var(--accent);
+  color:rgba(255,255,255,.45);
   font-style:normal;
 }
 .hero-sub{
   font-size:18px;line-height:1.5;color:var(--fg-2);
-  max-width:52ch;margin:0 auto 36px;font-weight:400;letter-spacing:-.01em;
+  max-width:52ch;margin:0 auto 24px;font-weight:400;letter-spacing:-.01em;
 }
-.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .hero-cta .btn-primary{padding:12px 18px;font-size:14px;border-radius:10px}
 .hero-cta .btn-primary .k{
   font-family:var(--mono);font-size:11px;opacity:.6;
@@ -421,11 +429,12 @@ h1.hero-h .accent{
 }
 .hero-stage .stage-glow{
   position:absolute;inset:-20% -10% -10%;
+  /* Single faint warm halo behind the macbook stage — was two stacked
+     blobs at 0.8 which overpowered the cool shell. */
   background:
-    radial-gradient(ellipse 50% 40% at 50% 40%, var(--accent-glow), transparent 60%),
-    radial-gradient(ellipse 40% 30% at 30% 70%, var(--accent-warm-2), transparent 60%);
+    radial-gradient(ellipse 50% 40% at 50% 40%, var(--accent-glow), transparent 60%);
   filter:blur(40px);
-  pointer-events:none;z-index:0;opacity:.8;
+  pointer-events:none;z-index:0;opacity:.45;
 }
 .stage-inner{
   position:relative;z-index:1;
@@ -720,7 +729,7 @@ h2.section-h{
      span; shorter ones ($19. Once. Yours.) still hold their shape. */
   max-width:22ch;
 }
-h2.section-h .accent{color:var(--accent)}
+h2.section-h .accent{color:rgba(255,255,255,.45)}
 h2.section-h .mute{color:var(--dim)}
 .section-sub{
   font-size:18px;line-height:1.45;color:var(--fg-2);max-width:50ch;margin:0;letter-spacing:-.01em;
@@ -743,7 +752,7 @@ h2.section-h .mute{color:var(--dim)}
   font-family:var(--display);font-size:clamp(32px, 3.4vw, 44px);
   line-height:1.02;letter-spacing:-.03em;font-weight:700;margin:0 0 20px;
 }
-.f-copy h3 .accent{color:var(--accent)}
+.f-copy h3 .accent{color:rgba(255,255,255,.45)}
 .f-copy .lead{font-size:18px;color:var(--fg-2);line-height:1.5;margin:0 0 28px;letter-spacing:-.005em}
 /* Bullets are flat now: no card border, no hover translate. The
    bordered chrome competed visually with the live demo next to them
@@ -781,7 +790,9 @@ h2.section-h .mute{color:var(--dim)}
      so the text doesn't sprawl. */
   max-width:1800px;
   margin:0 auto;
-  padding:clamp(32px, 4vw, 72px) var(--gutter) clamp(56px, 7vw, 104px);
+  /* Padding tightened (was 32/72 → 56/104) so the macbook lands higher
+     in the viewport — the demo is the headline asset, not the copy. */
+  padding:clamp(20px, 2.4vw, 44px) var(--gutter) clamp(40px, 5vw, 72px);
 }
 
 /* Copy stack — all four headlines stacked on top of one another so the
@@ -790,12 +801,10 @@ h2.section-h .mute{color:var(--dim)}
 .mc-copy-stack{
   position:relative;
   max-width:780px;
-  margin:0 auto clamp(16px, 1.8vw, 24px);
-  /* Reserve room for the tallest headline + lead so the layout doesn't
-     pop when the active feature changes. Tuned against the longest
-     pair (Actions block) — trimmed from 200px so the macbook has more
-     headroom in the viewport. */
-  min-height:170px;
+  margin:0 auto clamp(12px, 1.4vw, 18px);
+  /* Reserve room for the tallest headline (two-line) + one-line lead.
+     180px = 38px eyebrow + ~110px title + ~26px lead + slack. */
+  min-height:180px;
   text-align:center;
 }
 .mc-copy{
@@ -814,7 +823,7 @@ h2.section-h .mute{color:var(--dim)}
   letter-spacing:.14em;text-transform:uppercase;
   color:var(--accent);
   display:inline-flex;align-items:center;gap:7px;
-  padding:5px 12px;margin-bottom:18px;
+  padding:5px 12px;margin-bottom:12px;
   background:color-mix(in oklch, var(--accent) 6%, transparent);
   border:1px solid color-mix(in oklch, var(--accent) 32%, var(--border));
   border-radius:999px;
@@ -828,19 +837,21 @@ h2.section-h .mute{color:var(--dim)}
   font-family:var(--display);
   font-size:clamp(32px, 3.6vw, 48px);
   line-height:1.04;letter-spacing:-.03em;font-weight:700;
-  margin:0 0 14px;max-width:18ch;
+  margin:0 0 10px;max-width:18ch;
 }
-.mc-title .accent{color:var(--accent)}
+.mc-title .accent{color:rgba(255,255,255,.45)}
 .mc-lead{
   font-size:17px;line-height:1.5;color:var(--dim);
-  margin:0;letter-spacing:-.005em;max-width:54ch;
+  /* Widened from 54ch so the now-one-line leads stay on one line even
+     for the longest pair, without bumping the copy-stack min-height. */
+  margin:0;letter-spacing:-.005em;max-width:62ch;
 }
 
 /* Tab strip — 4 pills with a sliding progress bar on the active one.
    Keyboard hint sits under the label like the old f-tabs. */
 .mc-tabs{
   display:flex;justify-content:center;gap:12px;flex-wrap:wrap;
-  margin:0 auto clamp(20px, 2.4vw, 32px);
+  margin:0 auto clamp(14px, 1.6vw, 22px);
   max-width:680px;
 }
 .mc-tab{
@@ -2401,7 +2412,7 @@ h2.section-h .mute{color:var(--dim)}
    next to the $19 amount, splitting attention on desktop. Now reads as
    the lead-paragraph it actually is. */
 .price-aside h3{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:-.02em;margin:0 0 14px;line-height:1.2}
-.price-aside h3 .accent{color:var(--accent)}
+.price-aside h3 .accent{color:rgba(255,255,255,.45)}
 .price-aside p{color:var(--fg-2);line-height:1.55;margin:0 0 16px;font-size:15px;letter-spacing:-.005em}
 .price-aside p.lead{font-size:18px;color:var(--fg);margin-bottom:20px}
 .price-aside .seals{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}

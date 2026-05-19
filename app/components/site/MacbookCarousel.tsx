@@ -37,7 +37,7 @@ const FEATURES: Feature[] = [
       </>
     ),
     lead:
-      "Every detour through Finder breaks the train of thought. ⌥ Space, three letters, ↵ — and you're back where you were, without ever touching the trackpad.",
+      "⌥ Space, three letters, ↵ — right window, in front.",
     clips: [
       {
         src: "/videos/1-windows.mp4",
@@ -67,7 +67,7 @@ const FEATURES: Feature[] = [
       </>
     ),
     lead:
-      "The app switcher hands you back whichever Cursor window came up first — not the one you actually wanted. ⌥ Tab lists every editor window as its own row, grouped by project, most-recent first.",
+      "Every editor window, grouped by project, most-recent first.",
     clips: [
       {
         src: "/videos/2-option-tab.mp4",
@@ -89,7 +89,7 @@ const FEATURES: Feature[] = [
       </>
     ),
     lead:
-      "Write your shortcuts once in ~/.odak/config.yaml, drop a tiny .odak file in any project, and the right action fires for the right project.",
+      "Define shortcuts once. The right action fires per project.",
     clips: [
       {
         src: "/videos/3-actions.mp4",
@@ -112,7 +112,7 @@ const FEATURES: Feature[] = [
       </>
     ),
     lead:
-      "Apple gave you a strip of screen back. Odak parks the project you're working on up there — one glance and you know where you are.",
+      "The active project lives in the notch. Always visible.",
     clips: [
       {
         src: "/videos/4-notch.mp4",

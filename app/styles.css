@@ -11,43 +11,24 @@
    correctly when bundled into /assets/index-XXX.css. */
 
 /* shadcn-flavored CSS variables that the Button primitive expects.
-   Mapped onto Odak's existing warm tokens so shadcn components stay on
-   brand without duplicating colors. */
+   Odak is a dark-first product brand — Bridgemind-style — so we apply
+   the cool charcoal tokens at :root unconditionally. No light-mode
+   variant: pages that need a light shell use their own page-local CSS. */
 :root {
-  --background: 0 0% 96%;
-  --foreground: 30 25% 12%;
-  --primary: 30 25% 12%;
-  --primary-foreground: 38 30% 96%;
-  --secondary: 38 30% 90%;
-  --secondary-foreground: 30 25% 12%;
-  --accent: 38 30% 92%;
-  --accent-foreground: 30 25% 12%;
-  --destructive: 0 70% 55%;
-  --destructive-foreground: 38 30% 96%;
-  --muted: 38 25% 88%;
-  --muted-foreground: 30 15% 35%;
-  --border: 30 15% 85%;
-  --input: 30 15% 85%;
-  --ring: 38 50% 60%;
+  --background: 0 0% 6%;          /* #0f0f0f */
+  --foreground: 0 0% 100%;        /* #ffffff */
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 6%;
+  --secondary: 0 0% 9%;           /* #161618 */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 0 0% 11%;             /* #1c1c1f */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 60% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --muted: 0 0% 9%;
+  --muted-foreground: 0 0% 60%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 38 50% 55%;
   --radius: 0.5rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 24 12% 5%;
-    --foreground: 38 30% 92%;
-    --primary: 38 30% 92%;
-    --primary-foreground: 24 12% 5%;
-    --secondary: 24 8% 12%;
-    --secondary-foreground: 38 30% 92%;
-    --accent: 24 8% 14%;
-    --accent-foreground: 38 30% 92%;
-    --destructive: 0 60% 45%;
-    --destructive-foreground: 38 30% 92%;
-    --muted: 24 8% 12%;
-    --muted-foreground: 38 15% 60%;
-    --border: 24 8% 18%;
-    --input: 24 8% 18%;
-    --ring: 38 50% 55%;
-  }
 }
