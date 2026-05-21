@@ -1,12 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionTemplate,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { MacbookFrame, MacbookNotchOverlay } from "./MacbookFrame";
 
 /** A caption beat: shows `text` once `currentTime` of the parent clip
@@ -21,6 +14,7 @@ type Clip = {
 type Feature = {
   id: string;
   eyebrow: string;
+  key: string;
   title: React.ReactNode;
   lead: React.ReactNode;
   /** One clip for a single demo; two for a sequential pair (§1). */
@@ -30,14 +24,14 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     id: "search",
-    eyebrow: "⌥ Space · Search",
+    eyebrow: "Search",
+    key: "⌥ Space",
     title: (
       <>
         Three letters in. <span className="accent">Window in focus.</span>
       </>
     ),
-    lead:
-      "⌥ Space, three letters, ↵ — right window, in front.",
+    lead: "⌥ Space, three letters, ↵ — right window, in front.",
     clips: [
       {
         src: "/videos/1-windows.mp4",
@@ -60,14 +54,14 @@ const FEATURES: Feature[] = [
   },
   {
     id: "switch",
-    eyebrow: "⌥ Tab · Switch",
+    eyebrow: "Switch",
+    key: "⌥ Tab",
     title: (
       <>
-        ⌘ Tab switches apps. <span className="accent">⌥ Tab switches windows.</span>
+        ⌘ Tab for apps. <span className="accent">⌥ Tab for windows.</span>
       </>
     ),
-    lead:
-      "Every editor window, grouped by project, most-recent first.",
+    lead: "Every editor window, grouped by project, most-recent first.",
     clips: [
       {
         src: "/videos/2-option-tab.mp4",
@@ -82,14 +76,14 @@ const FEATURES: Feature[] = [
   },
   {
     id: "actions",
-    eyebrow: "⌘ K · Actions",
+    eyebrow: "Actions",
+    key: "⌘ K",
     title: (
       <>
         One actions library, <span className="accent">every project.</span>
       </>
     ),
-    lead:
-      "Define shortcuts once. The right action fires per project.",
+    lead: "Define shortcuts once. The right action fires per project.",
     clips: [
       {
         src: "/videos/3-actions.mp4",
@@ -105,14 +99,14 @@ const FEATURES: Feature[] = [
   },
   {
     id: "notch",
-    eyebrow: "Notch · Always visible",
+    eyebrow: "Notch",
+    key: "Always",
     title: (
       <>
         The notch, <span className="accent">finally useful.</span>
       </>
     ),
-    lead:
-      "The active project lives in the notch. Always visible.",
+    lead: "The active project lives in the notch. Always visible.",
     clips: [
       {
         src: "/videos/4-notch.mp4",
@@ -128,12 +122,8 @@ const FEATURES: Feature[] = [
   },
 ];
 
-const SHORT_LABELS = ["Search", "Switch", "Actions", "Notch"] as const;
-const KEY_HINTS = ["⌥ Space", "⌥ Tab", "⌘ K", "—"] as const;
-
 export function MacbookCarousel() {
   const sectionRef = useRef<HTMLElement>(null);
-  // videoRefs[featureIdx][clipIdx] — flat array of refs the order matches DOM.
   const videoRefs = useRef<HTMLVideoElement[]>([]);
   const tabRefs = useRef<HTMLButtonElement[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -142,22 +132,6 @@ export function MacbookCarousel() {
   const [captionText, setCaptionText] = useState<string>("");
   const prefersReducedMotion = useReducedMotion();
 
-  // Scroll-grow on entry: 0.78 → 1.0 across the first 35% of the section's
-  // scroll progress, then holds at 1.0 so the carousel runs at full size
-  // while the user watches.
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.35, 1],
-    prefersReducedMotion ? [1, 1, 1] : [0.82, 1, 1]
-  );
-  const transform = useMotionTemplate`scale(${scale})`;
-
-  // Flattened list of (feature, clip) pairs in DOM order — keeps videoRefs
-  // indexable by a single number and matches the JSX iteration below.
   const clipSlots: Array<{ featureIdx: number; clipIdx: number; clip: Clip }> = [];
   FEATURES.forEach((f, fi) => {
     f.clips.forEach((clip, ci) => clipSlots.push({ featureIdx: fi, clipIdx: ci, clip }));
@@ -166,8 +140,6 @@ export function MacbookCarousel() {
     (s) => s.featureIdx === activeIdx && s.clipIdx === subIdx
   );
 
-  // Autoplay on in-view; pause on out-of-view. Off-screen 60s clips
-  // shouldn't burn CPU.
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -179,10 +151,6 @@ export function MacbookCarousel() {
     return () => io.disconnect();
   }, []);
 
-  // Drive playback whenever active slot or in-view changes. The incoming
-  // clip is rewound to 0 and played; outgoing clips are only paused —
-  // never rewound mid-crossfade, since flipping a fading-out frame back
-  // to t=0 masks the opacity transition and reads as a hard cut.
   useEffect(() => {
     if (prefersReducedMotion) return;
     videoRefs.current.forEach((v, i) => {
@@ -198,13 +166,10 @@ export function MacbookCarousel() {
 
   function handleEnded() {
     const cur = FEATURES[activeIdx];
-    // Two-clip feature (§1): on first clip end, swap to the second.
     if (cur.clips.length === 2 && subIdx === 0) {
       setSubIdx(1);
       return;
     }
-    // Otherwise advance to the next feature, looping back to 0 after the
-    // last one so the carousel runs forever for visitors who stay parked.
     setActiveIdx((activeIdx + 1) % FEATURES.length);
     setSubIdx(0);
   }
@@ -214,21 +179,15 @@ export function MacbookCarousel() {
     setSubIdx(0);
   }
 
-  // Drive both (a) the active tab's progress fill and (b) the caption
-  // text from the active video's timeupdate event. Progress fill goes
-  // direct-DOM (timeupdate fires every ~250ms and we don't want to
-  // re-render the world for a moving width); caption uses state because
-  // AnimatePresence needs React to see the change to crossfade.
   useEffect(() => {
     const v = videoRefs.current[activeSlot];
     const tab = tabRefs.current[activeIdx];
     if (!v) return;
-    const fill = tab?.querySelector<HTMLElement>(".mc-progress-fill") ?? null;
+    const fill = tab?.querySelector<HTMLElement>(".mc-tab-fill") ?? null;
     const cur = FEATURES[activeIdx];
     const captions = cur.clips[subIdx]?.captions ?? [];
 
     const onTime = () => {
-      // (a) Tab progress fill — combined across both clips for 2-clip features.
       if (fill && !prefersReducedMotion) {
         let total = 0;
         let elapsed = 0;
@@ -246,9 +205,6 @@ export function MacbookCarousel() {
         fill.style.width = `${pct}%`;
       }
 
-      // (b) Caption — latest beat whose `at` <= currentTime wins. Empty
-      // string before the first beat fires, so the strip stays clear
-      // during the cold-start moment of each clip.
       const t = v.currentTime;
       let next = "";
       for (const cap of captions) {
@@ -258,20 +214,15 @@ export function MacbookCarousel() {
       setCaptionText((prev) => (prev === next ? prev : next));
     };
 
-    // Reset on clip change so a fresh clip doesn't briefly show the
-    // previous clip's last caption before the first timeupdate fires.
     setCaptionText("");
-
     v.addEventListener("timeupdate", onTime);
     return () => v.removeEventListener("timeupdate", onTime);
   }, [activeIdx, subIdx, activeSlot, prefersReducedMotion]);
 
-  // Reset progress fills on inactive tabs so they don't carry stale
-  // widths into the next cycle.
   useEffect(() => {
     tabRefs.current.forEach((tab, i) => {
       if (!tab) return;
-      const fill = tab.querySelector<HTMLElement>(".mc-progress-fill");
+      const fill = tab.querySelector<HTMLElement>(".mc-tab-fill");
       if (!fill) return;
       if (i !== activeIdx) fill.style.width = "0%";
     });
@@ -284,57 +235,82 @@ export function MacbookCarousel() {
       ref={sectionRef}
       className="mc-section"
       id="features"
-      style={{ position: "relative" }}
+      data-active={active.id}
     >
-      {/* Copy stack — every feature's headline is mounted at all times,
-          inactive ones fade to 0 opacity. Position:absolute on the
-          inactive items keeps height equal to the tallest headline so
-          the layout doesn't jump as the active feature changes. */}
-      <div className="mc-copy-stack">
-        {FEATURES.map((f, i) => (
-          <div
-            key={f.id}
-            className={`mc-copy ${i === activeIdx ? "is-active" : ""}`}
-            aria-hidden={i !== activeIdx}
-          >
-            <div className="mc-eyebrow">{f.eyebrow}</div>
-            <h2 className="mc-title">{f.title}</h2>
-            <p className="mc-lead">{f.lead}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Tabs — jump-to-feature buttons with a fill bar showing video
-          progress on the active one. */}
       <div className="mc-tabs" role="tablist" aria-label="Features">
-        {FEATURES.map((f, i) => (
-          <button
-            key={f.id}
-            ref={(el) => {
-              if (el) tabRefs.current[i] = el;
-            }}
-            type="button"
-            role="tab"
-            aria-selected={i === activeIdx}
-            className={`mc-tab ${i === activeIdx ? "is-active" : ""}`}
-            onClick={() => jumpTo(i)}
-          >
-            <span className="mc-tab-label">{SHORT_LABELS[i]}</span>
-            <span className="mc-tab-key">{KEY_HINTS[i]}</span>
-            <span className="mc-progress" aria-hidden="true">
-              <span className="mc-progress-fill" />
-            </span>
-          </button>
-        ))}
+        <div className="mc-tabs-pill">
+          {FEATURES.map((f, i) => {
+            const isActive = i === activeIdx;
+            return (
+              <button
+                key={f.id}
+                ref={(el) => {
+                  if (el) tabRefs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`mc-tab ${isActive ? "is-active" : ""}`}
+                onClick={() => jumpTo(i)}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="mc-tab-active-bg"
+                    className="mc-tab-active-bg"
+                    aria-hidden="true"
+                    transition={{
+                      type: "tween",
+                      duration: 0.85,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  />
+                )}
+                <span className="mc-tab-content">
+                  <span className="mc-tab-label">{f.eyebrow}</span>
+                  <span
+                    className="mc-tab-key"
+                    aria-hidden={!isActive}
+                  >
+                    {f.key}
+                  </span>
+                </span>
+                <span className="mc-tab-fill" aria-hidden="true" />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* MacBook stage. We reuse the legacy .mb-stage / .macbook-wrap /
-          .macbook / .screen rules verbatim (perspective, drop-shadows,
-          screen radius, notch-overlay). The scroll-grow scale is applied
-          one level up so it doesn't disturb the macbook's perspective. */}
-      <motion.div className="mc-stage-wrap" style={{ transform }}>
+      <div className="mc-meta">
+        <motion.h3
+          key={`title-${active.id}`}
+          className="mc-title"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: prefersReducedMotion ? 0 : 0.7,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {active.title}
+        </motion.h3>
+        <motion.p
+          key={`lead-${active.id}`}
+          className="mc-lead"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: prefersReducedMotion ? 0 : 0.7,
+            delay: prefersReducedMotion ? 0 : 0.14,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {active.lead}
+        </motion.p>
+      </div>
+
+      <div className="mc-stage">
         <div className="mb-stage">
-          <div className="glow" />
           <div className="macbook-wrap">
             <div className="macbook">
               <MacbookFrame />
@@ -355,9 +331,6 @@ export function MacbookCarousel() {
                     style={{ opacity: i === activeSlot ? 1 : 0 }}
                   />
                 ))}
-                {/* Subtitle overlay — crossfades on text change via
-                    AnimatePresence keyed on the text itself. Sits inside
-                    .screen so the macbook's rounded corners clip it. */}
                 <div className="mc-subtitle" aria-live="polite">
                   <AnimatePresence mode="wait" initial={false}>
                     {captionText && (
@@ -382,13 +355,6 @@ export function MacbookCarousel() {
             </div>
           </div>
         </div>
-      </motion.div>
-
-      {/* Caption strip under the macbook — same title as the active
-          headline above, but compact. Reads as a chyron during the
-          autoplay loop. */}
-      <div className="mc-caption" aria-live="polite">
-        {active.eyebrow}
       </div>
     </section>
   );

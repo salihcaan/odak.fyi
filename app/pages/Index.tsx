@@ -7,14 +7,11 @@ import { Nav } from "@/components/site/Nav";
 import { SvgSprite } from "@/components/site/SvgSprite";
 import indexBody from "../legacy/index-body.html?raw";
 
-// Index = home. Renders chrome (sprite, aurora, nav, hero, footer) as React;
-// hero text gets motion; the MacbookCarousel below it cycles four
-// product recordings inside a macbook frame with scroll-grow on entry.
-// Everything below it (positioning, pricing, faq) is still injected as
-// the original HTML — dense markup with stable DOM IDs that the inline-
-// JS demos in legacy/index-runtime.js target. The runtime script is
-// loaded after first paint via useEffect so React's commit beats it to
-// the DOM.
+// Index = home. Hero text on top, MacbookCarousel (compact tabbed card)
+// below it, then the legacy HTML body for positioning/pricing/faq. Legacy
+// HTML carries stable DOM ids the inline-JS demos in
+// legacy/index-runtime.js target — the runtime script is appended after
+// first paint via useEffect so React's commit beats it to the DOM.
 
 export function Index() {
   const prefersReducedMotion = useReducedMotion();
@@ -29,22 +26,24 @@ export function Index() {
     };
   }, []);
 
-  const enter = (delay: number) =>
-    prefersReducedMotion
-      ? {
-          initial: { opacity: 0 },
-          animate: { opacity: 1 },
-          transition: { duration: 0.2 },
-        }
-      : {
-          initial: { opacity: 0, y: 14 },
-          animate: { opacity: 1, y: 0 },
-          transition: {
-            duration: 0.7,
-            delay,
-            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-          },
-        };
+  const enter = (delay: number) => {
+    if (prefersReducedMotion) {
+      return {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.2 },
+      };
+    }
+    return {
+      initial: { opacity: 0, y: 14 },
+      animate: { opacity: 1, y: 0 },
+      transition: {
+        duration: 0.7,
+        delay,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      },
+    };
+  };
 
   return (
     <>
@@ -54,33 +53,17 @@ export function Index() {
 
       <Nav showBuy hashHrefs />
 
+      <div className="hero-stage-combined">
+      <div className="stage-grid" aria-hidden="true" />
       <section className="hero" id="hero" style={{ position: "relative" }}>
         <div className="hero-text">
-          <motion.a
-            className="hero-bar"
-            href="/changelog.html#v0-1-4"
-            {...enter(0)}
-          >
-            <span className="tag">v0.1.4</span>
-            <span>Same-name projects, everywhere</span>
-            <span className="sep">·</span>
-            <span>Read the changelog</span>
-            <span className="arrow" aria-hidden="true">
-              <svg viewBox="0 0 12 12">
-                <path d="M3 6h6m-3-3l3 3-3 3" />
-              </svg>
-            </span>
-          </motion.a>
-
-          <motion.h1 className="hero-h" {...enter(0.09)}>
-            Any project.<br />
-            <span className="accent">Two keys.</span>
+          <motion.h1 className="hero-h" {...enter(0)}>
+            Any project<br /><span className="accent">Two keys.</span>
           </motion.h1>
 
           <motion.p className="hero-sub" {...enter(0.18)}>
-            Press ⌥ Space (that's Option + Space), type three letters, hit ↵.
-            Odak brings the right window into focus — even when ten Cursor
-            windows share one icon.
+            Press ⌥ Space, type three letters, hit ↵. Odak brings the right
+            window into focus — even across ten Cursor windows.
           </motion.p>
 
           <motion.div className="hero-cta" {...enter(0.27)}>
@@ -116,6 +99,7 @@ export function Index() {
       </section>
 
       <MacbookCarousel />
+      </div>
 
       <div dangerouslySetInnerHTML={{ __html: indexBody }} />
 

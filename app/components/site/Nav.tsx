@@ -38,10 +38,17 @@ export function Nav({
           <a href={`${prefix}#faq`}>FAQ</a>
           <a href="/docs/actions.html">Docs</a>
           <a
-            href="/changelog.html"
-            style={{ opacity: currentPath === "/changelog.html" ? 1 : 0.7 }}
+            href="/changelog.html#v0-1-4"
+            className="nav-changelog"
+            aria-label="What's new in v0.1.4"
           >
-            Changelog
+            <span className="tag">v0.1.4</span>
+            <span className="label">What's new</span>
+            <span className="arrow" aria-hidden="true">
+              <svg viewBox="0 0 12 12">
+                <path d="M3 6h6m-3-3l3 3-3 3" />
+              </svg>
+            </span>
           </a>
         </div>
         <div className="nav-cta">

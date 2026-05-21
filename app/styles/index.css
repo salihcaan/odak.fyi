@@ -15,12 +15,13 @@
   --mute:       rgba(255,255,255,.38);
   --faint:      rgba(255,255,255,.18);
 
-  /* accent — kept amber-gold so the brand colour survives, but it now
-     lands on a neutral shell instead of a warm one, so it has to do all
-     the warm work alone. Used rarely on purpose. */
-  --accent:     oklch(78% 0.14 75);
-  --accent-2:   oklch(68% 0.16 55);
-  --accent-glow: oklch(78% 0.18 75 / .35);
+  /* accent — saffron, not honey. Sits in the amber-gold family the
+     brand started with, but with enough chroma to read as a deliberate
+     warm against the cool charcoal shell instead of a faded gold.
+     Used rarely on purpose. */
+  --accent:     oklch(78% 0.18 70);
+  --accent-2:   oklch(68% 0.17 55);
+  --accent-glow: oklch(78% 0.20 70 / .35);
   --accent-ink: #161210;
   /* second ambient blob — dropped to near-transparent so the hero reads
      as a single warm halo instead of a wash. */
@@ -110,7 +111,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px;scroll-snap-type:y proximity}
 body{
   /* No background here on purpose — html already paints --bg. Adding a
      body bg covers fixed z-index:-1 ambient layers (aurora siblings)
@@ -134,6 +135,10 @@ button{font-family:inherit}
 .aurora{
   position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
   opacity:1;transition:opacity .6s ease;
+  /* Hidden while we redesign the lighting from scratch — the
+     top-left + bottom-right warm halos were the last ambient
+     source still painting on the page. */
+  display:none;
 }
 .aurora::before,
 .aurora::after{
@@ -152,13 +157,13 @@ button{font-family:inherit}
 .aurora::before{
   width:60vw;height:60vw;top:-20vw;left:-10vw;
   background:radial-gradient(circle, var(--accent-glow), transparent 60%);
-  opacity:.18;
+  opacity:.12;
   animation:aur1 26s ease-in-out infinite alternate;
 }
 .aurora::after{
   width:70vw;height:70vw;top:30vh;right:-25vw;
   background:radial-gradient(circle, var(--accent-warm-2), transparent 60%);
-  opacity:.10;
+  opacity:.06;
   animation:aur2 32s ease-in-out infinite alternate;
 }
 @keyframes aur1{
@@ -259,7 +264,55 @@ body.scrolling .aurora::after{
 .nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
 .nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s}
 .nav-links a:hover{color:var(--fg);background:var(--surface)}
-.nav-cta{display:flex;align-items:center;gap:8px}
+.nav-cta{display:flex;align-items:center;gap:10px}
+
+/* Small saffron "what's new" chip living next to the Download CTA.
+   Saffron tint signals brand + "new"; quieter than the primary button
+   so the eye still lands on Download first. Hidden on phones — the
+   chip would push the nav inner past viewport width. */
+.nav-changelog{
+  display:inline-flex;align-items:center;gap:8px;
+  height:32px;padding:0 12px;
+  background:color-mix(in oklch, var(--accent) 10%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 35%, transparent);
+  border-radius:999px;
+  color:var(--accent);
+  font-size:12px;font-weight:500;letter-spacing:-.003em;
+  white-space:nowrap;
+  transition:background .15s var(--ease-out),
+             border-color .15s var(--ease-out),
+             transform .15s var(--ease-out);
+}
+.nav-changelog:hover{
+  background:color-mix(in oklch, var(--accent) 16%, transparent);
+  border-color:color-mix(in oklch, var(--accent) 55%, transparent);
+}
+.nav-changelog .tag{
+  font-family:var(--mono);
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--accent);
+  opacity:.95;
+}
+.nav-changelog .label{
+  color:var(--fg-2);
+  font-weight:500;
+}
+.nav-changelog:hover .label{color:var(--fg)}
+.nav-changelog .arrow{
+  display:inline-flex;align-items:center;
+  width:10px;height:10px;
+  color:var(--accent);
+  transition:transform .2s var(--ease-out);
+}
+.nav-changelog .arrow svg{
+  width:100%;height:100%;
+  stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.nav-changelog:hover .arrow{transform:translateX(2px)}
+@media (max-width:760px){
+  .nav-changelog{display:none}
+}
 .nav-cta .icon-btn{
   width:32px;height:32px;display:grid;place-items:center;border-radius:8px;
   background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--fg-2);
@@ -285,16 +338,17 @@ body.scrolling .aurora::after{
    ========================================================== */
 .hero{
   max-width:var(--maxw);margin:0 auto;
-  /* Tightened so the macbook demo lands near the fold instead of
-     ~150px below it. Was 88/48; the hero has plenty of negative space
-     even at 48/28 because we centre on a max-width container. */
-  padding:48px var(--gutter) 28px;
+  /* Compressed hero — punchier, less negative space so the headline
+     reads as a single forceful beat and the macbook demo immediately
+     follows. Was 48/28; the single-line H1 lets us drop to 28/16. */
+  padding:28px var(--gutter) 16px;
   position:relative;
   text-align:center;
+  scroll-snap-align:start;
 }
 a.hero-bar{
   display:inline-flex;align-items:center;gap:8px;
-  padding:4px 12px 4px 5px;margin-bottom:24px;
+  padding:4px 12px 4px 5px;margin-bottom:16px;
   background:var(--surface);border:1px solid var(--border);
   border-radius:999px;
   font-family:var(--mono);font-size:10.5px;letter-spacing:.01em;
@@ -336,24 +390,35 @@ a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
 }
 h1.hero-h{
   font-family:var(--display);
-  font-size:clamp(48px, 7.4vw, 104px);
-  line-height:.98;
-  letter-spacing:-.045em;
-  font-weight:700;
-  margin:0 0 18px;
-  /* clamp the H1 to the centered column on narrow viewports so the
-     line wraps inside the gutter instead of bleeding off the right. */
+  font-size:clamp(48px, 8vw, 112px);
+  line-height:.88;
+  letter-spacing:-.04em;
+  font-weight:800;
+  margin:0 0 28px;
   max-width:100%;
+  color:#fff;
 }
+/* Bridgemind-style gradient on the muted half of the headline:
+   solid-looking text that fades from 65% white at the top of the
+   glyphs to 28% at the bottom. Reads as "lit from above" and gives
+   the line a sense of depth that a flat opacity never does. */
 h1.hero-h .accent{
-  color:rgba(255,255,255,.45);
   font-style:normal;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.7) 0%,
+    rgba(255,255,255,.3) 100%
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
 }
 .hero-sub{
-  font-size:18px;line-height:1.5;color:var(--fg-2);
-  max-width:52ch;margin:0 auto 24px;font-weight:400;letter-spacing:-.01em;
+  font-size:18px;line-height:1.55;color:rgba(255,255,255,.7);
+  max-width:60ch;margin:0 auto 32px;font-weight:400;letter-spacing:-.005em;
 }
-.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
 .hero-cta .btn-primary{padding:12px 18px;font-size:14px;border-radius:10px}
 .hero-cta .btn-primary .k{
   font-family:var(--mono);font-size:11px;opacity:.6;
@@ -387,7 +452,7 @@ h1.hero-h .accent{
    Centered alongside the rest of the hero. */
 .hero-fine{
   display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.01em;
+  font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.01em;
 }
 .hero-fine .dot{width:3px;height:3px;border-radius:50%;background:var(--faint)}
 
@@ -417,6 +482,74 @@ h1.hero-h .accent{
   background:linear-gradient(180deg, var(--prod-blue), var(--prod-blue-2));
   color:#fff;border-color:color-mix(in oklch, var(--prod-blue) 80%, black 15%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 0 14px var(--prod-blue-glow);
+}
+
+/* ==========================================================
+   HERO ↔ FEATURES — composed stage with Bridgemind-style
+   ambient layers. The stage owns its own stacking context so
+   the gradients and grid lines paint behind the hero text +
+   macbook frame and nowhere else.
+
+   Layers (back to front):
+     1. ::before  — center spotlight: a warm saffron bloom in
+                    the upper third, dimming the edges to give
+                    the stage a "lit center" feel.
+     2. ::after   — cool counter-bloom: a faint cyan-ish wash
+                    tucked in the lower-left corner, opposite
+                    the saffron weight so the composition
+                    feels balanced (Bridgemind uses green; we
+                    use prod-blue for brand resonance).
+     3. .stage-grid — line crosshatch grid (two scales) layered
+                    behind the blooms for texture, masked with
+                    a radial fade so it dissolves near the
+                    macbook and never competes with the content.
+   ========================================================== */
+.hero-stage-combined{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;  /* clips the corner bloom + grid bleed */
+}
+/* Warm center bloom + vignette. The vignette is the second stop
+   that ramps to ~0 at the edges so the corners darken slightly,
+   focusing the eye on the center. */
+/* Ambient bloom removed — the grid pattern carries the background
+   on its own while we decide on a proper lighting treatment. */
+/* Cool counter-bloom — anchored bottom-left so the saffron up-top
+   has a complementary mass below. The two together create the
+   diagonal energy Bridgemind's hero has between its top-right
+   orange and lower-left green. */
+/* Cool counter-bloom intentionally removed — the macbook screen
+   carries enough cool mass on its own; adding a prod-blue wash
+   on the page created a third competing palette (saffron above
+   + blue corner + blue macbook). One color story is enough. */
+.hero-stage-combined .stage-grid{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+  background-size:80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  /* Mask anchored just below the headline (50% 45%) and stretched
+     to 75% tall so the grid carries past the macbook and feathers
+     into the section that follows, instead of dying above the
+     keyboard. */
+  -webkit-mask-image:radial-gradient(ellipse 65% 75% at 50% 45%, #000 0%, transparent 90%);
+  mask-image:radial-gradient(ellipse 65% 75% at 50% 45%, #000 0%, transparent 90%);
+  opacity:.65;
+}
+.hero-stage-combined > *{
+  position:relative;
+  z-index:1;
+}
+.hero-stage-combined .hero{
+  padding-bottom:0;
+}
+.hero-stage-combined .mc-section{
+  padding-top:clamp(32px, 3.6vw, 56px);
 }
 
 /* ==========================================================
@@ -691,6 +824,8 @@ section.block{
   max-width:var(--maxw);margin:0 auto;
   padding:calc(var(--space-section) - 48px) var(--gutter) 48px;
   position:relative;
+  scroll-snap-align:start;
+  scroll-margin-top:64px;
 }
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
    ornament (aurora, glow, grain) lives in the background — eyebrows
@@ -719,9 +854,9 @@ section.block{
 .mb-titlecard .eyebrow::before{display:none}
 h2.section-h{
   font-family:var(--display);
-  font-size:clamp(40px, 5.4vw, 72px);
-  line-height:1;
-  letter-spacing:-.038em;
+  font-size:clamp(28px, 3.4vw, 40px);
+  line-height:1.12;
+  letter-spacing:-.024em;
   font-weight:700;
   margin:0 0 20px;
   /* 22ch lets longer headings ("Why not just use Raycast?") wrap on
@@ -777,152 +912,188 @@ h2.section-h .mute{color:var(--dim)}
 .f-copy .bullets li .txt span{color:var(--dim);font-size:14px;line-height:1.5}
 
 /* ==========================================================
-   MACBOOK CAROUSEL — single section containing four feature
-   videos cycling inside a MacBook frame. Copy crossfades when
-   the active feature changes; tabs let the user jump; the
-   macbook itself scroll-grows from 0.82 → 1.0 as the section
-   enters view. JS owns playback + handoff; CSS owns layout,
-   the grow transform target, and the crossfades.
+   FEATURE CAROUSEL — Flowy-style pill tabs above a centered
+   macbook frame, single caption block below. No sticky pin,
+   no depth diorama. The macbook chrome carries the brand
+   context (it's a Mac app); the per-clip in-screen subtitle
+   carries the narrative beats. Tabs scroll horizontally on
+   mobile.
    ========================================================== */
 .mc-section{
-  /* Wider than the regular --maxw container so the macbook can dominate
-     the viewport. Copy + tabs below keep their own narrower max-widths
-     so the text doesn't sprawl. */
-  max-width:1800px;
+  max-width:1320px;
   margin:0 auto;
-  /* Padding tightened (was 32/72 → 56/104) so the macbook lands higher
-     in the viewport — the demo is the headline asset, not the copy. */
-  padding:clamp(20px, 2.4vw, 44px) var(--gutter) clamp(40px, 5vw, 72px);
+  /* Tightened: less padding-top so the tabs sit right under the
+     hero CTA, less padding-bottom so the title + lead hug the
+     next section. Smaller gap between tabs / stage / meta gives
+     a more integrated, Bridgemind-style composition. */
+  padding:clamp(12px, 1.6vw, 28px) var(--gutter) clamp(32px, 4vw, 64px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(14px, 1.8vw, 24px);
+  min-height:calc(100dvh - 64px);
+  /* Scroll snap: lock to the top of the features section when the
+     user scrolls into proximity. Margin offsets the sticky nav so
+     the tabs land below it instead of behind it. */
+  scroll-snap-align:start;
+  scroll-margin-top:64px;
 }
 
-/* Copy stack — all four headlines stacked on top of one another so the
-   tallest defines the box height and the active one fades in. The block
-   sits above the macbook and is centered. */
-.mc-copy-stack{
-  position:relative;
-  max-width:780px;
-  margin:0 auto clamp(12px, 1.4vw, 18px);
-  /* Reserve room for the tallest headline (two-line) + one-line lead.
-     180px = 38px eyebrow + ~110px title + ~26px lead + slack. */
-  min-height:180px;
-  text-align:center;
-}
-.mc-copy{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  opacity:0;pointer-events:none;
-  transition:opacity .45s var(--ease-smooth), transform .45s var(--ease-smooth);
-  transform:translateY(8px);
-}
-.mc-copy.is-active{
-  opacity:1;pointer-events:auto;
-  transform:translateY(0);
-}
-.mc-eyebrow{
-  font-family:var(--mono);font-size:10.5px;font-weight:500;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);
-  display:inline-flex;align-items:center;gap:7px;
-  padding:5px 12px;margin-bottom:12px;
-  background:color-mix(in oklch, var(--accent) 6%, transparent);
-  border:1px solid color-mix(in oklch, var(--accent) 32%, var(--border));
-  border-radius:999px;
-}
-.mc-eyebrow::before{
-  content:'';width:5px;height:5px;border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 8px color-mix(in oklch, var(--accent) 70%, transparent);
-}
-.mc-title{
-  font-family:var(--display);
-  font-size:clamp(32px, 3.6vw, 48px);
-  line-height:1.04;letter-spacing:-.03em;font-weight:700;
-  margin:0 0 10px;max-width:18ch;
-}
-.mc-title .accent{color:rgba(255,255,255,.45)}
-.mc-lead{
-  font-size:17px;line-height:1.5;color:var(--dim);
-  /* Widened from 54ch so the now-one-line leads stay on one line even
-     for the longest pair, without bumping the copy-stack min-height. */
-  margin:0;letter-spacing:-.005em;max-width:62ch;
-}
-
-/* Tab strip — 4 pills with a sliding progress bar on the active one.
-   Keyboard hint sits under the label like the old f-tabs. */
+/* Tabs — segmented control with a single sliding pill that animates
+   between active tabs via Framer's layoutId. Inactive tabs are
+   label-only (no kbd chip chrome). The active tab reveals its
+   shortcut as a quiet monospace caption inside the pill, so the
+   eyebrow keeps top billing and the keystroke gets a secondary
+   moment without competing for emphasis. */
 .mc-tabs{
-  display:flex;justify-content:center;gap:12px;flex-wrap:wrap;
-  margin:0 auto clamp(14px, 1.6vw, 22px);
-  max-width:680px;
+  display:flex;
+  justify-content:center;
+  width:100%;
 }
+.mc-tabs-pill{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  overflow:auto;
+  scrollbar-width:none;
+  max-width:100%;
+  padding:4px;
+  background:color-mix(in oklch, var(--bg-2) 70%, transparent);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent),
+    0 1px 2px rgba(0,0,0,.25);
+}
+.mc-tabs-pill::-webkit-scrollbar{display:none}
+
 .mc-tab{
   position:relative;
-  display:inline-flex;flex-direction:column;align-items:center;gap:2px;
-  padding:10px 18px;
+  display:inline-flex;align-items:center;
+  padding:9px 16px;
   background:transparent;
-  border:1px solid var(--border);
-  border-radius:999px;
-  color:var(--dim);
-  font:500 13px/1 var(--sans);letter-spacing:-.005em;
+  border:0;
+  border-radius:10px;
+  color:var(--mute);
   cursor:pointer;
-  transition:color var(--dur-fast) var(--ease-out),
-             border-color var(--dur-fast) var(--ease-out),
-             background var(--dur-fast) var(--ease-out);
+  font:inherit;
+  white-space:nowrap;
+  transition:color var(--dur-fast) var(--ease-out);
+}
+.mc-tab:hover{color:var(--fg-2)}
+.mc-tab.is-active{color:var(--fg)}
+.mc-tab:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+  border-radius:10px;
+}
+
+/* Animated active background — Framer Motion layoutId target. Sits
+   under content and slides between tabs with a spring curve. */
+.mc-tab-active-bg{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,
+    color-mix(in oklch, var(--bg-2) 30%, var(--fg) 7%),
+    color-mix(in oklch, var(--bg-2) 60%, var(--fg) 3%));
+  border-radius:10px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 9%, transparent),
+    inset 0 -1px 0 rgba(0,0,0,.2),
+    0 1px 2px rgba(0,0,0,.25);
+  z-index:0;
+  pointer-events:none;
+}
+
+.mc-tab-content{
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+  align-items:baseline;
+}
+
+.mc-tab-label{
+  font-family:var(--display);
+  font-size:14px;line-height:1;letter-spacing:-.01em;
+  font-weight:500;color:inherit;
+}
+.mc-tab.is-active .mc-tab-label{font-weight:600}
+
+/* Shortcut caption — collapsed by default, expands in-place on the
+   active tab. Width + opacity transition reads as one motion. */
+.mc-tab-key{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:11px;font-weight:500;letter-spacing:.02em;
+  color:color-mix(in oklch, var(--fg) 50%, transparent);
+  max-width:0;
+  margin-left:0;
+  opacity:0;
   overflow:hidden;
+  white-space:nowrap;
+  transition:
+    max-width .85s cubic-bezier(.22,1,.36,1),
+    margin-left .85s cubic-bezier(.22,1,.36,1),
+    opacity .4s var(--ease-out) .25s;
 }
-.mc-tab:hover{color:var(--fg);border-color:var(--fg)}
-.mc-tab.is-active{
-  color:var(--fg);
-  background:color-mix(in oklch, var(--accent) 8%, transparent);
-  border-color:color-mix(in oklch, var(--accent) 40%, var(--border));
-}
-.mc-tab-label{font-size:13px;font-weight:600;color:inherit}
-.mc-tab-key{font-family:var(--mono);font-size:10px;color:var(--mute);letter-spacing:.04em}
-.mc-tab.is-active .mc-tab-key{color:color-mix(in oklch, var(--accent) 80%, var(--fg))}
-
-.mc-progress{
-  position:absolute;left:0;right:0;bottom:0;height:2px;
-  background:transparent;
-  overflow:hidden;
-}
-.mc-progress-fill{
-  display:block;height:100%;width:0%;
-  background:var(--accent);
-  /* No transition: the JS timeupdate handler writes width continuously,
-     and a transition would lag visibly behind the actual playhead. */
+.mc-tab.is-active .mc-tab-key{
+  max-width:120px;
+  margin-left:9px;
+  opacity:1;
+  color:color-mix(in oklch, var(--fg) 62%, transparent);
 }
 
-/* Stage wrap is the scroll-grow transform target. Its child .mb-stage
-   already owns perspective + 3d transforms; we keep those untouched and
-   put the scale on this outer wrapper so the macbook's 3d math is
-   undisturbed. transform-origin:top so the headline stays put and the
-   macbook reveals downward as it grows (no jump). */
-.mc-stage-wrap{
-  transform-origin:50% 0%;
-  will-change:transform;
+/* Progress fill — thin accent bar at the bottom of the active tab.
+   JS writes width as a 0–100% spanning current clip(s) of the active
+   feature. Signals "auto-advancing slideshow" without adding new
+   chrome. Fades in only on the active tab; inactive tabs reset to 0%
+   in JS, masked by opacity. */
+.mc-tab-fill{
+  position:absolute;
+  left:0;bottom:0;
+  width:0;
+  height:2px;
+  background:linear-gradient(90deg,
+    color-mix(in oklch, var(--accent) 95%, transparent),
+    color-mix(in oklch, var(--accent) 65%, transparent));
+  border-bottom-left-radius:10px;
+  opacity:0;
+  z-index:2;
+  pointer-events:none;
+  box-shadow:0 0 6px color-mix(in oklch, var(--accent) 35%, transparent);
+  transition:opacity .35s var(--ease-out), width .15s linear;
+}
+.mc-tab.is-active .mc-tab-fill{opacity:.9}
+.mc-tab.is-active .mc-tab-fill[style*="width: 100%"]{
+  border-bottom-right-radius:10px;
+}
+@media (prefers-reduced-motion: reduce){
+  .mc-tab-fill{display:none}
 }
 
-/* The active video covers the screen entirely; inactive ones are
-   stacked underneath with opacity:0 and crossfade in/out. cover, not
-   contain, because the source's 3344×2160 aspect (≈1.548:1) is wider
-   than the screen's window (≈1.642:1) so a small horizontal crop reads
-   better than a black letterbox. */
+/* Stage — the macbook framed centrally. 1240px lets the chrome
+   reach close to the page gutter so the demo dominates the
+   composition; on narrower viewports the inner .mb-stage min()
+   rule keeps it from overflowing. */
+.mc-stage{
+  position:relative;
+  width:100%;
+  max-width:1240px;
+  margin:0 auto;
+}
+
 .mc-video{
   position:absolute;inset:0;
   width:100%;height:100%;
   object-fit:cover;
-  transition:opacity .4s var(--ease-smooth);
   pointer-events:none;
   z-index:5;
 }
 
-/* Subtitle overlay inside the macbook screen. Sits above the video
-   (z=6) but below the screen reflection (::before z=7) so the glare
-   pass still lies on top. Bottom 6% leaves headroom above the macbook
-   frame's lid; text-shadow handles contrast over arbitrary frames. */
 /* Subtitle anchored low inside the macbook screen — keynote-style
-   placement, well under the action area. 9% bottom drops it just above
-   the macOS dock when the dock is visible (only in the empty-desktop
-   intros) and well clear of action UI otherwise. */
+   placement, well under the action area. */
 .mc-subtitle{
   position:absolute;
   left:0;right:0;bottom:9%;
@@ -935,7 +1106,7 @@ h2.section-h .mute{color:var(--dim)}
 .mc-subtitle-text{
   display:inline-block;
   font-family:var(--sans);
-  font-size:clamp(14px, 1.95vw, 26px);
+  font-size:clamp(13px, 1.7vw, 22px);
   font-weight:600;
   letter-spacing:-0.018em;
   line-height:1.22;
@@ -955,25 +1126,39 @@ h2.section-h .mute{color:var(--dim)}
   will-change:opacity, transform;
 }
 
-/* Caption under the macbook — names the active feature for users who
-   skip past the headline. Aurally announced via aria-live=polite. */
-.mc-caption{
-  margin-top:clamp(16px, 2vw, 24px);
+/* Meta block below the macbook — Flowy-style single caption line.
+   Centered, max ~58ch so longer leads still read comfortably. */
+.mc-meta{
   text-align:center;
-  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--mute);
+  max-width:60ch;
+  margin:0 auto;
+  display:flex;flex-direction:column;gap:8px;
+}
+.mc-title{
+  font-family:var(--display);
+  font-size:clamp(22px, 2.4vw, 32px);
+  line-height:1.15;letter-spacing:-.025em;
+  font-weight:700;color:var(--fg);
+  margin:0;
+}
+.mc-title .accent{color:rgba(255,255,255,.55)}
+.mc-lead{
+  font-size:15.5px;line-height:1.55;
+  color:var(--fg-2);margin:0;
+  letter-spacing:-.005em;
 }
 
-@media (max-width: 820px){
-  .mc-tabs{gap:8px}
-  .mc-tab{padding:8px 12px}
-  .mc-tab-label{font-size:12px}
-  .mc-stage-wrap{transform:none !important}
+@media (max-width: 720px){
+  .mc-section{gap:18px}
+  .mc-tab{padding:8px 14px}
+  .mc-tab-label{font-size:13px}
+  .mc-tab-key{display:none}
+  .mc-title{font-size:clamp(20px, 5.4vw, 26px)}
+  .mc-lead{font-size:14.5px}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .mc-stage-wrap{transform:none !important}
-  .mc-copy{transition:none}
+  .mc-video{transition:none}
 }
 
 .f-stage{
@@ -2199,112 +2384,223 @@ h2.section-h .mute{color:var(--dim)}
    three other launchers. Odak column is highlighted with an
    accent band; mobile transposes to per-feature stacked cards.
    ========================================================== */
+/* Comparison section overrides — same restraint as the FAQ. The
+   heading + block read as one centered unit; the heading is
+   sized down to match the dense table below instead of dwarfing
+   it like the page's larger section-h would. */
+#positioning .section-head{
+  max-width:680px;
+}
+#positioning h2.section-h{
+  max-width:none;
+}
+
 .pos-compare{
-  --cols: minmax(0,1.5fr) repeat(4, minmax(0,1fr));
+  --cols: minmax(0,1.6fr) repeat(4, minmax(0,1fr));
   position:relative;
-  margin-top:24px;
+  margin:32px auto 0;
+  max-width:1100px;
   border:1px solid var(--border);
-  border-radius:18px;
-  background:var(--surface);
+  border-radius:14px;
+  background:#0a0a0a;
   overflow:hidden;
+  isolation:isolate;
 }
-/* Vertical accent band behind the Odak column. The grid is
-   1.5fr + 4 × 1fr = 5.5fr, so the Odak column starts at
-   1.5/5.5 and is 1/5.5 wide. Recalculated against actual
-   column width via attr-free percentage math. */
-.pos-compare::before{
-  content:'';position:absolute;top:0;bottom:0;pointer-events:none;
-  left:calc(100% * 1.5 / 5.5);
-  width:calc(100% * 1 / 5.5);
-  background:linear-gradient(180deg,
-    color-mix(in oklch, var(--accent) 8%, transparent),
-    color-mix(in oklch, var(--accent) 3%, transparent) 60%,
-    transparent 100%);
-}
+/* Amber column tint removed entirely — the table reads as
+   monochrome restraint. Brand color now appears in exactly ONE
+   place inside the table (the small dot next to the ODAK header). */
+.pos-compare::before{display:none}
+
 .pos-compare-thead{
   display:grid;grid-template-columns:var(--cols);
   align-items:end;gap:0;
-  padding:22px 28px 20px;
-  border-bottom:1px solid var(--border);
-  background:linear-gradient(180deg, color-mix(in oklch, var(--bg-2) 60%, transparent), transparent);
+  padding:24px 32px 18px;
+  border-bottom:1px solid color-mix(in oklch, var(--border) 60%, transparent);
   position:relative;
+  z-index:1;
 }
 .pos-compare-thead .h-feat{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:color-mix(in oklch, var(--fg) 35%, transparent);
+  font-weight:600;
 }
 .pos-compare-thead .h-col{
-  font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--fg-2);
+  font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:-.005em;
+  color:color-mix(in oklch, var(--fg) 55%, transparent);
   text-align:center;
 }
-.pos-compare-thead .h-col.us{color:var(--accent)}
-.pos-compare-thead .h-col.us::after{
-  content:'';display:block;margin:8px auto 0;
-  width:28px;height:2px;border-radius:2px;
-  background:var(--accent);box-shadow:0 0 10px var(--accent-glow);
+/* ODAK header — the lone amber accent in the entire table. A
+   small dot prefix marks the brand column; the label itself stays
+   in the same family weight as competitors (no shouty 700/16px). */
+.pos-compare-thead .h-col.us{
+  color:var(--fg);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.01em;
+  text-transform:uppercase;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.pos-compare-thead .h-col.us::before{
+  content:'';
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px color-mix(in oklch, var(--accent) 60%, transparent);
 }
 
 .pos-row{
   display:grid;grid-template-columns:var(--cols);
   align-items:center;
-  padding:20px 28px;
-  border-top:1px solid var(--border);
+  padding:16px 32px;
+  border-top:1px solid color-mix(in oklch, var(--border) 50%, transparent);
   position:relative;
+  z-index:1;
+  transition:background var(--dur-fast) var(--ease-out);
 }
-.pos-row .feat{font-size:15px;color:var(--fg-2);letter-spacing:-.005em;line-height:1.35}
+.pos-row:hover{
+  background:color-mix(in oklch, var(--fg) 2.5%, transparent);
+}
+
+/* Group separator — tiny uppercase mono caption between row beats.
+   Bridgemind "Compare plans" pattern. Padding tuned to feel like
+   a section header inside the table (no extra top space — it's
+   not a card divider, it's a label). */
+.pos-group{
+  position:relative;
+  z-index:2;
+  padding:18px 24px 6px;
+  border-top:1px solid color-mix(in oklch, var(--border) 50%, transparent);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:color-mix(in oklch, var(--fg) 35%, transparent);
+}
+/* First group sits flush against the thead — kill the doubled-up
+   border so it doesn't look like a divider AND a header. */
+.pos-compare-thead + .pos-group{
+  border-top:0;
+}
+.pos-row .feat{font-size:14.5px;color:var(--fg-2);letter-spacing:-.005em;line-height:1.4}
+.pos-row .feat code{
+  font-family:var(--mono);font-size:.86em;
+  padding:1px 6px;border-radius:5px;
+  background:color-mix(in oklch, var(--bg) 60%, transparent);
+  border:1px solid var(--border);
+  color:var(--fg-2);
+}
 .pos-row .cells{display:contents}
 .pos-row .cell{
   display:flex;justify-content:center;align-items:center;
 }
 .pos-row .cell .lbl{display:none}
-.pos-row .cell .mk{
-  width:20px;height:20px;border-radius:50%;
+
+/* YES — bare check glyph. Default = competitor weight (subtle
+   gray). Odak's check below is slightly heavier and brighter,
+   but stays monochrome — the brand signal lives in the header
+   dot, not in every cell. */
+.pos-row .cell.y .mk{
+  width:22px;height:22px;border-radius:0;
   display:inline-flex;justify-content:center;align-items:center;
-  background:var(--surface-2);border:1px solid var(--border);
+  background:transparent;border:0;
   position:relative;
 }
-.pos-row .cell.y .mk{
-  background:color-mix(in oklch, var(--accent) 18%, transparent);
-  border-color:color-mix(in oklch, var(--accent) 55%, var(--border));
-  box-shadow:0 0 12px color-mix(in oklch, var(--accent) 28%, transparent);
-}
 .pos-row .cell.y .mk svg{
-  width:11px;height:11px;stroke:var(--accent);fill:none;
-  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  width:14px;height:14px;
+  stroke:color-mix(in oklch, var(--fg) 50%, transparent);
+  fill:none;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
 }
-.pos-row .cell.n .mk::after{
-  content:'';width:8px;height:1.5px;background:var(--mute);border-radius:1px;
-}
-.pos-row .cell.p .mk{
-  background:color-mix(in oklch, var(--accent) 8%, transparent);
-  border-color:color-mix(in oklch, var(--accent) 30%, var(--border));
-}
-.pos-row .cell.p .mk::after{
-  content:'';width:7px;height:7px;border-radius:50%;
-  background:color-mix(in oklch, var(--accent) 50%, transparent);
-}
-.pos-row .cell.us.y .mk{
-  background:color-mix(in oklch, var(--accent) 28%, transparent);
+/* YES on the Odak column — pure white, slightly heavier weight
+   to communicate "yes, and the brand backs it" without color. */
+.pos-row .cell.us.y .mk svg{
+  stroke:var(--fg);
+  stroke-width:2.6;
 }
 
-.pos-compare-foot{
-  padding:18px 28px;border-top:1px solid var(--border);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--mute);
-  display:flex;flex-wrap:wrap;gap:18px;justify-content:center;
+/* PARTIAL — dashed outline with a small accent dot. Reads as
+   "kind of" without competing with the YES chips. */
+.pos-row .cell.p .mk{
+  width:22px;height:22px;border-radius:50%;
+  display:inline-flex;justify-content:center;align-items:center;
+  background:transparent;
+  border:1px dashed color-mix(in oklch, var(--fg) 22%, transparent);
+  position:relative;
 }
-.pos-compare-foot .lg{display:inline-flex;align-items:center;gap:6px}
+.pos-row .cell.p .mk::after{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:color-mix(in oklch, var(--fg) 38%, transparent);
+}
+
+/* NO — bare em-dash, no chrome. Empty by design so the eye skips
+   past it and the YES chips dominate the scan. */
+.pos-row .cell.n .mk{
+  width:22px;height:22px;background:transparent;border:0;
+  display:inline-flex;justify-content:center;align-items:center;
+  position:relative;
+}
+.pos-row .cell.n .mk::after{
+  content:'';width:10px;height:1.5px;border-radius:1px;
+  background:color-mix(in oklch, var(--mute) 70%, transparent);
+}
+/* Odak NO marker keeps the same neutral dash as every other column —
+   no amber tint. The lone "Open source" row reads as honest, not
+   highlighted. */
+
+.pos-compare-foot{
+  padding:14px 24px;
+  border-top:1px solid color-mix(in oklch, var(--border) 50%, transparent);
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  color:color-mix(in oklch, var(--fg) 35%, transparent);
+  text-transform:uppercase;font-weight:600;
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
+  position:relative;z-index:1;
+}
+.pos-compare-foot .lg{display:inline-flex;align-items:center;gap:8px}
 .pos-compare-foot .lg .mk{
-  width:12px;height:12px;border-radius:50%;
+  width:14px;height:14px;border-radius:50%;
   display:inline-flex;justify-content:center;align-items:center;
 }
-.pos-compare-foot .lg.y .mk{background:color-mix(in oklch, var(--accent) 22%, transparent);border:1px solid color-mix(in oklch, var(--accent) 55%, var(--border))}
-.pos-compare-foot .lg.p .mk{background:color-mix(in oklch, var(--accent) 8%, transparent);border:1px solid color-mix(in oklch, var(--accent) 30%, var(--border));position:relative}
-.pos-compare-foot .lg.p .mk::after{content:'';width:5px;height:5px;border-radius:50%;background:color-mix(in oklch, var(--accent) 50%, transparent)}
-.pos-compare-foot .lg.n .mk{background:var(--surface-2);border:1px solid var(--border);position:relative}
-.pos-compare-foot .lg.n .mk::after{content:'';width:5px;height:1px;background:var(--mute);border-radius:1px}
+.pos-compare-foot .lg.y .mk{
+  background:transparent;border:0;position:relative;
+}
+.pos-compare-foot .lg.y .mk::after{
+  content:'';
+  width:8px;height:5px;
+  border-left:1.6px solid color-mix(in oklch, var(--fg) 55%, transparent);
+  border-bottom:1.6px solid color-mix(in oklch, var(--fg) 55%, transparent);
+  transform:rotate(-45deg) translateY(-1px);
+  border-radius:1px;
+}
+.pos-compare-foot .lg.p .mk{
+  background:transparent;
+  border:1px dashed color-mix(in oklch, var(--fg) 22%, transparent);
+  position:relative;
+}
+.pos-compare-foot .lg.p .mk::after{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:color-mix(in oklch, var(--fg) 38%, transparent);
+}
+.pos-compare-foot .lg.n .mk{
+  background:transparent;border:0;position:relative;
+}
+.pos-compare-foot .lg.n .mk::after{
+  content:'';width:8px;height:1.5px;border-radius:1px;
+  background:color-mix(in oklch, var(--mute) 70%, transparent);
+}
 
 @media (max-width:760px){
   .pos-compare::before{display:none}
   .pos-compare-thead{display:none}
+  .pos-group{
+    padding:18px 14px 6px;
+    border-top:1px solid color-mix(in oklch, var(--border) 70%, transparent);
+    font-size:9.5px;letter-spacing:.22em;
+  }
+  .pos-compare-thead + .pos-group,
+  .pos-compare > .pos-group:first-of-type{
+    border-top:0;padding-top:8px;
+  }
   .pos-row{
     display:flex;flex-direction:column;align-items:stretch;gap:10px;
     padding:14px 14px;
@@ -2321,15 +2617,27 @@ h2.section-h .mute{color:var(--dim)}
     flex-direction:column;gap:6px;padding:8px 4px;
     background:none;border:0;
   }
+  /* Mobile Odak cell: neutral white tint (no amber wash). The
+     ODAK label carries the brand color so the eye still sorts
+     which column is ours, but the cell itself stays monochrome
+     to match the desktop treatment. */
   .pos-row .cell.us{
-    background:color-mix(in oklch, var(--accent) 7%, transparent);
+    background:color-mix(in oklch, var(--fg) 5%, transparent);
     border-radius:10px;
   }
   .pos-row .cell .lbl{
     display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;
     text-transform:uppercase;color:var(--mute);text-align:center;
   }
-  .pos-row .cell.us .lbl{color:var(--accent)}
+  .pos-row .cell.us .lbl{
+    color:var(--accent);
+    font-weight:600;
+    display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  }
+  .pos-row .cell.us .lbl::before{
+    content:'';width:5px;height:5px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 6px color-mix(in oklch, var(--accent) 60%, transparent);
+  }
 }
 
 /* ==========================================================
@@ -2338,6 +2646,10 @@ h2.section-h .mute{color:var(--dim)}
 .pricing{
   display:grid;grid-template-columns:1.05fr 1fr;gap:32px;align-items:center;
   max-width:1000px;margin:0 auto;
+  /* 3D context for the price-card hover tilt. Perspective lives on
+     the parent so the card's rotateX/rotateY actually project into
+     depth instead of looking like a flat 2D skew. */
+  perspective:1400px;
 }
 .price-card{
   position:relative;
@@ -2348,6 +2660,61 @@ h2.section-h .mute{color:var(--dim)}
     linear-gradient(180deg, var(--bg-2), var(--bg));
   overflow:hidden;
   box-shadow:0 24px 48px -12px rgba(0,0,0,.35), inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+/* Tilt-on-hover. Selectors are specificity-bumped to win against
+   the global .reveal.in rule (which also sets transform). CSS vars
+   are written by /legacy/index-runtime.js (price-card tilt block)
+   from pointer position; defaults render the card flat. */
+.price-card,
+.price-card.reveal.in{
+  transform:
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translateZ(var(--tilt-z, 0));
+  transition:
+    transform .5s var(--ease-out),
+    box-shadow .35s var(--ease-out);
+}
+/* While the cursor is hovering, switch to a near-instant transition
+   so the card tracks the pointer 1:1 instead of lagging behind. */
+.price-card[data-tilt-active],
+.price-card.reveal.in[data-tilt-active]{
+  transition:
+    transform .12s linear,
+    box-shadow .35s var(--ease-out);
+  box-shadow:
+    0 40px 80px -20px rgba(0,0,0,.55),
+    0 12px 28px -8px rgba(0,0,0,.35),
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 7%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
+}
+/* Cursor-following specular highlight — sells the "floating deck"
+   feel by adding a soft glint that moves with the pointer across
+   the card surface. */
+.price-card::after{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:radial-gradient(
+    circle 320px at var(--tilt-mx, 50%) var(--tilt-my, 0%),
+    color-mix(in oklch, var(--fg) 9%, transparent),
+    transparent 55%
+  );
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s var(--ease-out);
+  mix-blend-mode:screen;
+  z-index:0;
+}
+.price-card[data-tilt-active]::after{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  .pricing{perspective:none}
+  .price-card{transform:none}
+  .price-card[data-tilt-active]{transform:none}
+  .price-card::after{display:none}
 }
 /* Removed: the redundant ::before top-down gradient overlay. The radial
    accent in the corner already sells the warm tint; stacking a linear
@@ -2369,7 +2736,7 @@ h2.section-h .mute{color:var(--dim)}
      the card without breaking the page-level hierarchy. */
   font-family:var(--display);font-size:clamp(64px, 7.4vw, 88px);line-height:.95;
   letter-spacing:-.035em;font-weight:700;margin:0;position:relative;z-index:1;
-  display:flex;align-items:flex-start;gap:8px;
+  display:flex;align-items:flex-start;gap:4px;
 }
 .price-card .amount .curr{font-size:.42em;color:var(--dim);margin-top:8px;font-weight:600}
 .price-card .amount .per{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:500;margin-left:10px;margin-top:auto;padding-bottom:22px}
@@ -2427,48 +2794,94 @@ h2.section-h .mute{color:var(--dim)}
    The chevron rotates 180° when open; the answer paragraph reveals
    via reserved row + opacity, no height animation (no CLS).
    ========================================================== */
+/* FAQ section overrides — center the heading above the centered
+   block so they read as one unit, and scale the heading down to
+   match the flat-block restraint of the list itself (Bridgemind
+   uses 36px for "Frequently asked." instead of the page's larger
+   section-h size). */
+#faq .section-head{
+  max-width:680px;
+}
+#faq h2.section-h{
+  max-width:none;
+}
+
+/* Bridgemind-style FAQ — solid #0a0a0a blocks stacked edge-to-edge,
+   no borders, no gaps. Each item gets a subtle background lift on
+   hover (+1% white) and open (+2%). The "+" icon lives on the LEFT
+   and rotates 45° to "×" when open. Answer body is indented past
+   the icon column so question and answer align on the text axis. */
 .faq-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:12px 48px;
-  max-width:1000px;margin:0 auto;
+  display:flex;flex-direction:column;
+  max-width:760px;margin:0 auto;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
 }
 .faq-item{
-  border-top:1px solid var(--border);
-  padding:0;
+  background:#0a0a0a;
+  border:0;
+  transition:background var(--dur-fast) var(--ease-out);
 }
+.faq-item + .faq-item{
+  border-top:1px solid color-mix(in oklch, var(--border) 60%, transparent);
+}
+.faq-item:hover{background:color-mix(in oklch, var(--fg) 2%, #0a0a0a)}
+.faq-item[open]{background:color-mix(in oklch, var(--fg) 5%, #0a0a0a)}
+.faq-item[open]:hover{background:color-mix(in oklch, var(--fg) 5%, #0a0a0a)}
+
 .faq-item summary{
   list-style:none;
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:18px 0;
+  display:flex;align-items:flex-start;gap:16px;
+  padding:20px 24px;
   cursor:pointer;
-  font-family:var(--display);font-size:17px;font-weight:600;
-  letter-spacing:-.015em;color:var(--fg);line-height:1.3;
+  font-family:var(--display);font-size:16px;font-weight:500;
+  letter-spacing:-.005em;color:var(--fg);line-height:1.45;
   user-select:none;
-  /* Touch target ≥44 via vertical padding */
 }
 .faq-item summary::-webkit-details-marker{display:none}
 .faq-item summary::marker{content:""}
-.faq-item summary .q{flex:1;min-width:0}
-.faq-item summary .chev{
-  flex-shrink:0;width:24px;height:24px;
+.faq-item summary .q{
+  flex:1;min-width:0;
+  order:2; /* keep question visually after the icon */
+}
+.faq-item summary .ic{
+  flex-shrink:0;width:20px;height:20px;
+  margin-top:2px; /* optical alignment with first line of text */
   display:inline-flex;align-items:center;justify-content:center;
-  color:var(--mute);
-  transition:transform var(--dur-snappy) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  color:color-mix(in oklch, var(--fg) 50%, transparent);
+  transition:transform var(--dur-snappy) var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+  order:1; /* render before the question */
 }
-.faq-item summary .chev svg{
-  width:12px;height:12px;stroke:currentColor;fill:none;
-  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+.faq-item summary .ic svg{
+  width:14px;height:14px;stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
 }
-.faq-item[open] summary .chev{transform:rotate(180deg);color:var(--accent)}
-.faq-item summary:hover{color:var(--accent)}
-.faq-item summary:hover .chev{color:var(--accent)}
-.faq-item summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
+.faq-item[open] summary .ic{
+  transform:rotate(45deg); /* "+" becomes "×" */
+  color:var(--accent);
+}
+.faq-item summary:hover .ic{color:var(--fg)}
+.faq-item[open] summary:hover .ic{color:var(--accent)}
+.faq-item summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px}
+
+/* Answer body — indented past the icon column (24px padding + 20px
+   icon + 16px gap = 60px) so it aligns with the question text. */
 .faq-item p{
-  margin:0 0 18px;
-  padding-right:38px;
-  color:var(--fg-2);font-size:15px;line-height:1.55;letter-spacing:-.005em;
-  /* Subtle reveal — native <details> open is instant; the fade-in
-     softens the swap without animating block-size (which would CLS). */
+  margin:0;
+  padding:0 24px 22px 60px;
+  color:color-mix(in oklch, var(--fg) 55%, transparent);
+  font-size:15px;line-height:1.6;letter-spacing:-.003em;
   animation:faq-reveal .22s var(--ease-out);
+}
+.faq-item p a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.faq-item p code{
+  font-family:var(--mono);font-size:.88em;
+  padding:1px 6px;border-radius:5px;
+  background:color-mix(in oklch, var(--bg) 60%, transparent);
+  border:1px solid var(--border);
+  color:var(--fg-2);
 }
 @keyframes faq-reveal{
   from{opacity:0;transform:translateY(-4px)}
@@ -2476,7 +2889,7 @@ h2.section-h .mute{color:var(--dim)}
 }
 @media (prefers-reduced-motion: reduce){
   .faq-item p{animation:none}
-  .faq-item summary .chev{transition:none}
+  .faq-item summary .ic{transition:none}
 }
 .faq-item p a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in oklch, var(--accent) 50%, transparent)}
 .faq-item p a:hover{border-bottom-color:var(--accent)}
@@ -2486,13 +2899,15 @@ h2.section-h .mute{color:var(--dim)}
   background:var(--surface-2);border:1px solid var(--border);
   color:var(--fg-2);
 }
-.faq-item summary code{font-size:.92em;background:transparent;border:none;padding:0;color:var(--accent)}
+/* Inline <code> in summary inherits the .faq-item code chip
+   treatment above — no special accent recolor here, otherwise
+   it reads as a link instead of a code token. */
 
 /* ==========================================================
    FOOTER
    ========================================================== */
 footer.site-foot{
-  max-width:var(--maxw);margin:var(--space-section) auto 0;
+  max-width:var(--maxw);margin:clamp(48px, 6vw, 80px) auto 0;
   padding:48px var(--gutter) 32px;
   border-top:1px solid var(--border);
   line-height:1.55;
@@ -2682,12 +3097,12 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
    ensures the macbook (aspect 1.642) fits in roughly 80% of viewport
    height — frame + base + feet visible without scrolling. */
 .mb-stage{
-  /* Bumped from 1600/92vw/90vh-aspect — the macbook now reaches up to
-     1750px wide on huge displays and uses ~96% of width/height on
-     standard ones, so it feels like the centerpiece rather than a
-     thumbnail. The aspect-locked vh cap stays so the bottom keys never
-     get clipped on short windows. */
-  max-width:min(1750px, 96vw, calc(96vh * 1.642));margin:0 auto;
+  /* The vh cap multiplier reserves vertical room for the tabs +
+     title/lead block sitting above the macbook, so all three pieces
+     fit in a typical laptop viewport (≥800vh). Aspect ratio 1.642
+     means width = height × 1.642; 70vh × 1.642 ≈ 115vh as a width
+     cap, which translates back to ~70vh of laptop height. */
+  max-width:min(1500px, 92vw, calc(70vh * 1.642));margin:0 auto;
   perspective:2400px;position:relative;
   transform-style:preserve-3d;
 }
@@ -2727,27 +3142,8 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
    base. Bright peak is visible BELOW the laptop (where shadows fall in
    real life), not hidden behind the device. Width capped at 96% so
    body's overflow-x:clip can't slice the flank into a visible band. */
-.mb-stage::after{
-  content:'';
-  position:absolute;
-  left:50%;
-  top:90%;
-  transform:translateX(-50%);
-  width:110%;
-  height:50%;
-  z-index:-2;
-  pointer-events:none;
-  background:radial-gradient(
-    ellipse 50% 45% at 50% 25%,
-    rgba(0,0,0,.65) 0%,
-    rgba(0,0,0,.45) 18%,
-    rgba(0,0,0,.26) 38%,
-    rgba(0,0,0,.10) 62%,
-    rgba(0,0,0,.03) 82%,
-    rgba(0,0,0,0) 98%
-  );
-  filter:blur(8px);
-}
+/* Cast shadow halo under the macbook removed — pending the new
+   lighting decision. */
 
 .macbook{
   position:relative;width:100%;
@@ -2831,10 +3227,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      loss is near-zero while we save 25% of the per-paint filter cost
      (drop-shadow re-rasters the whole alpha mask every frame the macbook
      is in motion — reveal, parallax, theme swap). */
-  filter:
-    drop-shadow(0 0.1cqi 0.3cqi rgba(0,0,0,.34))
-    drop-shadow(0 0.5cqi 1.2cqi rgba(0,0,0,.26))
-    drop-shadow(0 1.5cqi 3.0cqi rgba(0,0,0,.22));
+  filter:none;
 }
 /* MacBook Pro 16" Silver — inline SVG mockup (open-lid view with
    visible base + feet). Frame aspect 619x377 = 1.642. Screen rectangle
@@ -3061,8 +3454,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
     0 0.7cqi 1.6cqi rgba(0,0,0,.30),
     0 2.4cqi 5.5cqi rgba(0,0,0,.36),
     0 5.5cqi 11.0cqi rgba(0,0,0,.26),
-    0 0 0 0.23cqi var(--prod-blue),
-    0 0 5.48cqi var(--prod-blue-glow);
+    0 0 0 0.23cqi var(--prod-blue);
 }
 .mb-window .titlebar{
   display:flex;align-items:center;gap:0.57cqi;
@@ -3881,3 +4273,4 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   .f-cap-track{margin-top:16px;height:32px}
   .f-cap{font-size:12px;padding:5px 10px;gap:6px}
 }
+

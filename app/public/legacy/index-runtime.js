@@ -1176,3 +1176,65 @@
     sync();
   }
 })();
+
+// ===== $19 price-card tilt =====
+// Cursor-tracking 3D tilt that turns the price card into a "floating
+// deck." We listen for pointermove on the card, compute the cursor's
+// position relative to the card's center, and write CSS variables
+// (--tilt-x, --tilt-y, --tilt-z, --tilt-mx, --tilt-my) consumed by
+// .price-card / .price-card::after. The CSS handles the actual
+// rotation + specular highlight + return-to-rest transition.
+//
+// Respects prefers-reduced-motion (skip entirely) and uses
+// pointer events so it works on touch (tap-and-drag tilts).
+(function(){
+  const card = document.querySelector('.price-card');
+  if(!card) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const MAX_DEG = 7;     // rotation cap on each axis
+  const LIFT_PX = 14;    // upward Z lift on hover (sells the float)
+  let rafId = null;
+  let target = { rx: 0, ry: 0, mx: 50, my: 0 };
+
+  function apply(){
+    rafId = null;
+    card.style.setProperty('--tilt-x', target.rx.toFixed(2) + 'deg');
+    card.style.setProperty('--tilt-y', target.ry.toFixed(2) + 'deg');
+    card.style.setProperty('--tilt-z', LIFT_PX + 'px');
+    card.style.setProperty('--tilt-mx', target.mx.toFixed(1) + '%');
+    card.style.setProperty('--tilt-my', target.my.toFixed(1) + '%');
+  }
+  function schedule(){
+    if(rafId !== null) return;
+    rafId = requestAnimationFrame(apply);
+  }
+
+  card.addEventListener('pointerenter', () => {
+    card.setAttribute('data-tilt-active', '');
+  });
+
+  card.addEventListener('pointermove', (e) => {
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;   // 0..1
+    const py = (e.clientY - r.top) / r.height;   // 0..1
+    // Rotation: top-of-card tilts back, bottom tilts toward viewer
+    // (inverted Y); right tilts right, left tilts left.
+    target.ry = (px - 0.5) * 2 * MAX_DEG;
+    target.rx = -(py - 0.5) * 2 * MAX_DEG;
+    target.mx = px * 100;
+    target.my = py * 100;
+    schedule();
+  });
+
+  card.addEventListener('pointerleave', () => {
+    card.removeAttribute('data-tilt-active');
+    target = { rx: 0, ry: 0, mx: 50, my: 0 };
+    // Reset Z too; CSS transition handles the glide back.
+    card.style.setProperty('--tilt-x', '0deg');
+    card.style.setProperty('--tilt-y', '0deg');
+    card.style.setProperty('--tilt-z', '0px');
+    card.style.setProperty('--tilt-mx', '50%');
+    card.style.setProperty('--tilt-my', '0%');
+  });
+})();
