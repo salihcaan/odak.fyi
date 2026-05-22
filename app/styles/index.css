@@ -111,7 +111,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px;scroll-snap-type:y proximity}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
 body{
   /* No background here on purpose — html already paints --bg. Adding a
      body bg covers fixed z-index:-1 ambient layers (aurora siblings)
@@ -344,7 +344,6 @@ body.scrolling .aurora::after{
   padding:28px var(--gutter) 16px;
   position:relative;
   text-align:center;
-  scroll-snap-align:start;
 }
 a.hero-bar{
   display:inline-flex;align-items:center;gap:8px;
@@ -824,7 +823,6 @@ section.block{
   max-width:var(--maxw);margin:0 auto;
   padding:calc(var(--space-section) - 48px) var(--gutter) 48px;
   position:relative;
-  scroll-snap-align:start;
   scroll-margin-top:64px;
 }
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
@@ -933,10 +931,8 @@ h2.section-h .mute{color:var(--dim)}
   justify-content:center;
   gap:clamp(14px, 1.8vw, 24px);
   min-height:calc(100dvh - 64px);
-  /* Scroll snap: lock to the top of the features section when the
-     user scrolls into proximity. Margin offsets the sticky nav so
-     the tabs land below it instead of behind it. */
-  scroll-snap-align:start;
+  /* Offsets hash-anchor jumps (#features) so the tabs land below the
+     sticky 64px nav rather than behind it. */
   scroll-margin-top:64px;
 }
 
