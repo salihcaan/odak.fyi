@@ -932,15 +932,7 @@ h2.section-h .mute{color:var(--dim)}
   position:relative;
   isolation:isolate;
 }
-/* Pin track length is tuned to 5 clip slots (Search has 2 clips,
-   Switch/Actions/Notch have 1 each) — each slot gets ~70% of a
-   viewport's worth of scroll to scrub through. The component reads
-   the actual offsetHeight to compute scroll progress, so the only
-   contract here is "enough scroll budget for 5 stages." */
 @media (min-width: 721px){
-  .mc-pin-wrap[data-scrub="on"]{
-    min-height:calc(100dvh * 4.5);
-  }
   .mc-pin-wrap{
     min-height:calc(100dvh * 2.5);
   }

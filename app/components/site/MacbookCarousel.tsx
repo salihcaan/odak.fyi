@@ -124,13 +124,11 @@ const FEATURES: Feature[] = [
 
 export function MacbookCarousel() {
   const sectionRef = useRef<HTMLElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<HTMLVideoElement[]>([]);
   const tabRefs = useRef<HTMLButtonElement[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [subIdx, setSubIdx] = useState(0);
   const [inView, setInView] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
   const [captionText, setCaptionText] = useState<string>("");
   const prefersReducedMotion = useReducedMotion();
 
@@ -141,20 +139,6 @@ export function MacbookCarousel() {
   const activeSlot = clipSlots.findIndex(
     (s) => s.featureIdx === activeIdx && s.clipIdx === subIdx
   );
-
-  // Desktop + non-reduced-motion gets the scroll-driven scrub treatment;
-  // everything else keeps the old IntersectionObserver + auto-advance.
-  // Mirrors the .mc-pin-wrap media query (sticky pin is desktop-only).
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(min-width: 721px)");
-    const apply = () => setIsDesktop(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  const scrubMode = isDesktop && !prefersReducedMotion;
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -167,11 +151,8 @@ export function MacbookCarousel() {
     return () => io.disconnect();
   }, []);
 
-  // Fallback playback path (mobile + reduced motion): auto-play the
-  // active clip while the section is in view; advance on `ended`.
   useEffect(() => {
     if (prefersReducedMotion) return;
-    if (scrubMode) return;
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
       if (i === activeSlot && inView) {
@@ -181,80 +162,9 @@ export function MacbookCarousel() {
         v.pause();
       }
     });
-  }, [activeSlot, inView, prefersReducedMotion, scrubMode]);
-
-  // Desktop scroll-scrub: map scroll position within the pin track to
-  // a (slotIdx, withinSlotProgress) pair, then set the active video's
-  // currentTime directly. Videos stay paused — they're scrubbed
-  // frame-by-frame as the user scrolls. Tab fill and captions key off
-  // currentTime via the existing timeupdate listener so they ride
-  // along automatically.
-  useEffect(() => {
-    if (!scrubMode) return;
-    if (typeof window === "undefined") return;
-
-    let raf = 0;
-    let lastSlot = -1;
-
-    const update = () => {
-      raf = 0;
-      const track = pinRef.current;
-      if (!track) return;
-      const rect = track.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const usable = Math.max(1, track.offsetHeight - vh);
-      const scrolled = Math.max(0, Math.min(usable, -rect.top));
-      const progress = scrolled / usable;
-      const n = clipSlots.length;
-      const sp = progress * n;
-      const slotIdx = Math.max(0, Math.min(n - 1, Math.floor(sp)));
-      const within = Math.max(0, Math.min(1, sp - slotIdx));
-
-      if (slotIdx !== lastSlot) {
-        lastSlot = slotIdx;
-        const slot = clipSlots[slotIdx];
-        setActiveIdx(slot.featureIdx);
-        setSubIdx(slot.clipIdx);
-        videoRefs.current.forEach((v, i) => {
-          if (!v) return;
-          if (i !== slotIdx) v.pause();
-        });
-      }
-
-      const v = videoRefs.current[slotIdx];
-      if (v && Number.isFinite(v.duration) && v.duration > 0) {
-        if (!v.paused) v.pause();
-        const target = within * v.duration;
-        if (Math.abs(v.currentTime - target) > 0.04) {
-          try {
-            v.currentTime = target;
-          } catch {
-            /* ignore — happens briefly before metadata loads */
-          }
-        }
-      }
-    };
-
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-    // clipSlots is rebuilt on every render but holds the same shape;
-    // depending on scrubMode is sufficient to (de)activate this loop.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrubMode]);
+  }, [activeSlot, inView, prefersReducedMotion]);
 
   function handleEnded() {
-    if (scrubMode) return;
     const cur = FEATURES[activeIdx];
     if (cur.clips.length === 2 && subIdx === 0) {
       setSubIdx(1);
@@ -267,20 +177,6 @@ export function MacbookCarousel() {
   function jumpTo(idx: number) {
     setActiveIdx(idx);
     setSubIdx(0);
-    if (!scrubMode) return;
-    const track = pinRef.current;
-    if (!track) return;
-    const targetSlot = clipSlots.findIndex(
-      (s) => s.featureIdx === idx && s.clipIdx === 0
-    );
-    if (targetSlot < 0) return;
-    const vh = window.innerHeight;
-    const usable = Math.max(1, track.offsetHeight - vh);
-    const trackTop = window.scrollY + track.getBoundingClientRect().top;
-    // aim for ~5% into the slot so the stage settles before scrubbing
-    const slotProgress = (targetSlot + 0.05) / clipSlots.length;
-    const targetY = trackTop + slotProgress * usable;
-    window.scrollTo({ top: targetY, behavior: "smooth" });
   }
 
   useEffect(() => {
@@ -335,11 +231,7 @@ export function MacbookCarousel() {
   const active = FEATURES[activeIdx];
 
   return (
-    <div
-      className="mc-pin-wrap"
-      ref={pinRef}
-      data-scrub={scrubMode ? "on" : "off"}
-    >
+    <div className="mc-pin-wrap">
     <section
       ref={sectionRef}
       className="mc-section"
