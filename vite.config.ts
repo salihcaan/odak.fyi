@@ -17,12 +17,45 @@ function gitSha(): string {
   }
 }
 
+// Production hosting rewrites /buy → /buy.html etc.; dev needs the
+// same mapping or Vite's TS resolver wins and serves /buy as the
+// compiled buy.tsx module (Chrome renders the script as text in a
+// <pre>, breaking the page). Tiny dev-only middleware matches the
+// known MPA entries and rewrites before Vite's resolver runs.
+const MPA_ENTRIES = [
+  "buy",
+  "buy-stage",
+  "changelog",
+  "privacy",
+  "refund",
+  "terms",
+] as const;
+const cleanUrlsPlugin = {
+  name: "odak:clean-mpa-urls",
+  configureServer(server: import("vite").ViteDevServer) {
+    server.middlewares.use((req, _res, next) => {
+      const url = req.url ?? "";
+      const match = url.match(
+        /^\/(buy|buy-stage|changelog|privacy|refund|terms)(\?.*)?$/,
+      );
+      if (match && MPA_ENTRIES.includes(match[1] as (typeof MPA_ENTRIES)[number])) {
+        req.url = `/${match[1]}.html${match[2] ?? ""}`;
+      }
+      next();
+    });
+  },
+};
+
 // MPA build — one HTML entry per URL on the existing site. Output path
 // matches today's URL structure (e.g. /buy.html, /changelog.html) so
 // inbound links from Release builds, search engines, and bookmarks keep
 // working after cutover.
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), cleanUrlsPlugin],
+  // Tell Vite this is an MPA so it skips SPA-style index.html fallback
+  // and trusts the URL-to-entry mapping (combined with cleanUrlsPlugin
+  // above, /buy resolves to /buy.html in dev like it does in prod).
+  appType: "mpa",
   root: "app",
   define: {
     __BUILD_SHA__: JSON.stringify(gitSha()),
