@@ -5,8 +5,7 @@
 <title>Actions — Odak</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="description" content="Actions are keyboard shortcuts that fire when a project is selected in Odak. Open apps, open URLs, run scripts — with variables for path, git state, and per-project values."/>
-<meta name="theme-color" content="#0a0908" media="(prefers-color-scheme: dark)"/>
-<meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#0a0908"/>
 <meta name="robots" content="index,follow"/>
 <link rel="icon" type="image/png" href="/assets/logo/odak.png"/>
 <link rel="apple-touch-icon" href="/assets/logo/odak.png"/>
@@ -30,21 +29,10 @@
   --maxw:780px;
   --radius:14px;
 }
-[data-theme="light"]{
-  --bg:#f7f4ef;--bg-2:#eee8dc;--bg-3:#e5ddcc;
-  --surface:rgba(26,20,16,.03);--surface-2:rgba(26,20,16,.05);
-  --border:rgba(26,20,16,.08);--border-2:rgba(26,20,16,.14);
-  --fg:#1a1410;--fg-2:rgba(26,20,16,.78);--dim:rgba(26,20,16,.58);--mute:rgba(26,20,16,.4);
-  --accent:oklch(58% 0.17 55);--accent-2:oklch(48% 0.19 45);--accent-glow:oklch(58% 0.22 55 / .35);--accent-ink:#fff6e8;
-  --code-bg:rgba(26,20,16,.04);
-  --code-key:oklch(48% 0.18 55);
-  --code-str:oklch(46% 0.12 145);
-  --code-com:rgba(26,20,16,.42);
-}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 html{background:var(--bg);scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-.005em;transition:background .4s ease,color .4s ease}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-.005em}
 a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
 a:hover{color:var(--accent)}
 ::selection{background:var(--accent);color:var(--accent-ink)}
@@ -82,10 +70,6 @@ a:hover{color:var(--accent)}
 .nav-brand:hover{color:inherit}
 .nav-brand .mark{width:22px;height:22px;display:inline-block;flex-shrink:0;line-height:0}
 .nav-brand .mark img{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
-.nav-brand .mark .icon-light{display:none}
-[data-theme="light"] .nav-brand .mark .icon-dark{display:none}
-[data-theme="light"] .nav-brand .mark .icon-light{display:block}
-[data-theme="light"] .nav-brand .mark img{filter:drop-shadow(0 2px 6px rgba(26,20,16,.18))}
 .nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
 .nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s;text-decoration:none}
 .nav-links a:hover{color:var(--fg);background:var(--surface)}
@@ -203,12 +187,7 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
         <picture>
           <source type="image/avif" srcset="/assets/logo/odak-dark.avif">
           <source type="image/webp" srcset="/assets/logo/odak-dark.webp">
-          <img class="icon-dark" src="/assets/logo/odak-dark.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
-        </picture>
-        <picture>
-          <source type="image/avif" srcset="/assets/logo/odak.avif">
-          <source type="image/webp" srcset="/assets/logo/odak.webp">
-          <img class="icon-light" src="/assets/logo/odak.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
+          <img src="/assets/logo/odak-dark.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
         </picture>
       </div>
       <span>Odak</span>
@@ -222,9 +201,6 @@ footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:4
       <a href="/changelog.html" style="opacity:.7">Changelog</a>
     </div>
     <div class="nav-cta">
-      <button class="icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-        <svg viewBox="0 0 16 16" id="theme-icon"><path d="M8 2v1m0 10v1m6-6h-1M3 8H2m10.2-4.2l-.7.7M4.5 11.5l-.7.7m8.4 0l-.7-.7M4.5 4.5l-.7-.7"/><circle cx="8" cy="8" r="3"/></svg>
-      </button>
       <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary">Download <span style="font-family:var(--mono);font-size:11px;opacity:.65;font-weight:500">26 MB</span></a>
     </div>
   </div>
@@ -1260,12 +1236,7 @@ actions:          # required
           <picture>
             <source type="image/avif" srcset="/assets/logo/odak-dark.avif">
             <source type="image/webp" srcset="/assets/logo/odak-dark.webp">
-            <img class="icon-dark" src="/assets/logo/odak-dark.png" alt="" width="56" height="56" decoding="async" loading="lazy">
-          </picture>
-          <picture>
-            <source type="image/avif" srcset="/assets/logo/odak.avif">
-            <source type="image/webp" srcset="/assets/logo/odak.webp">
-            <img class="icon-light" src="/assets/logo/odak.png" alt="" width="56" height="56" decoding="async" loading="lazy">
+            <img src="/assets/logo/odak-dark.png" alt="" width="56" height="56" decoding="async" loading="lazy">
           </picture>
         </div>
         <span>Odak</span>
@@ -1317,29 +1288,6 @@ actions:          # required
   window.addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update)},{passive:true});
   update();
 })();
-(function(){
-  // ----- Theme toggle (mirrors index/privacy) -----
-  const KEY='odak-theme';
-  const stored=localStorage.getItem(KEY);
-  const initial=stored||'dark';
-  apply(initial);
-  const btn=document.getElementById('theme-toggle');
-  btn.addEventListener('click',()=>{
-    const next=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
-    localStorage.setItem(KEY,next);
-    apply(next);
-  });
-  function apply(t){
-    document.body.setAttribute('data-theme',t);
-    const icon=document.getElementById('theme-icon');
-    if(icon){
-      icon.innerHTML=t==='dark'
-        ?'<path d="M13 9.5a5 5 0 1 1-6.5-6.5 5 5 0 0 0 6.5 6.5z"/>'
-        :'<path d="M8 2v1m0 10v1m6-6h-1M3 8H2m10.2-4.2l-.7.7M4.5 11.5l-.7.7m8.4 0l-.7-.7M4.5 4.5l-.7-.7"/><circle cx="8" cy="8" r="3"/>';
-    }
-  }
-})();
-
 (function(){
   // ----- Tiny YAML/shell tinting in <pre><code> -----
   // Light-weight on purpose: highlights YAML keys, double-quoted strings,

@@ -29,6 +29,7 @@ const MPA_ENTRIES = [
   "privacy",
   "refund",
   "terms",
+  "docs/actions",
 ] as const;
 const cleanUrlsPlugin = {
   name: "odak:clean-mpa-urls",
@@ -36,7 +37,7 @@ const cleanUrlsPlugin = {
     server.middlewares.use((req, _res, next) => {
       const url = req.url ?? "";
       const match = url.match(
-        /^\/(buy|buy-stage|changelog|privacy|refund|terms)(\?.*)?$/,
+        /^\/(buy|buy-stage|changelog|privacy|refund|terms|docs\/actions)(\?.*)?$/,
       );
       if (match && MPA_ENTRIES.includes(match[1] as (typeof MPA_ENTRIES)[number])) {
         req.url = `/${match[1]}.html${match[2] ?? ""}`;
@@ -81,6 +82,7 @@ export default defineConfig({
         privacy: path.resolve(__dirname, "app/privacy.html"),
         refund: path.resolve(__dirname, "app/refund.html"),
         terms: path.resolve(__dirname, "app/terms.html"),
+        "docs-actions": path.resolve(__dirname, "app/docs/actions.html"),
       },
     },
   },
