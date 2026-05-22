@@ -22,6 +22,44 @@ function gitSha(): string {
   }
 }
 
+// Pull the latest release (highest <sparkle:version> integer) out of
+// appcast.xml so the nav tag, "What's new" link, and Download size
+// badge all track the actual shipped DMG without manual edits. The
+// appcast is the source of truth for releases — the website used to
+// hardcode "v0.1.4" and "26 MB" in three places, which drifted every
+// release. Falls back to package.json + a dash so dev builds without
+// an appcast (tarball checkout) still render.
+function latestRelease(): { version: string; size: string } {
+  try {
+    const xml = readFileSync(path.resolve(__dirname, "appcast.xml"), "utf8");
+    const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)]
+      .map((m) => {
+        const body = m[1];
+        const buildNo = Number(
+          body.match(/<sparkle:version>(\d+)<\/sparkle:version>/)?.[1] ?? 0,
+        );
+        const version = body.match(
+          /<sparkle:shortVersionString>([^<]+)<\/sparkle:shortVersionString>/,
+        )?.[1];
+        const bytes = Number(
+          body.match(/<enclosure[^>]+length="(\d+)"/)?.[1] ?? 0,
+        );
+        return { buildNo, version, bytes };
+      })
+      .filter((i) => i.buildNo && i.version && i.bytes)
+      .sort((a, b) => b.buildNo - a.buildNo);
+    if (!items.length) throw new Error("no appcast items parsed");
+    const top = items[0];
+    return {
+      version: top.version!,
+      size: `${Math.round(top.bytes / (1024 * 1024))} MB`,
+    };
+  } catch {
+    return { version: pkg.version, size: "—" };
+  }
+}
+const release = latestRelease();
+
 // Production hosting rewrites /buy → /buy.html etc.; dev needs the
 // same mapping or Vite's TS resolver wins and serves /buy as the
 // compiled buy.tsx module (Chrome renders the script as text in a
@@ -36,6 +74,19 @@ const MPA_ENTRIES = [
   "terms",
   "docs/actions",
 ] as const;
+// Static HTML pages (currently /docs/actions.html) can't use the
+// __APP_VERSION__/__DMG_SIZE__ defines that React reads, so swap
+// {{APP_VERSION}} and {{DMG_SIZE}} placeholders at build/dev time
+// against the same release info parsed from appcast.xml.
+const htmlReleasePlugin = {
+  name: "odak:html-release-vars",
+  transformIndexHtml(html: string) {
+    return html
+      .replace(/\{\{APP_VERSION\}\}/g, release.version)
+      .replace(/\{\{DMG_SIZE\}\}/g, release.size);
+  },
+};
+
 const cleanUrlsPlugin = {
   name: "odak:clean-mpa-urls",
   configureServer(server: import("vite").ViteDevServer) {
@@ -57,7 +108,7 @@ const cleanUrlsPlugin = {
 // inbound links from Release builds, search engines, and bookmarks keep
 // working after cutover.
 export default defineConfig({
-  plugins: [react(), cleanUrlsPlugin],
+  plugins: [react(), cleanUrlsPlugin, htmlReleasePlugin],
   // Tell Vite this is an MPA so it skips SPA-style index.html fallback
   // and trusts the URL-to-entry mapping (combined with cleanUrlsPlugin
   // above, /buy resolves to /buy.html in dev like it does in prod).
@@ -65,7 +116,8 @@ export default defineConfig({
   root: "app",
   define: {
     __BUILD_SHA__: JSON.stringify(gitSha()),
-    __APP_VERSION__: JSON.stringify(pkg.version),
+    __APP_VERSION__: JSON.stringify(release.version),
+    __DMG_SIZE__: JSON.stringify(release.size),
   },
   // app/public/ contains a symlink to ../assets so CSS paths like
   // url('/assets/bundled/inter-latin.woff2') resolve correctly.

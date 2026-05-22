@@ -65,7 +65,7 @@ export function Nav({
                 fontWeight: 500,
               }}
             >
-              26 MB
+              {__DMG_SIZE__}
             </span>
           </a>
         </div>
