@@ -231,6 +231,7 @@ export function MacbookCarousel() {
   const active = FEATURES[activeIdx];
 
   return (
+    <div className="mc-pin-wrap">
     <section
       ref={sectionRef}
       className="mc-section"
@@ -357,5 +358,6 @@ export function MacbookCarousel() {
         </div>
       </div>
     </section>
+    </div>
   );
 }

@@ -547,9 +547,10 @@ h1.hero-h .accent{
 .hero-stage-combined .hero{
   padding-bottom:0;
 }
-.hero-stage-combined .mc-section{
-  padding-top:clamp(32px, 3.6vw, 56px);
-}
+/* Note: MacbookCarousel is rendered as a sibling of .hero-stage-combined
+   (not nested) so .mc-section can use position:sticky cleanly. The aurora
+   and .grid-bg are page-wide position:fixed, so they continue to bleed
+   behind the features section unchanged. */
 
 /* ==========================================================
    HERO STAGE — the palette mockup framing
@@ -917,6 +918,31 @@ h2.section-h .mute{color:var(--dim)}
    carries the narrative beats. Tabs scroll horizontally on
    mobile.
    ========================================================== */
+/* Pin wrapper — lucien.com-style scroll-pin. The outer wrap is taller
+   than the viewport so .mc-section can become position:sticky inside it
+   and stay glued to the top of the viewport while the user scrolls. The
+   videos drive feature advancement via onEnded (see MacbookCarousel.tsx);
+   scroll only controls when the user is released past the section.
+   On small screens we skip pinning — a 100dvh-tall pin behaves poorly
+   on portrait phones and the natural flow already reads fine.
+   The 250dvh budget gives the user a clear "held" moment (~1.5 screens
+   of pin duration after sticky engages) without locking them on the
+   page longer than the video runtime allows. */
+.mc-pin-wrap{
+  position:relative;
+  isolation:isolate;
+}
+@media (min-width: 721px){
+  .mc-pin-wrap{
+    min-height:calc(100dvh * 2.5);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .mc-pin-wrap{
+    min-height:0;
+  }
+}
+
 .mc-section{
   max-width:1320px;
   margin:0 auto;
@@ -924,7 +950,7 @@ h2.section-h .mute{color:var(--dim)}
      hero CTA, less padding-bottom so the title + lead hug the
      next section. Smaller gap between tabs / stage / meta gives
      a more integrated, Bridgemind-style composition. */
-  padding:clamp(12px, 1.6vw, 28px) var(--gutter) clamp(32px, 4vw, 64px);
+  padding:clamp(32px, 3.6vw, 56px) var(--gutter) clamp(32px, 4vw, 64px);
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -934,6 +960,30 @@ h2.section-h .mute{color:var(--dim)}
   /* Offsets hash-anchor jumps (#features) so the tabs land below the
      sticky 64px nav rather than behind it. */
   scroll-margin-top:64px;
+}
+
+/* Sticky pin — engages on desktop only. Section pins below the nav
+   (64px) and locks to viewport height so the macbook stays centered
+   while the .mc-pin-wrap parent continues to take up scroll budget
+   behind it. */
+@media (min-width: 721px){
+  .mc-pin-wrap > .mc-section{
+    position:sticky;
+    top:64px;
+    height:calc(100dvh - 64px);
+    min-height:0;
+    /* Trim padding so all three pieces (tabs / stage / meta) fit
+       inside a viewport when pinned — the outer pin-wrap reserves
+       its own breathing room above and below the section. */
+    padding-top:clamp(16px, 2vw, 32px);
+    padding-bottom:clamp(20px, 2.4vw, 40px);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .mc-pin-wrap > .mc-section{
+    position:static;
+    height:auto;
+  }
 }
 
 /* Tabs — segmented control with a single sliding pill that animates

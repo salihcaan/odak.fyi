@@ -97,9 +97,9 @@ export function Index() {
           </motion.div>
         </div>
       </section>
+      </div>
 
       <MacbookCarousel />
-      </div>
 
       <div dangerouslySetInnerHTML={{ __html: indexBody }} />
 
