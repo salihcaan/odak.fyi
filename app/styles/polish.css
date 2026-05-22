@@ -6,6 +6,43 @@
    within the established --dur-fast / --ease-out budget.
    ========================================================== */
 
+/* ----- Cross-document view transitions (Chromium 126+, Safari 18+).
+         Opts every same-origin navigation into a soft cross-fade —
+         /buy ↔ /, /changelog ↔ /privacy, etc. — instead of the bare
+         document swap. The nav bar and brand mark are named so the
+         browser morphs them in place across pages rather than fading
+         them out and back in. Browsers without MPA View Transitions
+         get an instant swap (no JS fallback needed); reduced-motion
+         users get a zero-duration animation. ----- */
+@view-transition{
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root){
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.nav{ view-transition-name: site-nav; }
+.nav-brand{ view-transition-name: site-brand; }
+::view-transition-old(site-nav),
+::view-transition-new(site-nav),
+::view-transition-old(site-brand),
+::view-transition-new(site-brand){
+  animation-duration: 260ms;
+  animation-timing-function: var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(site-nav),
+  ::view-transition-new(site-nav),
+  ::view-transition-old(site-brand),
+  ::view-transition-new(site-brand){
+    animation-duration: 0s;
+  }
+}
+
+
 /* ----- Buttons: add a real press state alongside the lift hover.
          transform composites cheaply; layered with the existing
          hover so the press lands inside the same transition. ----- */
