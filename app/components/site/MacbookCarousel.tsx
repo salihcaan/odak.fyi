@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { MacbookFrame, MacbookNotchOverlay } from "./MacbookFrame";
 
 /** A caption beat: shows `text` once `currentTime` of the parent clip
@@ -129,7 +129,6 @@ export function MacbookCarousel() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [subIdx, setSubIdx] = useState(0);
   const [inView, setInView] = useState(false);
-  const [captionText, setCaptionText] = useState<string>("");
   const prefersReducedMotion = useReducedMotion();
 
   const clipSlots: Array<{ featureIdx: number; clipIdx: number; clip: Clip }> = [];
@@ -179,42 +178,33 @@ export function MacbookCarousel() {
     setSubIdx(0);
   }
 
+  // Tab progress fill — tracks playback time across the active
+  // feature's clips so the tab pill fills as the demo plays.
   useEffect(() => {
     const v = videoRefs.current[activeSlot];
     const tab = tabRefs.current[activeIdx];
     if (!v) return;
     const fill = tab?.querySelector<HTMLElement>(".mc-tab-fill") ?? null;
     const cur = FEATURES[activeIdx];
-    const captions = cur.clips[subIdx]?.captions ?? [];
 
     const onTime = () => {
-      if (fill && !prefersReducedMotion) {
-        let total = 0;
-        let elapsed = 0;
-        cur.clips.forEach((_, ci) => {
-          const idx = clipSlots.findIndex(
-            (s) => s.featureIdx === activeIdx && s.clipIdx === ci
-          );
-          const node = videoRefs.current[idx];
-          const d = node?.duration || 0;
-          total += d;
-          if (ci < subIdx) elapsed += d;
-          else if (ci === subIdx) elapsed += node?.currentTime || 0;
-        });
-        const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
-        fill.style.width = `${pct}%`;
-      }
-
-      const t = v.currentTime;
-      let next = "";
-      for (const cap of captions) {
-        if (cap.at <= t) next = cap.text;
-        else break;
-      }
-      setCaptionText((prev) => (prev === next ? prev : next));
+      if (!fill || prefersReducedMotion) return;
+      let total = 0;
+      let elapsed = 0;
+      cur.clips.forEach((_, ci) => {
+        const idx = clipSlots.findIndex(
+          (s) => s.featureIdx === activeIdx && s.clipIdx === ci
+        );
+        const node = videoRefs.current[idx];
+        const d = node?.duration || 0;
+        total += d;
+        if (ci < subIdx) elapsed += d;
+        else if (ci === subIdx) elapsed += node?.currentTime || 0;
+      });
+      const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
+      fill.style.width = `${pct}%`;
     };
 
-    setCaptionText("");
     v.addEventListener("timeupdate", onTime);
     return () => v.removeEventListener("timeupdate", onTime);
   }, [activeIdx, subIdx, activeSlot, prefersReducedMotion]);
@@ -312,6 +302,7 @@ export function MacbookCarousel() {
 
       <div className="mc-stage">
         <div className="mb-stage">
+          <div className="glow" aria-hidden="true" />
           <div className="macbook-wrap">
             <div className="macbook">
               <MacbookFrame />
@@ -332,25 +323,6 @@ export function MacbookCarousel() {
                     style={{ opacity: i === activeSlot ? 1 : 0 }}
                   />
                 ))}
-                <div className="mc-subtitle" aria-live="polite">
-                  <AnimatePresence mode="wait" initial={false}>
-                    {captionText && (
-                      <motion.span
-                        key={captionText}
-                        className="mc-subtitle-text"
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{
-                          duration: prefersReducedMotion ? 0 : 0.28,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                      >
-                        {captionText}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
               </div>
               <MacbookNotchOverlay />
             </div>
