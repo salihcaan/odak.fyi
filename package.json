@@ -2,8 +2,10 @@
   "name": "odak-fyi",
   "private": true,
   "type": "module",
+  "version": "0.1.4",
   "scripts": {
     "dev": "vite",
+    "prebuild": "rm -rf dist",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true"

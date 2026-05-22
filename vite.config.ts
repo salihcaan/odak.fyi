@@ -1,7 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
+
+const pkg = JSON.parse(
+  readFileSync(path.resolve(__dirname, "package.json"), "utf8"),
+) as { version: string };
 
 // Short git SHA at build/dev time. The footer status row shows it so
 // the brand reads as a developer tool that ships frequently. Falls
@@ -60,7 +65,7 @@ export default defineConfig({
   root: "app",
   define: {
     __BUILD_SHA__: JSON.stringify(gitSha()),
-    __APP_VERSION__: JSON.stringify("0.1.4"),
+    __APP_VERSION__: JSON.stringify(pkg.version),
   },
   // app/public/ contains a symlink to ../assets so CSS paths like
   // url('/assets/bundled/inter-latin.woff2') resolve correctly.

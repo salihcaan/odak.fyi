@@ -38,11 +38,11 @@ export function Nav({
           <a href={`${prefix}#faq`}>FAQ</a>
           <a href="/docs/actions.html">Docs</a>
           <a
-            href="/changelog.html#v0-1-4"
+            href={`/changelog.html#v${__APP_VERSION__.replace(/\./g, "-")}`}
             className="nav-changelog"
-            aria-label="What's new in v0.1.4"
+            aria-label={`What's new in v${__APP_VERSION__}`}
           >
-            <span className="tag">v0.1.4</span>
+            <span className="tag">v{__APP_VERSION__}</span>
             <span className="label">What's new</span>
             <span className="arrow" aria-hidden="true">
               <svg viewBox="0 0 12 12">
