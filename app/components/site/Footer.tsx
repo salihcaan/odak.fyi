@@ -95,6 +95,14 @@ export function Footer() {
       </motion.div>
       <div className="foot-bottom">
         <div>© 2026 Odak</div>
+        <div className="foot-status" aria-label="Build status">
+          <span className="foot-status-dot" aria-hidden="true" />
+          <span>v{__APP_VERSION__}</span>
+          <span className="foot-status-sep">·</span>
+          <span className="foot-status-sha">{__BUILD_SHA__}</span>
+          <span className="foot-status-sep">·</span>
+          <span>shipping</span>
+        </div>
         <div className="istanbul">
           Made in Istanbul ·{" "}
           <b>

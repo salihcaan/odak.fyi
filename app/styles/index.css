@@ -2981,6 +2981,31 @@ footer.site-foot{
 .foot-bottom .istanbul{color:var(--fg-2)}
 .foot-bottom .istanbul b{color:var(--accent);font-weight:500}
 
+/* System-status pill — sits in the middle of the footer bottom row,
+   reads "v0.1.4 · 71f8185 · shipping" with a soft green pulse. The
+   dev signal devs scan a developer-tool footer for. SHA is injected
+   from `git rev-parse --short HEAD` at build time. */
+.foot-status{
+  display:inline-flex; align-items:center; gap:6px;
+  color: var(--mute);
+}
+.foot-status-dot{
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #34c47a;
+  box-shadow: 0 0 0 4px rgba(52,196,122,.16);
+  animation: foot-status-pulse 2.6s ease-in-out infinite;
+  flex:0 0 auto;
+}
+.foot-status-sep{ color: var(--faint); }
+.foot-status-sha{ color: var(--fg-2); }
+@keyframes foot-status-pulse{
+  0%, 100%{ box-shadow: 0 0 0 4px rgba(52,196,122,.16); }
+  50%{ box-shadow: 0 0 0 7px rgba(52,196,122,.04); }
+}
+@media (prefers-reduced-motion: reduce){
+  .foot-status-dot{ animation: none; }
+}
+
 /* ==========================================================
    PALETTE ANIMATION — scripted loop on the real-product mockup
    ========================================================== */
