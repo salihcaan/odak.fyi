@@ -3349,12 +3349,8 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
     radial-gradient(ellipse 60% 40% at 80% 85%, oklch(45% 0.22 30 / .42), transparent 70%),
     linear-gradient(155deg,#1d1410 0%, #2a1c14 50%, #14100a 100%);
 }
-/* Faint screen reflection — diagonal highlight */
-.macbook .screen::before{
-  content:'';position:absolute;inset:0;z-index:7;pointer-events:none;
-  background:linear-gradient(115deg, transparent 0%, transparent 35%, rgba(255,255,255,.05) 50%, transparent 65%);
-  mix-blend-mode:screen;
-}
+/* Screen reflection removed — user wants the original video to read
+   clean, no overlays on top of the playback. */
 
 /* Desktop chrome inside the screen. container-type lets descendants
    (caption, etc.) size against the screen rect rather than the viewport. */
