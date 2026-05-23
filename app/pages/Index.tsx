@@ -57,7 +57,7 @@ export function Index() {
       <div className="stage-grid" aria-hidden="true" />
       <section className="hero" id="hero" style={{ position: "relative" }}>
         <div className="hero-text">
-          <motion.h1 className="hero-h" {...enter(0)}>
+          <motion.h1 className="hero-h mt-8 sm:mt-12" {...enter(0)}>
             Any project<br /><span className="accent">Two keys.</span>
           </motion.h1>
 
@@ -94,6 +94,20 @@ export function Index() {
             <span>14-day trial · no card</span>
             <span className="dot"></span>
             <span>macOS 26+ · Apple Silicon</span>
+          </motion.div>
+          
+          <motion.div 
+            className="mt-16 sm:mt-24 pb-12 flex justify-center text-white/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+          >
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+            </motion.div>
           </motion.div>
         </div>
       </section>

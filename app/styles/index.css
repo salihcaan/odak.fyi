@@ -246,13 +246,13 @@ body.scrolling .aurora::after{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px var(--gutter);gap:24px;
 }
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:16px}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:18px}
 /* Brand mark — uses the real Odak app icon (terracotta ⌘) shipped from
    assets/logo/. The PNG already carries its own rounded square + soft
    shadow + glow, so the wrapper is a clean inline-block — no gradient
    or box-shadow that would double up on the icon's own. */
 .nav-brand .mark{
-  width:22px;height:22px;display:inline-block;flex-shrink:0;line-height:0;
+  width:28px;height:28px;display:inline-block;flex-shrink:0;line-height:0;
 }
 .nav-brand .mark img{
   width:100%;height:100%;display:block;
@@ -323,13 +323,21 @@ body.scrolling .aurora::after{
 .btn-primary{
   background:var(--fg);color:var(--bg);
   padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:-.005em;
-  border:1px solid var(--fg);
+  border:1px solid transparent;
   display:inline-flex;align-items:center;gap:8px;
-  transition:transform .15s, box-shadow .2s;
+  transition:transform .3s ease, box-shadow .3s ease, background .3s ease;
   cursor:pointer;
   white-space:nowrap;
+  position:relative;
+  z-index:1;
 }
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px -4px color-mix(in oklch, var(--fg) 40%, transparent)}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.25),
+    0 10px 40px -10px rgba(255,255,255,0.3),
+    0 0 40px -8px rgba(218,84,39,0.5); /* #DA5427 (warm accent) glow */
+}
 
 
 
@@ -393,7 +401,7 @@ h1.hero-h{
   line-height:.88;
   letter-spacing:-.04em;
   font-weight:800;
-  margin:0 0 28px;
+  margin-bottom:28px;
   max-width:100%;
   color:#fff;
 }
@@ -942,8 +950,40 @@ h2.section-h .mute{color:var(--dim)}
     min-height:0;
   }
 }
+/* Ambient Parallax Particles for scroll progression cue. 
+   Creates a sleek 3D depth effect as blurred glowing orbs drift
+   upwards behind the sticky Macbook section at different speeds. */
+.mc-particles {
+  display:none;
+}
+@media (min-width: 721px) {
+  .mc-particles {
+    display:block;
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%);
+  }
+  .mc-particle-layer {
+    position:absolute;
+    top:0; left:0; right:0; 
+    height:150%;
+  }
+  .mc-dot {
+    position:absolute;
+    border-radius:50%;
+    background:var(--accent);
+    filter:blur(32px);
+    box-shadow:0 0 60px var(--accent-glow);
+    mix-blend-mode:screen;
+  }
+}
 
 .mc-section{
+  position:relative;
   max-width:1320px;
   margin:0 auto;
   /* Tightened: less padding-top so the tabs sit right under the
