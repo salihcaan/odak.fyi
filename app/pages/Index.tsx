@@ -118,8 +118,9 @@ export function Index() {
             <IdeMarquee />
           </motion.div>
 
-          <motion.div
-            className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40"
+          <motion.a
+            href="#features"
+            className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40 hover:text-white/80 transition-colors"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
@@ -130,7 +131,7 @@ export function Index() {
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
             </motion.div>
-          </motion.div>
+          </motion.a>
         </div>
       </section>
       </div>
