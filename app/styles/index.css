@@ -108,7 +108,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px;scroll-snap-type:y mandatory}
 body{
   /* No background here on purpose — html already paints --bg. Adding a
      body bg covers fixed z-index:-1 ambient layers (aurora siblings)
@@ -647,6 +647,7 @@ h1.hero-h .accent{
   position:relative;
   isolation:isolate;
   overflow:hidden;  /* clips the corner bloom + grid bleed */
+  scroll-snap-align:start;
 }
 /* Warm center bloom + vignette. The vignette is the second stop
    that ramps to ~0 at the edges so the corners darken slightly,
@@ -965,6 +966,7 @@ section.block{
   padding:calc(var(--space-section) - 48px) var(--gutter) 48px;
   position:relative;
   scroll-margin-top:64px;
+  scroll-snap-align:start;
 }
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
    ornament (aurora, glow, grain) lives in the background — eyebrows
@@ -1071,10 +1073,11 @@ h2.section-h .mute{color:var(--dim)}
 .mc-pin-wrap{
   position:relative;
   isolation:isolate;
+  scroll-snap-align:start;
 }
 @media (min-width: 721px){
   .mc-pin-wrap{
-    min-height:calc(100dvh * 1.6);
+    min-height:100dvh;
   }
 }
 @media (prefers-reduced-motion: reduce){
