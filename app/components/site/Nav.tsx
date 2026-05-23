@@ -1,4 +1,5 @@
 import { useScrollNav } from "@/hooks/useScrollNav";
+import { captureEvent } from "@/lib/analytics";
 import { Mark } from "./Logo";
 
 // Full-site nav with the page links menu. Used by index, changelog,
@@ -20,12 +21,12 @@ export function Nav({
     <nav className="nav">
       <div className="nav-inner">
         <a href={hashHrefs ? "#" : "/"} className="nav-brand">
-          <Mark />
+          <Mark size={28} />
           <span>Odak</span>
         </a>
         <div className="nav-links">
           <a href={`${prefix}#features`}>Features</a>
-          <a href={`${prefix}#positioning`}>Positioning</a>
+          <a href={`${prefix}#comparison`}>Comparison</a>
           <a href={`${prefix}#pricing`}>Pricing</a>
           {showBuy && (
             <a
@@ -55,7 +56,24 @@ export function Nav({
           <a
             href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
             className="btn-primary"
+            onClick={() =>
+              captureEvent("download_clicked", {
+                source: "nav",
+                version: __APP_VERSION__,
+              })
+            }
           >
+            <svg
+              viewBox="0 0 14 17"
+              style={{
+                width: 12,
+                height: 14,
+                fill: "currentColor",
+                marginTop: -2,
+              }}
+            >
+              <use href="#mb-apple" />
+            </svg>
             Download{" "}
             <span
               style={{
@@ -83,7 +101,7 @@ export function NavBuy() {
     <nav className="nav">
       <div className="nav-inner">
         <a href="/" className="nav-brand">
-          <Mark />
+          <Mark size={20} />
           <span>Odak</span>
         </a>
         <div className="nav-cta">

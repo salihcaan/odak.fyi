@@ -114,6 +114,9 @@ export default defineConfig({
   // above, /buy resolves to /buy.html in dev like it does in prod).
   appType: "mpa",
   root: "app",
+  // Load .env files from the repo root, not from `app/`, so .env.local
+  // sits next to package.json where deploy tooling expects it.
+  envDir: "..",
   define: {
     __BUILD_SHA__: JSON.stringify(gitSha()),
     __APP_VERSION__: JSON.stringify(release.version),

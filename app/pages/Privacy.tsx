@@ -18,11 +18,12 @@ export function Privacy() {
           exactly what's collected, what isn't, and where the few pieces I do
           see end up.
         </p>
-        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-10</p>
+        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-23</p>
 
         <div className="toc" aria-label="Table of contents">
           <ol>
             <li><a href="#who">Who I am</a></li>
+            <li><a href="#website">This website</a></li>
             <li><a href="#app">The macOS app</a></li>
             <li><a href="#purchases">Purchases &amp; Paddle</a></li>
             <li><a href="#support">Support email</a></li>
@@ -53,7 +54,57 @@ export function Privacy() {
           ).
         </p>
 
-        <h2 id="app">2. The macOS app</h2>
+        <h2 id="website">2. This website</h2>
+        <p><strong>Anonymous, cookieless analytics. No banner needed.</strong></p>
+        <div className="box">
+          <p>
+            Odak.fyi runs page-view analytics through{" "}
+            <a href="https://posthog.com" target="_blank" rel="noopener">
+              PostHog
+            </a>{" "}
+            in its strictest privacy mode. No cookies are set, nothing is
+            written to your browser's storage, and no cross-session
+            identifier is created. Because there is no terminal storage and
+            no persistent ID, EU/UK ePrivacy and GDPR do not require an
+            opt-in banner for this configuration — this disclosure is the
+            consent regime.
+          </p>
+        </div>
+        <p>The website analytics SDK is configured to:</p>
+        <ul>
+          <li>
+            <strong>Use in-memory persistence only</strong> (
+            <code>persistence: "memory"</code>) — no cookies, no
+            localStorage, no sessionStorage
+          </li>
+          <li>
+            <strong>Never create person profiles</strong> (
+            <code>person_profiles: "never"</code>) — events carry no user
+            record
+          </li>
+          <li>
+            <strong>Disable autocapture</strong>, session recording, and
+            surveys — only the explicit page-view event is sent
+          </li>
+          <li>
+            <strong>Not collect IP addresses</strong> (
+            <code>ip: false</code>, mirrored by the PostHog project's own
+            IP-scrub setting)
+          </li>
+        </ul>
+        <p>
+          What ships per page view: the URL path, the page title, the
+          referring URL (when your browser sends one), the browser/OS bucket
+          PostHog derives from your <code>User-Agent</code>, and a viewport
+          width bucket. That's it.
+        </p>
+        <p>
+          <strong>Never sent in any website event:</strong> your IP address,
+          any persistent identifier, form contents, scroll depth, click
+          targets, or anything you type into the page.
+        </p>
+
+        <h2 id="app">3. The macOS app</h2>
         <p><strong>Local by default. Telemetry only if you opt in.</strong></p>
         <div className="box">
           <p>
@@ -235,7 +286,7 @@ export function Privacy() {
           revalidation sends only the JWT — no fresh deviceId or deviceName.
         </p>
 
-        <h2 id="purchases">3. Purchases &amp; Paddle</h2>
+        <h2 id="purchases">4. Purchases &amp; Paddle</h2>
         <p>
           <strong>Paddle handles checkout. I never see your card.</strong>
         </p>
@@ -263,7 +314,7 @@ export function Privacy() {
           emails (license delivery, receipts, important update notices).
         </p>
 
-        <h2 id="support">4. Support email</h2>
+        <h2 id="support">5. Support email</h2>
         <p><strong>Your email sits in my inbox until I reply.</strong></p>
         <p>
           Write to <a href="mailto:support@odak.fyi">support@odak.fyi</a> or{" "}
@@ -271,7 +322,7 @@ export function Privacy() {
           anyone to a marketing list — there isn't one.
         </p>
 
-        <h2 id="rights">5. Your rights</h2>
+        <h2 id="rights">6. Your rights</h2>
         <p>
           <strong>You can ask me to see, fix, or delete what I hold.</strong>
         </p>
@@ -298,7 +349,7 @@ export function Privacy() {
           .
         </p>
 
-        <h2 id="retention">6. Retention</h2>
+        <h2 id="retention">7. Retention</h2>
         <p><strong>Kept only as long as needed.</strong></p>
         <ul>
           <li>Server access logs: up to 30 days.</li>
@@ -313,14 +364,14 @@ export function Privacy() {
           </li>
         </ul>
 
-        <h2 id="changes">7. Changes</h2>
+        <h2 id="changes">8. Changes</h2>
         <p><strong>I update this page when things change.</strong></p>
         <p>
           The "Last updated" date at the top reflects the latest revision.
           Material changes that affect paying customers go out by email.
         </p>
 
-        <h2 id="contact">8. Contact</h2>
+        <h2 id="contact">9. Contact</h2>
         <div className="box">
           <p>
             <strong>Hasan Salih Can</strong> (sole proprietor)

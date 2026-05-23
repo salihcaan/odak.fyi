@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { MacbookFrame, MacbookNotchOverlay } from "./MacbookFrame";
 
 /** A caption beat: shows `text` once `currentTime` of the parent clip
- *  crosses `at` (seconds). Latest matching beat wins. */
-type Caption = { at: number; text: string };
+ *  crosses `at` (seconds). Latest matching beat wins. Optional `ides`
+ *  renders a row of editor icons inside the pill. */
+type Caption = { at: number; text: string; ides?: string[] };
 
 type Clip = {
   src: string;
   captions: Caption[];
 };
+
+const IDE = {
+  cursor: "/assets/ide/cursor.webp",
+  vscode: "/assets/ide/vscode.webp",
+  intellij: "/assets/ide/intellij.webp",
+  antigravity: "/assets/ide/antigravity.png",
+  xcode: "/assets/ide/xcode.webp",
+  androidStudio: "/assets/ide/android-studio.png",
+} as const;
 
 type Feature = {
   id: string;
@@ -45,7 +55,11 @@ const FEATURES: Feature[] = [
         captions: [
           { at: 1.0, text: "⌥ Space." },
           { at: 3.5, text: "Find any project." },
-          { at: 7.0, text: "Open it — in any editor." },
+          {
+            at: 7.0,
+            text: "Open it — in any editor.",
+            ides: [IDE.cursor, IDE.vscode, IDE.intellij, IDE.antigravity, IDE.xcode, IDE.androidStudio],
+          },
           { at: 11.5, text: "Same shortcut, every project." },
           { at: 16.5, text: "From anywhere." },
         ],
@@ -68,7 +82,11 @@ const FEATURES: Feature[] = [
         captions: [
           { at: 1.5, text: "⌥ Tab — every window you have open." },
           { at: 6.0, text: "Across every editor." },
-          { at: 11.0, text: "Same project, different IDE? Listed separately." },
+          {
+            at: 11.0,
+            text: "Same project, different IDE? Listed separately.",
+            ides: [IDE.cursor, IDE.vscode, IDE.intellij],
+          },
           { at: 18.0, text: "Pick. Press. Done." },
         ],
       },
@@ -114,7 +132,7 @@ const FEATURES: Feature[] = [
           { at: 1.5, text: "Click the notch." },
           { at: 4.5, text: "Every project window, one menu." },
           { at: 9.5, text: "Pick — and you're there." },
-          { at: 15.5, text: "Same project, another IDE." },
+          { at: 15.5, text: "Same project, another IDE.", ides: [IDE.cursor, IDE.vscode] },
           { at: 19.5, text: "From any app, always one click away." },
         ],
       },
@@ -130,6 +148,7 @@ export function MacbookCarousel() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [subIdx, setSubIdx] = useState(0);
   const [inView, setInView] = useState(false);
+  const [activeCaption, setActiveCaption] = useState<Caption | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -196,25 +215,36 @@ export function MacbookCarousel() {
     if (!v) return;
     const fill = tab?.querySelector<HTMLElement>(".mc-tab-fill") ?? null;
     const cur = FEATURES[activeIdx];
+    const captions = cur.clips[subIdx]?.captions ?? [];
 
     const onTime = () => {
-      if (!fill || prefersReducedMotion) return;
-      let total = 0;
-      let elapsed = 0;
-      cur.clips.forEach((_, ci) => {
-        const idx = clipSlots.findIndex(
-          (s) => s.featureIdx === activeIdx && s.clipIdx === ci
-        );
-        const node = videoRefs.current[idx];
-        const d = node?.duration || 0;
-        total += d;
-        if (ci < subIdx) elapsed += d;
-        else if (ci === subIdx) elapsed += node?.currentTime || 0;
-      });
-      const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
-      fill.style.width = `${pct}%`;
+      if (fill && !prefersReducedMotion) {
+        let total = 0;
+        let elapsed = 0;
+        cur.clips.forEach((_, ci) => {
+          const idx = clipSlots.findIndex(
+            (s) => s.featureIdx === activeIdx && s.clipIdx === ci
+          );
+          const node = videoRefs.current[idx];
+          const d = node?.duration || 0;
+          total += d;
+          if (ci < subIdx) elapsed += d;
+          else if (ci === subIdx) elapsed += node?.currentTime || 0;
+        });
+        const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
+        fill.style.width = `${pct}%`;
+      }
+
+      const t = v.currentTime;
+      let next: Caption | null = null;
+      for (const cap of captions) {
+        if (cap.at <= t) next = cap;
+        else break;
+      }
+      setActiveCaption((prev) => (prev?.text === next?.text ? prev : next));
     };
 
+    setActiveCaption(null);
     v.addEventListener("timeupdate", onTime);
     return () => v.removeEventListener("timeupdate", onTime);
   }, [activeIdx, subIdx, activeSlot, prefersReducedMotion]);
@@ -350,6 +380,32 @@ export function MacbookCarousel() {
                     style={{ opacity: i === activeSlot ? 1 : 0 }}
                   />
                 ))}
+                <div className="mc-subtitle" aria-live="polite">
+                  <AnimatePresence mode="wait" initial={false}>
+                    {activeCaption && (
+                      <motion.span
+                        key={activeCaption.text}
+                        className="mc-subtitle-text"
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{
+                          duration: prefersReducedMotion ? 0 : 0.28,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                      >
+                        <span className="mc-subtitle-copy">{activeCaption.text}</span>
+                        {activeCaption.ides && activeCaption.ides.length > 0 && (
+                          <span className="mc-subtitle-ides" aria-hidden="true">
+                            {activeCaption.ides.map((src) => (
+                              <img key={src} src={src} alt="" loading="lazy" />
+                            ))}
+                          </span>
+                        )}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
               <MacbookNotchOverlay />
             </div>

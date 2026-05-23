@@ -6,10 +6,11 @@ import { IdeMarquee } from "@/components/site/IdeMarquee";
 import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
 import { SvgSprite } from "@/components/site/SvgSprite";
+import { captureEvent } from "@/lib/analytics";
 import indexBody from "../legacy/index-body.html?raw";
 
 // Index = home. Hero text on top, MacbookCarousel (compact tabbed card)
-// below it, then the legacy HTML body for positioning/pricing/faq. Legacy
+// below it, then the legacy HTML body for comparison/pricing/faq. Legacy
 // HTML carries stable DOM ids the inline-JS demos in
 // legacy/index-runtime.js target — the runtime script is appended after
 // first paint via useEffect so React's commit beats it to the DOM.
@@ -58,8 +59,8 @@ export function Index() {
       <div className="stage-grid" aria-hidden="true" />
       <section className="hero" id="hero" style={{ position: "relative" }}>
         <div className="hero-text">
-          <motion.div className="mt-8 sm:mt-12" {...enter(0)}>
-            <span className="hero-eyebrow">macOS launcher for developer projects</span>
+          <motion.div className="mt-2 sm:mt-4" {...enter(0)}>
+            <span className="hero-eyebrow">Project launcher for developers</span>
           </motion.div>
 
           <motion.h1 className="hero-h" {...enter(0.09)}>
@@ -67,14 +68,21 @@ export function Index() {
           </motion.h1>
 
           <motion.p className="hero-sub" {...enter(0.18)}>
-            Press ⌥ Space, type three letters, hit ↵. Odak brings the right
-            window into focus — even across ten Cursor windows.
+            Open or switch to any project from your keyboard. Hit ⌥ Space,
+            type a few letters, press ↵ — Odak launches it or focuses
+            the window if it's already open.
           </motion.p>
 
           <motion.div className="hero-cta" {...enter(0.27)}>
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
               className="btn-primary"
+              onClick={() =>
+                captureEvent("download_clicked", {
+                  source: "hero",
+                  version: __APP_VERSION__,
+                })
+              }
             >
               Try free for 14 days <span className="k">⌘ + D</span>
             </a>
@@ -111,7 +119,7 @@ export function Index() {
           </motion.div>
 
           <motion.div
-            className="mt-8 sm:mt-12 pb-12 flex justify-center text-white/30"
+            className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}

@@ -5,6 +5,14 @@ dist/
 .vite/
 design-system/
 
+# Vite env — only .env.example is checked in
+.env
+.env.local
+.env.*.local
 
 # Playwright MCP debug logs/snapshots
 .playwright-mcp/
+
+# Throwaway visual-verification screenshots dropped by Playwright MCP
+# into the repo root when filename param lacks a directory prefix.
+/*.png

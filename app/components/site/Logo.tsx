@@ -1,5 +1,5 @@
 export function Mark({
-  size = 22,
+  size = 32,
   fetchPriority = "high",
   loading = "eager",
 }: {

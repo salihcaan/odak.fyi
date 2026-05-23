@@ -33,7 +33,7 @@ export function Footer() {
         variants={gridVariants}
       >
         <motion.div className="foot-brand" variants={colVariants}>
-          <a href="/" className="nav-brand" style={{ fontSize: 18 }}>
+          <a href="/" className="nav-brand">
             <Mark size={28} loading="lazy" fetchPriority="auto" />
             <span>Odak</span>
           </a>

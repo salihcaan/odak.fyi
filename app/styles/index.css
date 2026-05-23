@@ -15,17 +15,14 @@
   --mute:       rgba(255,255,255,.38);
   --faint:      rgba(255,255,255,.18);
 
-  /* accent — saffron, not honey. Sits in the amber-gold family the
-     brand started with, but with enough chroma to read as a deliberate
-     warm against the cool charcoal shell instead of a faded gold.
-     Used rarely on purpose. */
-  --accent:     oklch(78% 0.18 70);
-  --accent-2:   oklch(68% 0.17 55);
-  --accent-glow: oklch(78% 0.20 70 / .35);
+  /* accent — a slightly refined version of the original terracotta/saffron.
+     Retains the warmth but dialed in for a more polished, professional glow. */
+  --accent:     oklch(76% 0.16 60);
+  --accent-2:   oklch(66% 0.16 55);
+  --accent-glow: oklch(76% 0.18 60 / .28);
   --accent-ink: #161210;
-  /* second ambient blob — dropped to near-transparent so the hero reads
-     as a single warm halo instead of a wash. */
-  --accent-warm-2: oklch(55% 0.18 25 / .14);
+  /* secondary ambient blob — faint warm halo */
+  --accent-warm-2: oklch(60% 0.14 45 / .12);
 
   /* product layer — the real app's default "Classic" accent #2B5AAA */
   --prod-blue:   #2B5AAA;
@@ -246,19 +243,19 @@ body.scrolling .aurora::after{
   display:flex;align-items:center;justify-content:space-between;
   padding:14px var(--gutter);gap:24px;
 }
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:18px}
+.nav-brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:-.02em;font-size:19px}
 /* Brand mark — uses the real Odak app icon (terracotta ⌘) shipped from
    assets/logo/. The PNG already carries its own rounded square + soft
    shadow + glow, so the wrapper is a clean inline-block — no gradient
    or box-shadow that would double up on the icon's own. */
 .nav-brand .mark{
-  width:28px;height:28px;display:inline-block;flex-shrink:0;line-height:0;
+  width:22px;height:22px;display:inline-block;flex-shrink:0;line-height:0;
 }
 .nav-brand .mark img{
   width:100%;height:100%;display:block;
-  /* Subtle drop-shadow lifts the icon off the nav surface at 22px —
-     the icon's own shadow is tuned for full-size dock display and
-     fades away when downscaled this far. */
+  /* Subtle drop-shadow lifts the icon off the nav surface — the
+     icon's own shadow is tuned for full-size dock display and fades
+     when downscaled to nav size. */
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
 }
 .nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
@@ -273,24 +270,28 @@ body.scrolling .aurora::after{
 .nav-changelog{
   display:inline-flex;align-items:center;gap:8px;
   height:32px;padding:0 12px;
-  background:color-mix(in oklch, var(--accent) 10%, transparent);
-  border:1px solid color-mix(in oklch, var(--accent) 35%, transparent);
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:999px;
-  color:var(--accent);
+  color:var(--fg-2);
   font-size:12px;font-weight:500;letter-spacing:-.003em;
   white-space:nowrap;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   transition:background .15s var(--ease-out),
              border-color .15s var(--ease-out),
-             transform .15s var(--ease-out);
+             transform .15s var(--ease-out),
+             box-shadow .15s var(--ease-out);
 }
 .nav-changelog:hover{
-  background:color-mix(in oklch, var(--accent) 16%, transparent);
-  border-color:color-mix(in oklch, var(--accent) 55%, transparent);
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
 .nav-changelog .tag{
   font-family:var(--mono);
   font-size:10.5px;font-weight:600;letter-spacing:.04em;
-  color:var(--accent);
+  color:var(--fg);
   opacity:.95;
 }
 .nav-changelog .label{
@@ -301,24 +302,29 @@ body.scrolling .aurora::after{
 .nav-changelog .arrow{
   display:inline-flex;align-items:center;
   width:10px;height:10px;
-  color:var(--accent);
-  transition:transform .2s var(--ease-out);
+  color:var(--fg-2);
+  transition:transform .2s var(--ease-out), color .2s var(--ease-out);
+}
+.nav-changelog:hover .arrow{
+  color:var(--fg);
+  transform:translateX(2px);
 }
 .nav-changelog .arrow svg{
   width:100%;height:100%;
   stroke:currentColor;fill:none;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;
 }
-.nav-changelog:hover .arrow{transform:translateX(2px)}
 @media (max-width:760px){
   .nav-changelog{display:none}
 }
 .nav-cta .icon-btn{
   width:32px;height:32px;display:grid;place-items:center;border-radius:8px;
-  background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--fg-2);
-  transition:background .15s, color .15s;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  cursor:pointer;color:var(--fg-2);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:background .15s, border-color .15s, color .15s, transform .15s;
 }
-.nav-cta .icon-btn:hover{background:var(--surface-2);color:var(--fg)}
+.nav-cta .icon-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--fg);transform:translateY(-1px)}
 .nav-cta .icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
 .btn-primary{
   background:var(--fg);color:var(--bg);
@@ -441,47 +447,60 @@ a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
   font-family:var(--mono);
-  font-size:12px;
-  letter-spacing:.14em;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.12em;
   text-transform:uppercase;
-  color:rgba(255,255,255,.55);
+  color:var(--fg-2);
   margin-bottom:20px;
   padding:6px 12px;
-  border:1px solid rgba(255,255,255,.1);
   border-radius:999px;
-  background:rgba(255,255,255,.02);
+  background:linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.01) 100%);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
 .hero-eyebrow::before{
   content:"";
-  width:6px;height:6px;border-radius:50%;
+  width:4px;height:4px;border-radius:50%;
   background:var(--accent);
   box-shadow:0 0 8px var(--accent-glow);
 }
 h1.hero-h{
   font-family:var(--display);
   font-size:clamp(48px, 8vw, 112px);
-  line-height:.88;
-  letter-spacing:-.04em;
+  line-height:.82;
+  letter-spacing:-.05em;
   font-weight:800;
   margin-bottom:28px;
   max-width:100%;
   color:#fff;
+  padding-bottom: 0.15em; /* prevents y descender clipping */
 }
 /* Bridgemind-style gradient on the muted half of the headline:
    solid-looking text that fades from 65% white at the top of the
    glyphs to 28% at the bottom. Reads as "lit from above" and gives
    the line a sense of depth that a flat opacity never does. */
 h1.hero-h .accent{
-  font-style:normal;
-  background:linear-gradient(
+  font-style: normal;
+  /* Bridgemind-style vertical gradient. box-decoration-break:clone makes each
+     wrapped line get its own full-range gradient (without it the gradient
+     would span both lines, dimming line 2). Vertical padding extends the
+     paint area beyond the tight line-height:.82 line box so the bottom of
+     round letters (o, e) doesn't fall outside the gradient and render as
+     transparent. */
+  background: linear-gradient(
     180deg,
-    rgba(255,255,255,.7) 0%,
-    rgba(255,255,255,.3) 100%
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,255,255,0.55) 100%
   );
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-  color:transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0.25em 0.05em;
+  margin: 0 -0.05em;
 }
 .hero-sub{
   font-size:18px;line-height:1.55;color:rgba(255,255,255,.7);
@@ -493,6 +512,57 @@ h1.hero-h .accent{
   font-family:var(--mono);font-size:11px;opacity:.6;
   padding:2px 6px;background:color-mix(in oklch, var(--bg) 30%, transparent);
   border-radius:4px;margin-left:4px;
+}
+
+/* Rotating conic-gradient halo on the hero's primary CTA only. ::before
+   carries the orbiting light (blurred, behind everything). ::after carries
+   the button's normal --fg fill so the halo only shows in the bleed past
+   the button's perimeter, not across the button face. Scoped to .hero-cta
+   so .nav-cta's Download button stays calm. */
+@property --halo-angle{
+  syntax:"<angle>";
+  initial-value:0deg;
+  inherits:false;
+}
+.hero-cta .btn-primary{
+  background:transparent;
+  isolation:isolate;
+}
+.hero-cta .btn-primary::before{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius:16px;
+  background:conic-gradient(
+    from var(--halo-angle),
+    transparent 0deg,
+    var(--accent) 40deg,
+    transparent 110deg,
+    transparent 360deg
+  );
+  filter:blur(14px);
+  opacity:.75;
+  z-index:-2;
+  pointer-events:none;
+  animation:hero-cta-halo 4s linear infinite;
+}
+.hero-cta .btn-primary::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:var(--fg);
+  z-index:-1;
+  pointer-events:none;
+}
+@keyframes hero-cta-halo{
+  to{ --halo-angle:360deg; }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-cta .btn-primary::before{
+    animation:none;
+    opacity:.4;
+  }
 }
 /* Apple-style accent text link CTA: equal visual weight with the filled
    primary, colored, with a chevron that animates toward its destination.
@@ -615,7 +685,7 @@ h1.hero-h .accent{
   z-index:1;
 }
 .hero-stage-combined .hero{
-  padding-bottom:0;
+  padding-bottom:40px;
 }
 /* Note: MacbookCarousel is rendered as a sibling of .hero-stage-combined
    (not nested) so .mc-section can use position:sticky cleanly. The aurora
@@ -1252,7 +1322,10 @@ h2.section-h .mute{color:var(--dim)}
   min-height:1.6em;
 }
 .mc-subtitle-text{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55em;
   font-family:var(--sans);
   font-size:clamp(13px, 1.7vw, 22px);
   font-weight:600;
@@ -1272,6 +1345,18 @@ h2.section-h .mute{color:var(--dim)}
     0 2px 8px rgba(0,0,0,.35);
   text-shadow:0 1px 2px rgba(0,0,0,.45);
   will-change:opacity, transform;
+}
+.mc-subtitle-copy{ display:inline-block; }
+.mc-subtitle-ides{
+  display:inline-flex;
+  align-items:center;
+  gap:.3em;
+}
+.mc-subtitle-ides img{
+  display:block;
+  width:1.35em;height:1.35em;
+  object-fit:contain;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.45));
 }
 
 /* Meta block below the macbook — Flowy-style single caption line.
@@ -2536,10 +2621,10 @@ h2.section-h .mute{color:var(--dim)}
    heading + block read as one centered unit; the heading is
    sized down to match the dense table below instead of dwarfing
    it like the page's larger section-h would. */
-#positioning .section-head{
+#comparison .section-head{
   max-width:680px;
 }
-#positioning h2.section-h{
+#comparison h2.section-h{
   max-width:none;
 }
 
@@ -2577,15 +2662,15 @@ h2.section-h .mute{color:var(--dim)}
   color:color-mix(in oklch, var(--fg) 55%, transparent);
   text-align:center;
 }
-/* ODAK header — the lone amber accent in the entire table. A
+/* Odak header — the lone amber accent in the entire table. A
    small dot prefix marks the brand column; the label itself stays
-   in the same family weight as competitors (no shouty 700/16px). */
+   in the same family weight as competitors (no shouty 700/16px) and
+   in proper case to match Raycast/AltTab/Spotlight. */
 .pos-compare-thead .h-col.us{
   color:var(--fg);
   font-size:13px;
   font-weight:600;
-  letter-spacing:.01em;
-  text-transform:uppercase;
+  letter-spacing:-.005em;
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
 }
 .pos-compare-thead .h-col.us::before{
@@ -4233,7 +4318,7 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
      and is in-viewport on most loads anyway, so the perf cost of
      omitting it is small and the visual win is unambiguous. */
   #features      { content-visibility:auto; contain-intrinsic-size:1px 2400px; }
-  #positioning   { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
+  #comparison    { content-visibility:auto; contain-intrinsic-size:1px 800px;  }
   #pricing       { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
   #faq           { content-visibility:auto; contain-intrinsic-size:1px 700px;  }
   .site-foot     { content-visibility:auto; contain-intrinsic-size:1px 360px;  }

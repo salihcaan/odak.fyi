@@ -1229,12 +1229,16 @@
 
   card.addEventListener('pointerleave', () => {
     card.removeAttribute('data-tilt-active');
-    target = { rx: 0, ry: 0, mx: 50, my: 0 };
-    // Reset Z too; CSS transition handles the glide back.
+    // Reset rotation + lift so the card glides back to flat (CSS
+    // transitions the transform). Leave --tilt-mx/--tilt-my alone:
+    // the specular gradient doesn't transition, so resetting it
+    // here would snap the highlight to a default position mid-fade.
+    // Letting it stay where the cursor exited means it fades out
+    // in place; next pointermove overwrites it on re-entry.
+    target.rx = 0;
+    target.ry = 0;
     card.style.setProperty('--tilt-x', '0deg');
     card.style.setProperty('--tilt-y', '0deg');
     card.style.setProperty('--tilt-z', '0px');
-    card.style.setProperty('--tilt-mx', '50%');
-    card.style.setProperty('--tilt-my', '0%');
   });
 })();
