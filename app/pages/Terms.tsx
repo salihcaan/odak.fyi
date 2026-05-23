@@ -17,7 +17,7 @@ export function Terms() {
           These terms govern your use of the Odak website and macOS
           application, and the licence you receive when you buy Odak.
         </p>
-        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-10</p>
+        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-23</p>
 
         <div className="toc" aria-label="Table of contents">
           <ol>
@@ -44,17 +44,18 @@ export function Terms() {
           <code>odak.fyi</code>, you ("you", the "User") agree to these Terms.
         </p>
         <p>
-          Paid purchases are processed by our authorised reseller and Merchant
-          of Record, <strong>Paddle.com Market Limited</strong> ("Paddle").
-          Paddle's{" "}
+          Paid purchases are sold and fulfilled by our authorised reseller and
+          Merchant of Record, <strong>Polar Software Inc.</strong> ("Polar").
+          For the purchase transaction itself, Polar is the seller of record,
+          and Polar's{" "}
           <a
-            href="https://www.paddle.com/legal/checkout-buyer-terms"
+            href="https://polar.sh/legal/checkout-buyer-terms"
             target="_blank"
             rel="noopener"
           >
             Checkout Buyer Terms
           </a>{" "}
-          apply to the transaction itself.
+          apply.
         </p>
 
         <h2 id="trial">2. The free trial</h2>
@@ -68,15 +69,16 @@ export function Terms() {
         <h2 id="purchase">3. Purchase &amp; payment</h2>
         <p>
           Odak is sold for a <strong>one-time fee of US$19</strong> (price as
-          listed at checkout; local taxes are added by Paddle where
-          applicable). Checkout is operated by Paddle, who collects payment,
-          charges and remits any applicable tax (VAT, GST, sales tax), and
-          issues your receipt. We never see or store your card details.
+          listed at checkout; local taxes are added by Polar where applicable).
+          Checkout is operated by Polar as the seller of record, who collects
+          payment, charges and remits any applicable tax (VAT, GST, sales
+          tax), and issues your receipt. We never see or store your card
+          details.
         </p>
         <p>
           By completing a purchase you confirm that you have read and accepted
           these Terms, the <a href="/refund.html">Refund Policy</a>, and
-          Paddle's buyer terms shown at checkout.
+          Polar's buyer terms shown at checkout.
         </p>
 
         <h2 id="licence">4. Licence grant</h2>

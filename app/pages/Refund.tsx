@@ -17,7 +17,7 @@ export function Refund() {
           If Odak isn't right for you, get your money back. No forms, no
           friction.
         </p>
-        <p className="meta">Effective 2026-04-25 · Last updated 2026-04-25</p>
+        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-23</p>
 
         <div className="callout">
           <p>
@@ -50,22 +50,23 @@ export function Refund() {
               support@odak.fyi
             </a>{" "}
             with the subject line "Refund request" and the email address you
-            used at checkout, or your Paddle order ID. We'll reply and process
+            used at checkout, or your Polar order ID. We'll reply and process
             the refund — no questions, no hoops.
           </li>
           <li>
-            <strong>Contact Paddle directly</strong> via{" "}
-            <a href="https://paddle.net" target="_blank" rel="noopener">
-              paddle.net
+            <strong>Contact Polar directly</strong> via their customer portal
+            at{" "}
+            <a href="https://polar.sh/odak/portal" target="_blank" rel="noopener">
+              polar.sh/odak/portal
             </a>{" "}
-            using the same email address you used at checkout. Paddle is our
+            using the same email address you used at checkout. Polar is our
             Merchant of Record and can issue the refund on our behalf.
           </li>
         </ol>
 
         <h2 id="processing">Processing time</h2>
         <p>
-          Once the refund is approved, Paddle issues it to your original
+          Once the refund is approved, Polar issues it to your original
           payment method. Funds typically appear within{" "}
           <strong>3–10 business days</strong>, depending on your bank or card
           issuer. Currency-conversion fees charged by your bank are not within

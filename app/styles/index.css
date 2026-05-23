@@ -263,60 +263,6 @@ body.scrolling .aurora::after{
 .nav-links a:hover{color:var(--fg);background:var(--surface)}
 .nav-cta{display:flex;align-items:center;gap:10px}
 
-/* Small saffron "what's new" chip living next to the Download CTA.
-   Saffron tint signals brand + "new"; quieter than the primary button
-   so the eye still lands on Download first. Hidden on phones — the
-   chip would push the nav inner past viewport width. */
-.nav-changelog{
-  display:inline-flex;align-items:center;gap:8px;
-  height:32px;padding:0 12px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:999px;
-  color:var(--fg-2);
-  font-size:12px;font-weight:500;letter-spacing:-.003em;
-  white-space:nowrap;
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  transition:background .15s var(--ease-out),
-             border-color .15s var(--ease-out),
-             transform .15s var(--ease-out),
-             box-shadow .15s var(--ease-out);
-}
-.nav-changelog:hover{
-  background:rgba(255,255,255,.06);
-  border-color:rgba(255,255,255,.2);
-  box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-.nav-changelog .tag{
-  font-family:var(--mono);
-  font-size:10.5px;font-weight:600;letter-spacing:.04em;
-  color:var(--fg);
-  opacity:.95;
-}
-.nav-changelog .label{
-  color:var(--fg-2);
-  font-weight:500;
-}
-.nav-changelog:hover .label{color:var(--fg)}
-.nav-changelog .arrow{
-  display:inline-flex;align-items:center;
-  width:10px;height:10px;
-  color:var(--fg-2);
-  transition:transform .2s var(--ease-out), color .2s var(--ease-out);
-}
-.nav-changelog:hover .arrow{
-  color:var(--fg);
-  transform:translateX(2px);
-}
-.nav-changelog .arrow svg{
-  width:100%;height:100%;
-  stroke:currentColor;fill:none;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;
-}
-@media (max-width:760px){
-  .nav-changelog{display:none}
-}
 .nav-cta .icon-btn{
   width:32px;height:32px;display:grid;place-items:center;border-radius:8px;
   background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
@@ -490,8 +436,8 @@ h1.hero-h .accent{
      transparent. */
   background: linear-gradient(
     180deg,
-    rgba(255,255,255,0.9) 0%,
-    rgba(255,255,255,0.55) 100%
+    #ffffff 0%,
+    rgba(255,255,255,0.2) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;

@@ -25,7 +25,7 @@ export function Privacy() {
             <li><a href="#who">Who I am</a></li>
             <li><a href="#website">This website</a></li>
             <li><a href="#app">The macOS app</a></li>
-            <li><a href="#purchases">Purchases &amp; Paddle</a></li>
+            <li><a href="#purchases">Purchases &amp; Polar</a></li>
             <li><a href="#support">Support email</a></li>
             <li><a href="#rights">Your rights</a></li>
             <li><a href="#retention">Retention</a></li>
@@ -42,14 +42,14 @@ export function Privacy() {
           <a href="mailto:hello@odak.fyi">hello@odak.fyi</a>.
         </p>
         <p>
-          Checkout runs through <strong>Paddle</strong>, my Merchant of Record
+          Checkout runs through <strong>Polar</strong>, my Merchant of Record
           (their privacy policy:{" "}
           <a
-            href="https://www.paddle.com/legal/privacy"
+            href="https://polar.sh/legal/privacy"
             target="_blank"
             rel="noopener"
           >
-            paddle.com/legal/privacy
+            polar.sh/legal/privacy
           </a>
           ).
         </p>
@@ -286,14 +286,16 @@ export function Privacy() {
           revalidation sends only the JWT — no fresh deviceId or deviceName.
         </p>
 
-        <h2 id="purchases">4. Purchases &amp; Paddle</h2>
+        <h2 id="purchases">4. Purchases &amp; Polar</h2>
         <p>
-          <strong>Paddle handles checkout. I never see your card.</strong>
+          <strong>Polar handles checkout. I never see your card.</strong>
         </p>
         <p>
-          Paddle is the controller of your payment data under{" "}
+          Polar Software Inc. is my authorised reseller and Merchant of Record
+          — for the payment transaction itself, Polar is the seller, and is
+          the controller of your payment data under{" "}
           <a
-            href="https://www.paddle.com/legal/privacy"
+            href="https://polar.sh/legal/privacy"
             target="_blank"
             rel="noopener"
           >
@@ -308,10 +310,10 @@ export function Privacy() {
           <li>IP address (fraud prevention)</li>
         </ul>
         <p>
-          After a successful purchase, Paddle shares a limited record with me
-          — name, email, country, what you bought — so I can deliver your
-          license key, answer support, and send essential transactional
-          emails (license delivery, receipts, important update notices).
+          After a successful purchase, Polar shares a limited record with me —
+          name, email, country, what you bought — so I can deliver your
+          license key, answer support, and send essential transactional emails
+          (license delivery, receipts, important update notices).
         </p>
 
         <h2 id="support">5. Support email</h2>
@@ -342,9 +344,10 @@ export function Privacy() {
         </ul>
         <p>
           Email <a href="mailto:hello@odak.fyi">hello@odak.fyi</a> to exercise
-          any of these for data I hold. For payment data, contact Paddle at{" "}
-          <a href="https://paddle.net" target="_blank" rel="noopener">
-            paddle.net
+          any of these for data I hold. For payment data, contact Polar via
+          their customer portal at{" "}
+          <a href="https://polar.sh/odak/portal" target="_blank" rel="noopener">
+            polar.sh/odak/portal
           </a>
           .
         </p>

@@ -1,65 +1,69 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { Mark } from "@/components/site/Logo";
-import { NavBuy } from "@/components/site/Nav";
+import { Nav } from "@/components/site/Nav";
+import { Footer } from "@/components/site/Footer";
 import { usePageEnter } from "@/components/site/PageEnter";
 
 // Two URL surfaces:
-//   /buy        → live Paddle. Until LIVE_TOKEN is wired in, /buy renders a
-//                  pre-launch holding state and never falls back to sandbox —
+//   /buy        → live Polar. Until LIVE_CHECKOUT_URL is wired in, /buy renders
+//                  a pre-launch holding state and never falls back to sandbox —
 //                  real customers must not be able to mistake a test flow
 //                  for a real purchase.
-//   /buy-stage  → sandbox Paddle, always. Linked from Debug builds for QA.
-const LIVE_TOKEN = "REPLACE_WHEN_LIVE";
-const LIVE_PRICE_ID = "REPLACE_WHEN_LIVE";
-const SANDBOX_TOKEN = "test_e6166f8eb97687335a0722a87a8";
-const SANDBOX_PRICE_ID = "pri_01kr8bb5d61wm2435rs402m79j";
-const PADDLE_SDK = "https://cdn.paddle.com/paddle/v2/paddle.js";
+//   /buy-stage  → sandbox Polar, always. Linked from Debug builds for QA.
+//
+// Both URLs come from the Polar dashboard (Products → Checkout Links).
+// The link's success_url is configured server-side to point at
+// /buy?success=1 — Polar redirects there after a completed checkout.
+const LIVE_CHECKOUT_URL: string = "REPLACE_WHEN_LIVE";
+const SANDBOX_CHECKOUT_URL: string =
+  "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_qu3kQfXBxavRwSo0OKWe77sqFj5qVLusWEBr11pVh63/redirect";
+const POLAR_EMBED_SDK =
+  "https://cdn.jsdelivr.net/npm/@polar-sh/checkout@latest/dist/embed.global.js";
 
-type PaddleEvent = { name?: string };
-type Paddle = {
-  Initialize: (opts: {
-    token: string;
-    eventCallback?: (e: PaddleEvent) => void;
-  }) => void;
-  Environment: { set: (env: "sandbox" | "production") => void };
-  Checkout: {
-    open: (opts: {
-      items: Array<{ priceId: string; quantity: number }>;
-      customer?: { email?: string };
-      settings?: {
-        displayMode?: "overlay" | "inline";
-        theme?: "dark" | "light";
-        successUrl?: string;
-      };
-    }) => void;
-  };
+type PolarEmbedCheckoutInstance = { close: () => void };
+type PolarEmbedCheckout = {
+  create: (
+    url: string,
+    opts?: { theme?: "light" | "dark" },
+  ) => Promise<PolarEmbedCheckoutInstance>;
 };
 declare global {
   interface Window {
-    Paddle?: Paddle;
+    Polar?: { EmbedCheckout: PolarEmbedCheckout };
   }
 }
 
-function loadPaddle(): Promise<Paddle> {
-  if (window.Paddle) return Promise.resolve(window.Paddle);
+function loadPolar(): Promise<PolarEmbedCheckout> {
+  if (window.Polar?.EmbedCheckout)
+    return Promise.resolve(window.Polar.EmbedCheckout);
   return new Promise((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(
-      `script[src="${PADDLE_SDK}"]`,
+      `script[src="${POLAR_EMBED_SDK}"]`,
     );
     const script = existing ?? document.createElement("script");
     if (!existing) {
-      script.src = PADDLE_SDK;
+      script.src = POLAR_EMBED_SDK;
+      script.defer = true;
       document.head.appendChild(script);
     }
     script.addEventListener("load", () => {
-      if (window.Paddle) resolve(window.Paddle);
-      else reject(new Error("Paddle loaded but window.Paddle missing"));
+      if (window.Polar?.EmbedCheckout) resolve(window.Polar.EmbedCheckout);
+      else reject(new Error("Polar loaded but window.Polar.EmbedCheckout missing"));
     });
     script.addEventListener("error", () =>
-      reject(new Error("Failed to load Paddle SDK")),
+      reject(new Error("Failed to load Polar checkout SDK")),
     );
   });
+}
+
+// Single checkmark used in the benefits list — same SVG shape as the
+// home pricing card so the eye reads the two surfaces as one product.
+function Check() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 8l3 3 7-7" />
+    </svg>
+  );
 }
 
 export function Buy() {
@@ -67,23 +71,28 @@ export function Buy() {
   const [view, setView] = useState<"form" | "success" | "prelaunch">("form");
   const [email, setEmail] = useState("");
   const [isStage, setIsStage] = useState(false);
-  const paddleRef = useRef<Paddle | null>(null);
+  const polarRef = useRef<PolarEmbedCheckout | null>(null);
 
   useEffect(() => {
     const stage = window.location.pathname === "/buy-stage";
     setIsStage(stage);
-    const liveReady = LIVE_TOKEN !== "REPLACE_WHEN_LIVE";
+    const liveReady = LIVE_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
+    const stageReady = SANDBOX_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
 
-    // Pre-launch on public /buy: no Paddle init at all. Defense against
+    // Pre-launch on public /buy: no Polar init at all. Defense against
     // silent sandbox checkouts confusing real customers between site
-    // deploy and live token wire-in.
+    // deploy and live URL wire-in.
     if (!stage && !liveReady) {
       setView("prelaunch");
       return;
     }
+    if (stage && !stageReady) {
+      setView("prelaunch");
+      return;
+    }
 
-    // Pre-fill email from ?email= and show success on ?success=1 (Paddle
-    // redirect path for 3DS challenges that navigate the parent window).
+    // Pre-fill email from ?email= and show success on ?success=1 (Polar
+    // redirects to the link's configured success_url after completion).
     const params = new URLSearchParams(window.location.search);
     const emailParam = params.get("email");
     if (emailParam) setEmail(emailParam);
@@ -92,21 +101,11 @@ export function Buy() {
       history.replaceState(null, "", window.location.pathname);
     }
 
-    const useLive = !stage && liveReady;
-    const token = useLive ? LIVE_TOKEN : SANDBOX_TOKEN;
-
     let cancelled = false;
-    loadPaddle()
-      .then((Paddle) => {
+    loadPolar()
+      .then((Polar) => {
         if (cancelled) return;
-        if (stage) Paddle.Environment.set("sandbox");
-        Paddle.Initialize({
-          token,
-          eventCallback: (event) => {
-            if (event?.name === "checkout.completed") setView("success");
-          },
-        });
-        paddleRef.current = Paddle;
+        polarRef.current = Polar;
       })
       .catch((err) => {
         console.error(err);
@@ -119,140 +118,203 @@ export function Buy() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const Paddle = paddleRef.current;
-    if (!Paddle) return;
+    const Polar = polarRef.current;
+    if (!Polar) return;
     const value = email.trim();
     if (!value) return;
-    const useLive = !isStage && LIVE_TOKEN !== "REPLACE_WHEN_LIVE";
-    const priceId = useLive ? LIVE_PRICE_ID : SANDBOX_PRICE_ID;
-    Paddle.Checkout.open({
-      items: [{ priceId, quantity: 1 }],
-      customer: { email: value },
-      settings: {
-        displayMode: "overlay",
-        theme: "dark",
-        successUrl: window.location.origin + "/buy?success=1",
-      },
-    });
+    const useLive = !isStage && LIVE_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
+    const baseUrl = useLive ? LIVE_CHECKOUT_URL : SANDBOX_CHECKOUT_URL;
+    const url = new URL(baseUrl);
+    url.searchParams.set("customer_email", value);
+    Polar.create(url.toString(), { theme: "dark" });
   };
 
   return (
     <>
-      <NavBuy />
+      <div className="buy-ambient" aria-hidden="true">
+        <div className="buy-ambient-grid" />
+        <div className="buy-ambient-glow" />
+      </div>
+      <Nav />
       <motion.main
-        className="wrap"
+        className="buy-main"
         variants={item(0.05)}
         initial="hidden"
         animate="show"
       >
-        <span className="logo">
-          <Mark size={56} loading="eager" fetchPriority="high" />
-        </span>
-        <h1>Buy Odak</h1>
-        <p className="lede">One-time. No subscription, no upgrade fees.</p>
+        <header className="section-head">
+          <div className="eyebrow">Checkout</div>
+          <h1 className="section-h">
+            $19. Once. <span className="accent">Yours.</span>
+          </h1>
+          <p className="section-sub">
+            No seats, no subscription, no upgrade fees. Pay once, keep it
+            forever.
+          </p>
+        </header>
 
         {isStage && (
-          <div className="env-banner" style={{ display: "block" }}>
-            <strong>Sandbox checkout</strong> — no real charge. Use any test
-            card; the activation code only works in stage builds of Odak.
+          <div className="env-banner" role="note">
+            <span className="env-banner-tag">Sandbox</span>
+            <span>
+              Test checkout — no real charge. Use any test card; activation
+              codes only work in stage builds of Odak.
+            </span>
           </div>
         )}
 
-        {view === "form" && (
-          <>
-            <div className="price">
-              <span className="price-num">$19</span>
-              <span className="price-suf">
-                one&#8209;time · activates on up to 3&nbsp;Macs
-              </span>
-            </div>
+        <div className="checkout-grid">
+          {view === "form" && (
+            <article className="price-card">
+              <div className="head-row">
+                <span className="tier">One-time</span>
+                <span className="trial-badge">14 days free</span>
+              </div>
 
-            <ul className="benefits">
-              <li>
-                Search every project on your Mac, open it in your IDE in
-                under a second
-              </li>
-              <li>
-                One keyboard shortcut to jump between every open IDE window
-              </li>
-              <li>
-                Custom actions &mdash; run scripts, open URLs, or trigger
-                commands per project
-              </li>
-              <li>Free lifetime updates</li>
-            </ul>
+              <div className="amount">
+                <span className="curr">$</span>19
+                <span className="per">once</span>
+              </div>
+              <div className="amount-sub">3 Macs · lifetime license</div>
 
-            <form id="checkout-form" onSubmit={onSubmit}>
-              <input
-                id="email-input"
-                className="email-field"
-                type="email"
-                placeholder="your@email.com"
-                required
-                autoComplete="email"
-                inputMode="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <button id="checkout-btn" className="btn" type="submit">
-                Buy Odak — $19
-              </button>
-            </form>
-          </>
-        )}
+              <ul className="benefits">
+                <li>
+                  <Check />
+                  <span>
+                    <b>Every feature, unlocked.</b> No pro tier, no add-ons.
+                  </span>
+                </li>
+                <li>
+                  <Check />
+                  <span>
+                    Use on <b>3 Macs</b> — desktop, laptop, work machine.
+                  </span>
+                </li>
+                <li>
+                  <Check />
+                  <span>
+                    <b>Lifetime license.</b> Bug fixes, security patches,
+                    and new features — free.
+                  </span>
+                </li>
+                <li>
+                  <Check />
+                  <span>14-day free trial. No credit card.</span>
+                </li>
+              </ul>
 
-        {view === "success" && (
-          <div
-            id="success-state"
-            className="success"
-            style={{ display: "block" }}
-            role="status"
-            aria-live="polite"
-          >
-            <div className="success-icon">✓</div>
-            <h2>You're set!</h2>
-            <p>
-              We've sent your activation code to your email. Open Odak, go to
-              Settings &rarr; License, and paste the code.
-            </p>
-          </div>
-        )}
+              <form className="checkout-form" onSubmit={onSubmit}>
+                <label className="field">
+                  <span className="field-label">Email for activation code</span>
+                  <input
+                    id="email-input"
+                    type="email"
+                    placeholder="your@email.com"
+                    required
+                    autoComplete="email"
+                    inputMode="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+                <button id="checkout-btn" className="buy" type="submit">
+                  Buy Odak — $19
+                  <span className="arrow" aria-hidden="true">
+                    <svg viewBox="0 0 12 12">
+                      <path d="M3 6h6m-3-3l3 3-3 3" />
+                    </svg>
+                  </span>
+                </button>
+              </form>
 
-        {view === "prelaunch" && (
-          <div
-            id="prelaunch-state"
-            className="success"
-            style={{ display: "block" }}
-            role="status"
-            aria-live="polite"
-          >
-            <div className="success-icon">⏳</div>
-            <h2>Purchases open soon.</h2>
-            <p>
-              While payment setup wraps up, the{" "}
-              <strong>14-day trial</strong> is fully unlocked — every
-              feature, no credit card.
-            </p>
-            <a
-              className="btn"
-              style={{
-                textDecoration: "none",
-                textAlign: "center",
-                display: "block",
-                marginTop: 14,
-              }}
-              href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
+              <p className="price-fine">
+                One-time payment · instant activation · Sparkle auto-updates ·{" "}
+                <a href="/refund">14-day refund</a>
+              </p>
+            </article>
+          )}
+
+          {view === "success" && (
+            <article
+              id="success-state"
+              className="price-card state"
+              role="status"
+              aria-live="polite"
             >
-              Download free trial
-            </a>
-          </div>
-        )}
+              <div className="state-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12.5l4.5 4.5L19 7" />
+                </svg>
+              </div>
+              <h2>You're set.</h2>
+              <p>
+                We've sent your activation code to your email. Open Odak, go to
+                <strong> Settings → License</strong>, and paste the code.
+              </p>
+              <p className="price-fine">
+                Didn't get it? Check spam, then{" "}
+                <a href="mailto:support@odak.fyi">email support</a>.
+              </p>
+            </article>
+          )}
 
-        <p className="fine">
-          Secure checkout by Paddle · <a href="/refund">Refund policy</a> ·{" "}
-          <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
-        </p>
+          {view === "prelaunch" && (
+            <article
+              id="prelaunch-state"
+              className="price-card state"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="state-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+              </div>
+              <h2>Purchases open soon.</h2>
+              <p>
+                While payment setup wraps up, the <strong>14-day trial</strong>{" "}
+                is fully unlocked — every feature, no credit card.
+              </p>
+              <a
+                className="buy"
+                href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
+              >
+                Download free trial
+                <span className="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 12 12">
+                    <path d="M3 6h6m-3-3l3 3-3 3" />
+                  </svg>
+                </span>
+              </a>
+            </article>
+          )}
+
+          <aside className="price-aside">
+            <h3>
+              One-time <span className="accent">purchase.</span>
+            </h3>
+            <p className="lead">
+              Saves a few seconds per window-switch, dozens of times a day.
+            </p>
+            <p>
+              No subscription, no renewal. The license is yours to keep — every
+              update, free, forever.
+            </p>
+            <div className="seals">
+              <span className="seal">Hardened runtime</span>
+              <span className="seal">Apple Silicon</span>
+              <span className="seal">Telemetry off by default</span>
+            </div>
+            <p className="fine">
+              Secure checkout by <strong>Polar</strong> ·{" "}
+              <a href="/refund">Refund policy</a> · <a href="/terms">Terms</a> ·{" "}
+              <a href="/privacy">Privacy</a>
+            </p>
+          </aside>
+        </div>
       </motion.main>
+      <Footer />
     </>
   );
 }

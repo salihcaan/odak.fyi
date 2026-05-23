@@ -6,42 +6,74 @@
    within the established --dur-fast / --ease-out budget.
    ========================================================== */
 
-/* ----- Cross-document view transitions (Chromium 126+, Safari 18+).
-         Opts every same-origin navigation into a soft cross-fade —
-         /buy ↔ /, /changelog ↔ /privacy, etc. — instead of the bare
-         document swap. The nav bar and brand mark are named so the
-         browser morphs them in place across pages rather than fading
-         them out and back in. Browsers without MPA View Transitions
-         get an instant swap (no JS fallback needed); reduced-motion
-         users get a zero-duration animation. ----- */
-@view-transition{
-  navigation: auto;
+/* ----- Brand wordmark in the nav. Pages used to drift: index ran at
+         19px / cream-on-cream while every other page rendered the
+         wordmark at 16px / pure white, so the "Odak" text grew and
+         desaturated when leaving home. Loaded after every per-page
+         stylesheet, so source order wins without !important. ----- */
+.nav-brand{
+  font-size:19px;
+  gap:12px;
+  color:#f5ede0;
 }
-::view-transition-old(root),
-::view-transition-new(root){
-  animation-duration: 220ms;
-  animation-timing-function: var(--ease-out, cubic-bezier(.22,1,.36,1));
-}
-.nav{ view-transition-name: site-nav; }
-.nav-brand{ view-transition-name: site-brand; }
-::view-transition-old(site-nav),
-::view-transition-new(site-nav),
-::view-transition-old(site-brand),
-::view-transition-new(site-brand){
-  animation-duration: 260ms;
-  animation-timing-function: var(--ease-out, cubic-bezier(.22,1,.36,1));
-}
-@media (prefers-reduced-motion: reduce){
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-old(site-nav),
-  ::view-transition-new(site-nav),
-  ::view-transition-old(site-brand),
-  ::view-transition-new(site-brand){
-    animation-duration: 0s;
-  }
-}
+.nav-brand:hover{ color:#f5ede0; }
 
+/* ----- "What's new" version chip in the nav. Used on every React-
+         rendered page (index/changelog/privacy/refund/terms). Lives
+         here so it stays styled on pages whose per-page stylesheet
+         doesn't carry a copy. Hidden under 760px so it doesn't push
+         the nav past the viewport. ----- */
+.nav-changelog{
+  display:inline-flex;align-items:center;gap:8px;
+  height:32px;padding:0 12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  color:var(--fg-2);
+  font-size:12px;font-weight:500;letter-spacing:-.003em;
+  white-space:nowrap;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:background .15s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             border-color .15s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             transform .15s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             box-shadow .15s var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.nav-changelog:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.nav-changelog .tag{
+  font-family:var(--mono);
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--fg);
+  opacity:.95;
+}
+.nav-changelog .label{
+  color:var(--fg-2);
+  font-weight:500;
+}
+.nav-changelog:hover .label{color:var(--fg)}
+.nav-changelog .arrow{
+  display:inline-flex;align-items:center;
+  width:10px;height:10px;
+  color:var(--fg-2);
+  transition:transform .2s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             color .2s var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+.nav-changelog:hover .arrow{
+  color:var(--fg);
+  transform:translateX(2px);
+}
+.nav-changelog .arrow svg{
+  width:100%;height:100%;
+  stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+@media (max-width:760px){
+  .nav-changelog{display:none}
+}
 
 /* ----- Buttons: add a real press state alongside the lift hover.
          transform composites cheaply; layered with the existing

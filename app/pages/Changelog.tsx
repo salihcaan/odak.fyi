@@ -1,13 +1,8 @@
 import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
-import { usePageEnter } from "@/components/site/PageEnter";
 
-// Single release article. Animates in when its top edge crosses ~12% of
-// the viewport (matches the legacy .reveal IntersectionObserver
-// threshold). Reduced-motion: snap to visible.
 function Release({
   id,
   children,
@@ -15,32 +10,19 @@ function Release({
   id: string;
   children: ReactNode;
 }) {
-  const reduced = useReducedMotion();
   return (
-    <motion.article
-      className="release rel"
-      id={id}
-      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={
-        reduced
-          ? { duration: 0.22 }
-          : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
-      }
-    >
+    <article className="release rel" id={id}>
       {children}
-    </motion.article>
+    </article>
   );
 }
 
 export function Changelog() {
-  const { item } = usePageEnter();
   return (
     <>
       <Aurora />
       <Nav currentPath="/changelog.html" />
-      <motion.main variants={item(0.05)} initial="hidden" animate="show">
+      <main>
         <div className="eyebrow">Changelog</div>
         <h1>What's new</h1>
         <p className="lede">
@@ -324,7 +306,7 @@ export function Changelog() {
             </li>
             <li>
               <strong>14-day trial</strong> — every feature is unlocked.
-              License activation goes live once Paddle is set up.
+              License activation goes live once Polar is set up.
             </li>
           </ul>
 
@@ -368,7 +350,7 @@ export function Changelog() {
             at the <a href="/appcast.xml">appcast</a>.
           </p>
         </div>
-      </motion.main>
+      </main>
       <Footer />
     </>
   );

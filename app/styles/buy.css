@@ -1,266 +1,500 @@
-:root {
-  --bg: #0f0f0f;
-  --bg-2: #161618;
-  --fg: #ffffff;
-  --dim: rgba(255,255,255,.55);
-  --mute: rgba(255,255,255,.38);
-  --border: rgba(255,255,255,.08);
-  --accent: oklch(78% 0.14 75);
-  --accent-2: oklch(72% 0.16 65);
+/* ==========================================================
+   /buy + /buy-stage — checkout surface
+   ----------------------------------------------------------
+   Mirrors the home pricing section so /buy reads as part of
+   the same product, not a stripped-down payments page. The
+   tokens, eyebrow pill, display headline, price-card chrome,
+   gradient CTA, and trust seals all map 1:1 to index.css —
+   anything that differs is here because the buy page has to
+   carry the email field that the home pricing card doesn't.
+   ========================================================== */
+
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* tokens — copied from index.css so /buy renders with the same
+   palette, type scale, and motion vocabulary as the home page. */
+:root{
+  --bg:         #0f0f0f;
+  --bg-2:       #161618;
+  --bg-3:       #1c1c1f;
+  --surface:    rgba(255,255,255,.03);
+  --surface-2:  rgba(255,255,255,.06);
+  --border:     rgba(255,255,255,.08);
+  --border-2:   rgba(255,255,255,.14);
+  --fg:         #ffffff;
+  --fg-2:       rgba(255,255,255,.78);
+  --dim:        rgba(255,255,255,.55);
+  --mute:       rgba(255,255,255,.38);
+  --faint:      rgba(255,255,255,.18);
+
+  --accent:     oklch(76% 0.16 60);
+  --accent-2:   oklch(66% 0.16 55);
+  --accent-glow: oklch(76% 0.18 60 / .28);
   --accent-ink: #161210;
-  --surface: rgba(255,255,255,.03);
-  --surface-2: rgba(255,255,255,.06);
+  --accent-warm-2: oklch(60% 0.14 45 / .12);
+
+  --sans:'Inter',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --display:'Inter',-apple-system,system-ui,sans-serif;
+
+  --maxw:1100px;
+  --gutter:32px;
+  --radius:14px;
+  --radius-lg:22px;
+
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:    180ms;
 }
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-html { background: var(--bg); }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  transition: background .4s ease, color .4s ease;
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip}
+body{
+  color:var(--fg);
+  font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.005em;
+  background:var(--bg);
 }
-/* NAV — identical shell to the home/privacy/terms pages so the bar
-   reads as one component across every URL. Same blur, transparency,
-   z-index, padding, and scrolled-state behaviour. */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 80;
-  line-height: 1.55;
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  background: color-mix(in oklch, var(--bg) 62%, transparent);
-  border-bottom: 1px solid var(--border);
-  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
-  transition: background .25s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter .25s cubic-bezier(0.22, 1, 0.36, 1);
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+/* ==========================================================
+   AMBIENT — dot grid + warm halo behind the checkout column.
+   Pure CSS (the React Aurora on the home page uses Tailwind
+   utilities that aren't loaded for this entry). Sits behind
+   everything via z-index:-1.
+   ========================================================== */
+.buy-ambient{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
 }
-.nav.scrolled {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  background: color-mix(in oklch, var(--bg) 92%, transparent);
+.buy-ambient-grid{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle, var(--border-2) 1px, transparent 1px);
+  background-size:36px 36px;
+  mask-image:radial-gradient(ellipse 60% 80% at 50% 30%, #000 0%, transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 60% 80% at 50% 30%, #000 0%, transparent 70%);
+  opacity:.5;
 }
-@media (max-width: 760px) {
-  .nav {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: color-mix(in oklch, var(--bg) 88%, transparent);
-  }
+.buy-ambient-glow{
+  position:absolute;
+  top:-12vw;left:50%;transform:translateX(-50%);
+  width:90vw;max-width:1200px;
+  height:60vw;max-height:780px;
+  border-radius:50%;
+  filter:blur(140px);
+  background:radial-gradient(ellipse 50% 60% at 50% 50%, var(--accent-glow), transparent 65%);
+  opacity:.5;
 }
-.nav-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 14px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+
+/* ==========================================================
+   NAV — same chrome as the home page so the bar matches
+   1:1 when the user follows the Buy link.
+   ========================================================== */
+.nav{
+  position:sticky;top:0;z-index:80;
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  background:color-mix(in oklch, var(--bg) 62%, transparent);
+  border-bottom:1px solid var(--border);
+  box-shadow:inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  transition:background .25s var(--ease-out), backdrop-filter .25s var(--ease-out);
 }
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  font-size: 16px;
-  color: var(--fg);
-  text-decoration: none;
+.nav.scrolled{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  background:color-mix(in oklch, var(--bg) 92%, transparent);
 }
-.nav-brand .mark {
-  width: 22px;
-  height: 22px;
-  display: inline-block;
-  flex-shrink: 0;
-  line-height: 0;
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:19px;letter-spacing:-.02em;color:#f5ede0;text-decoration:none}
+.nav-brand:hover{color:#f5ede0}
+.nav-brand .mark{width:22px;height:22px;display:inline-block;flex-shrink:0;line-height:0}
+.nav-brand .mark img{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
+.nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s;text-decoration:none}
+.nav-links a:hover{color:var(--fg);background:var(--surface)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.nav-cta .icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--fg-2);transition:background .15s, color .15s, border-color .15s, transform .15s}
+.nav-cta .icon-btn:hover{background:var(--surface-2);color:var(--fg);border-color:rgba(255,255,255,.2);transform:translateY(-1px)}
+.nav-cta .icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
+@media (max-width:760px){
+  .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:color-mix(in oklch, var(--bg) 88%, transparent)}
+  .nav-links{display:none}
 }
-.nav-brand .mark img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+.btn-primary{
+  background:var(--fg);color:var(--bg);
+  padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:-.005em;
+  border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:transform .3s ease, box-shadow .3s ease;
+  cursor:pointer;white-space:nowrap;text-decoration:none;
 }
-.nav-cta { display: flex; align-items: center; gap: 8px; }
-.nav-back {
-  font-size: 13.5px;
-  color: var(--dim);
-  text-decoration: none;
-  padding: 7px 12px;
-  border-radius: 8px;
-  transition: color 150ms, background 150ms;
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.25),
+    0 10px 40px -10px rgba(255,255,255,0.3),
+    0 0 40px -8px rgba(218,84,39,0.5);
+  color:var(--bg);
 }
-.nav-back:hover {
-  color: var(--fg);
-  background: var(--surface);
+
+/* ==========================================================
+   MAIN — wider than the policy pages (1100px vs 760px) so the
+   two-column checkout grid has the same proportions as the
+   home pricing section.
+   ========================================================== */
+.buy-main{
+  max-width:var(--maxw);margin:0 auto;
+  padding:clamp(48px, 7vw, 96px) var(--gutter) clamp(64px, 9vw, 112px);
+  position:relative;
 }
-.icon-btn {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  color: var(--dim);
-  transition: background .15s, color .15s;
-  padding: 0;
+
+/* HEAD — section eyebrow + display headline + sub. Identical
+   visual rhythm to the home page's #pricing block. */
+.section-head{
+  text-align:center;
+  max-width:680px;
+  margin:0 auto clamp(40px, 5vw, 64px);
 }
-.icon-btn:hover { background: var(--surface-2); color: var(--fg); }
-.icon-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.wrap {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: clamp(40px, 8vw, 72px) 24px clamp(48px, 10vw, 96px);
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);
+  padding:5px 12px;margin-bottom:20px;
+  background:color-mix(in oklch, var(--accent) 6%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 32%, var(--border));
+  border-radius:999px;
 }
-.logo {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  display: block;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+.eyebrow::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px color-mix(in oklch, var(--accent) 70%, transparent);
 }
-.logo img { width: 100%; height: 100%; display: block; border-radius: inherit; }
-h1 {
-  font-size: clamp(28px, 5vw, 36px);
-  letter-spacing: -0.025em;
-  font-weight: 700;
-  margin: 0 0 6px 0;
-  line-height: 1.1;
+h1.section-h{
+  font-family:var(--display);
+  font-size:clamp(34px, 5.5vw, 56px);
+  line-height:1.05;letter-spacing:-.03em;font-weight:700;
+  margin:0 0 18px;color:#fff;
 }
-.lede {
-  color: var(--dim);
-  margin: 0 0 32px 0;
-  font-size: 17px;
+h1.section-h .accent{color:rgba(255,255,255,.45)}
+.section-sub{
+  font-size:17px;line-height:1.5;color:var(--fg-2);
+  margin:0 auto;max-width:50ch;letter-spacing:-.005em;
 }
-.env-banner {
-  display: none;
-  padding: 12px 14px;
-  background: rgba(255, 170, 0, 0.10);
-  border: 1px solid rgba(255, 170, 0, 0.4);
-  border-radius: 10px;
-  font-size: 13px;
-  margin-bottom: 24px;
-  color: #ffcc44;
+
+/* ==========================================================
+   ENV BANNER — only shown on /buy-stage.
+   ========================================================== */
+.env-banner{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  max-width:760px;margin:0 auto 28px;
+  padding:12px 16px;
+  background:color-mix(in oklch, var(--accent) 10%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 34%, transparent);
+  border-radius:12px;
+  font-size:13.5px;line-height:1.5;color:var(--fg-2);
 }
-.price {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 0 0 28px 0;
+.env-banner-tag{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);
+  padding:3px 8px;border-radius:999px;
+  background:color-mix(in oklch, var(--accent) 18%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 40%, transparent);
+  flex-shrink:0;
 }
-.price-num {
-  font-size: 56px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: var(--accent);
-  line-height: 1;
+
+/* ==========================================================
+   CHECKOUT GRID — price-card on the left, aside on the right.
+   Mirrors home pricing layout (1.05fr 1fr) so the two pages
+   share the same visual rhythm.
+   ========================================================== */
+.checkout-grid{
+  display:grid;
+  grid-template-columns:1.05fr 1fr;
+  gap:32px;align-items:center;
 }
-.price-suf {
-  color: var(--dim);
-  font-size: 15px;
+@media (max-width:880px){
+  .checkout-grid{grid-template-columns:1fr;gap:24px}
 }
-.benefits {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 28px 0;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+
+/* PRICE CARD — same chrome as home: corner radial accent, soft
+   drop shadow, inset top highlight, stronger border. We drop
+   the JS-driven tilt that the home card has — checkout pages
+   should feel solid, not playful. */
+.price-card{
+  position:relative;
+  padding:clamp(28px, 3.4vw, 44px) clamp(24px, 3vw, 40px);
+  border:1px solid var(--border-2);border-radius:var(--radius-lg);
+  background:
+    radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+  box-shadow:
+    0 24px 48px -12px rgba(0,0,0,.35),
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
+  overflow:hidden;
 }
-.benefits li {
-  padding: 13px 16px;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
+.price-card .head-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+  margin-bottom:24px;
+  position:relative;z-index:1;
 }
-.benefits li:last-child { border-bottom: none; }
-.benefits li::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex-shrink: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%231a1410' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E");
-  background-size: 12px;
-  background-repeat: no-repeat;
-  background-position: center;
+.price-card .tier{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
 }
-form { margin: 0; }
-.email-field {
-  width: 100%;
-  padding: 13px 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-2);
-  color: var(--fg);
-  font-size: 15px;
-  font-family: inherit;
-  margin-bottom: 10px;
-  -webkit-appearance: none;
-  appearance: none;
+.price-card .trial-badge{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  padding:5px 10px;border-radius:999px;
+  background:color-mix(in oklch, var(--accent) 20%, transparent);
+  color:var(--accent);
+  border:1px solid color-mix(in oklch, var(--accent) 40%, transparent);
+  white-space:nowrap;
 }
-.email-field:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+
+.price-card .amount{
+  font-family:var(--display);font-size:clamp(64px, 7.4vw, 88px);
+  line-height:.95;letter-spacing:-.035em;font-weight:700;
+  margin:0;position:relative;z-index:1;
+  display:flex;align-items:flex-start;gap:4px;
 }
-.email-field::placeholder { color: var(--mute); }
-.btn {
-  width: 100%;
-  padding: 14px 24px;
-  border-radius: 12px;
-  border: none;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background-color 150ms ease, transform 150ms ease;
+.price-card .amount .curr{font-size:.42em;color:var(--dim);margin-top:8px;font-weight:600}
+.price-card .amount .per{
+  font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);font-weight:500;margin-left:10px;margin-top:auto;padding-bottom:22px;
 }
-.btn:hover { background: var(--accent-2); }
-.btn:active { transform: scale(0.99); }
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: var(--accent);
+.price-card .amount-sub{
+  font-family:var(--mono);font-size:12px;color:var(--mute);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin:4px 0 28px;position:relative;z-index:1;
 }
-.fine {
-  margin-top: 24px;
-  font-size: 13px;
-  color: var(--mute);
-  text-align: center;
+
+.price-card ul.benefits{
+  list-style:none;padding:0;margin:0 0 28px;
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:1;
 }
-.fine a {
-  color: var(--dim);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border);
+.price-card ul.benefits li{
+  display:flex;align-items:flex-start;gap:12px;
+  color:var(--fg-2);font-size:14.5px;line-height:1.45;letter-spacing:-.005em;
 }
-.fine a:hover { color: var(--fg); }
-.success {
-  display: none;
-  padding: 24px;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-align: center;
+.price-card ul.benefits li svg{
+  width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:2px;
+  stroke:currentColor;fill:none;stroke-width:2;
 }
-.success-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin: 0 auto 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-ink);
-  font-size: 22px;
+.price-card ul.benefits li b{color:var(--fg);font-weight:600}
+
+/* CHECKOUT FORM — sits inside the price-card. The field has a
+   sunken treatment (slightly darker than card bg) so it reads as
+   an interactive input, not another panel. */
+.checkout-form{
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:18px;
+  position:relative;z-index:1;
 }
-.success h2 { margin: 0 0 6px 0; font-size: 20px; font-weight: 700; }
-.success p { margin: 0; font-size: 14px; color: var(--dim); }
+.field{display:flex;flex-direction:column;gap:6px}
+.field-label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);font-weight:500;
+}
+.field input{
+  width:100%;
+  padding:13px 15px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:rgba(0,0,0,.35);
+  color:var(--fg);
+  font-size:15px;font-family:inherit;letter-spacing:-.005em;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color .15s, background .15s, box-shadow .15s;
+}
+.field input:focus,
+.field input:focus-visible{
+  outline:none;
+  border-color:color-mix(in oklch, var(--accent) 60%, var(--border));
+  background:rgba(0,0,0,.5);
+  box-shadow:0 0 0 3px color-mix(in oklch, var(--accent) 16%, transparent);
+}
+.field input::placeholder{color:var(--mute)}
+
+/* BUY BUTTON — identical to home `.price-card .buy` so the
+   primary action carries the same warm gradient and glow. */
+.buy{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;
+  padding:14px 22px;border-radius:12px;
+  background:linear-gradient(180deg, var(--accent), var(--accent-2));
+  color:var(--accent-ink);
+  font-weight:600;font-size:15px;letter-spacing:-.005em;
+  border:1px solid color-mix(in oklch, var(--accent) 70%, black 10%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    0 12px 32px -8px var(--accent-glow);
+  cursor:pointer;
+  transition:transform .18s var(--ease-out), box-shadow .25s var(--ease-out);
+  position:relative;z-index:1;
+  text-decoration:none;
+  font-family:inherit;
+}
+.buy:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.32),
+    0 16px 40px -10px color-mix(in oklch, var(--accent) 55%, transparent);
+}
+.buy:active{transform:translateY(0)}
+.buy:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.buy .arrow{display:inline-flex;align-items:center;justify-content:center;color:currentColor;transition:transform var(--dur-fast) var(--ease-out)}
+.buy .arrow svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.buy:hover .arrow{transform:translateX(3px)}
+
+.price-fine{
+  font-family:var(--mono);font-size:10.5px;color:var(--mute);
+  letter-spacing:.02em;margin:0;position:relative;z-index:1;
+  line-height:1.6;
+}
+.price-fine a{
+  color:var(--fg-2);
+  border-bottom:1px solid var(--border-2);
+  padding-bottom:1px;
+  transition:color .15s, border-color .15s;
+  white-space:nowrap;
+}
+.price-fine a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* STATE CARDS — success / prelaunch share the price-card chrome
+   but center their content and swap the body for a status icon
+   + heading + paragraph. */
+.price-card.state{
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  padding:clamp(36px, 5vw, 56px) clamp(28px, 4vw, 48px);
+}
+.price-card.state .state-icon{
+  width:56px;height:56px;border-radius:50%;
+  display:grid;place-items:center;
+  background:color-mix(in oklch, var(--accent) 16%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 36%, transparent);
+  color:var(--accent);
+  margin-bottom:4px;
+}
+.price-card.state .state-icon svg{
+  width:24px;height:24px;
+  stroke:currentColor;fill:none;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+}
+.price-card.state h2{
+  margin:0;font-family:var(--display);
+  font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1.2;
+  color:var(--fg);
+}
+.price-card.state p{
+  margin:0;font-size:15px;color:var(--fg-2);line-height:1.6;
+  max-width:42ch;
+}
+.price-card.state p strong{color:var(--fg);font-weight:600}
+.price-card.state .buy{max-width:280px;width:100%;margin-top:6px}
+.price-card.state .price-fine{margin-top:6px}
+
+/* ==========================================================
+   PRICE ASIDE — right column. Reuses the home naming so the
+   page reads as the same site idiom.
+   ========================================================== */
+.price-aside{
+  padding:clamp(8px, 1vw, 16px) clamp(0px, 1vw, 12px);
+}
+.price-aside h3{
+  font-family:var(--display);font-size:24px;font-weight:600;
+  letter-spacing:-.02em;margin:0 0 14px;line-height:1.2;color:var(--fg);
+}
+.price-aside h3 .accent{color:rgba(255,255,255,.45)}
+.price-aside p{
+  color:var(--fg-2);line-height:1.55;margin:0 0 14px;
+  font-size:15px;letter-spacing:-.005em;
+}
+.price-aside p.lead{
+  font-size:17px;color:var(--fg);margin-bottom:18px;
+}
+.price-aside .seals{
+  display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px;
+}
+.price-aside .seal{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--dim);
+  padding:6px 12px;border:1px solid var(--border);border-radius:999px;
+  background:var(--surface);
+}
+.price-aside .fine{
+  font-size:12.5px;color:var(--mute);
+  margin:22px 0 0;line-height:1.65;
+  padding-top:18px;border-top:1px solid var(--border);
+}
+.price-aside .fine strong{color:var(--fg-2);font-weight:600}
+.price-aside .fine a{
+  color:var(--dim);
+  text-decoration:underline;text-decoration-color:var(--border-2);text-underline-offset:3px;
+  transition:color .15s, text-decoration-color .15s;
+}
+.price-aside .fine a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+
+/* ==========================================================
+   FOOTER — same chrome as the policy pages.
+   ========================================================== */
+footer.site-foot{
+  max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;
+  padding:48px 32px 32px;border-top:1px solid var(--border);line-height:1.55;
+}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.foot-brand .mission{font-size:15px;line-height:1.5;color:var(--dim);margin:16px 0 0;max-width:32ch;letter-spacing:-.005em}
+.foot-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;font-weight:500}
+.foot-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.foot-col a{color:var(--fg-2);font-size:14px;text-decoration:none}
+.foot-col a:hover{color:var(--accent)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding:20px 0 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.02em}
+.foot-bottom > *{white-space:nowrap}
+.foot-bottom .istanbul{color:var(--fg-2)}
+.foot-bottom .istanbul b{color:var(--accent);font-weight:500}
+.foot-status{display:flex;align-items:center;gap:8px}
+.foot-status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px color-mix(in oklch, var(--accent) 50%, transparent)}
+.foot-status-sep{color:var(--mute)}
+.foot-status-sha{font-family:var(--mono);color:var(--dim)}
+@media (max-width:960px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+
+/* ==========================================================
+   MOBILE — tighten the section head, drop ambient glow size,
+   and let the two columns stack vertically with the price
+   card on top (the action) and the marketing aside below.
+   ========================================================== */
+@media (max-width:560px){
+  .buy-main{padding-top:32px}
+  h1.section-h{font-size:clamp(30px, 9vw, 40px)}
+  .price-card .amount{font-size:clamp(56px, 14vw, 72px)}
+  .price-card .amount .per{padding-bottom:14px;font-size:12px}
+  .buy-ambient-glow{height:60vh;max-height:480px}
+  .price-aside{padding:0}
+}
