@@ -963,9 +963,8 @@ h1.hero-h .accent{
    ========================================================== */
 section.block{
   max-width:var(--maxw);margin:0 auto;
-  padding:calc(var(--space-section) - 48px) var(--gutter) 48px;
+  padding:calc(var(--space-section) - 80px) var(--gutter) 48px;
   position:relative;
-  scroll-margin-top:64px;
   scroll-snap-align:start;
 }
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
@@ -1133,8 +1132,7 @@ h2.section-h .mute{color:var(--dim)}
   gap:clamp(14px, 1.8vw, 24px);
   min-height:calc(100dvh - 64px);
   /* Offsets hash-anchor jumps (#features) so the tabs land below the
-     sticky 64px nav rather than behind it. */
-  scroll-margin-top:64px;
+     sticky 64px nav rather than behind it. (Handled by html scroll-padding-top) */
 }
 
 /* Sticky pin — engages on desktop only. Section pins below the nav
