@@ -137,9 +137,11 @@ export function Index() {
 
       <MacbookCarousel />
 
-      <div dangerouslySetInnerHTML={{ __html: indexBody }} />
+      <div className="rest-of-page">
+        <div dangerouslySetInnerHTML={{ __html: indexBody }} />
 
-      <Footer />
+        <Footer />
+      </div>
     </>
   );
 }

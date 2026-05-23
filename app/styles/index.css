@@ -108,7 +108,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px;scroll-snap-type:y mandatory}
 body{
   /* No background here on purpose — html already paints --bg. Adding a
      body bg covers fixed z-index:-1 ambient layers (aurora siblings)
@@ -647,6 +647,7 @@ h1.hero-h .accent{
   position:relative;
   isolation:isolate;
   overflow:hidden;  /* clips the corner bloom + grid bleed */
+  scroll-snap-align:start;
 }
 /* Warm center bloom + vignette. The vignette is the second stop
    that ramps to ~0 at the edges so the corners darken slightly,
@@ -960,6 +961,9 @@ h1.hero-h .accent{
 /* ==========================================================
    SECTION scaffolding
    ========================================================== */
+.rest-of-page{
+  scroll-snap-align:start;
+}
 section.block{
   max-width:var(--maxw);margin:0 auto;
   padding:calc(var(--space-section) - 80px) var(--gutter) 48px;
@@ -1070,6 +1074,7 @@ h2.section-h .mute{color:var(--dim)}
 .mc-pin-wrap{
   position:relative;
   isolation:isolate;
+  scroll-snap-align:start;
 }
 @media (min-width: 721px){
   .mc-pin-wrap{
