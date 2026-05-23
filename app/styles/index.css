@@ -1078,7 +1078,7 @@ h2.section-h .mute{color:var(--dim)}
 }
 @media (min-width: 721px){
   .mc-pin-wrap{
-    min-height:calc(100dvh * 1.3);
+    min-height:100dvh;
   }
 }
 @media (prefers-reduced-motion: reduce){
