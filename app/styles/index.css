@@ -108,7 +108,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px;scroll-snap-type:y mandatory}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:64px}
 body{
   /* No background here on purpose — html already paints --bg. Adding a
      body bg covers fixed z-index:-1 ambient layers (aurora siblings)
@@ -1070,7 +1070,6 @@ h2.section-h .mute{color:var(--dim)}
 .mc-pin-wrap{
   position:relative;
   isolation:isolate;
-  scroll-snap-align:start;
 }
 @media (min-width: 721px){
   .mc-pin-wrap{
