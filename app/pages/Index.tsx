@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Footer } from "@/components/site/Footer";
+import { IdeMarquee } from "@/components/site/IdeMarquee";
 import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
 import { SvgSprite } from "@/components/site/SvgSprite";
@@ -57,8 +58,12 @@ export function Index() {
       <div className="stage-grid" aria-hidden="true" />
       <section className="hero" id="hero" style={{ position: "relative" }}>
         <div className="hero-text">
-          <motion.h1 className="hero-h mt-8 sm:mt-12" {...enter(0)}>
-            Any project<br /><span className="accent">Two keys.</span>
+          <motion.div className="mt-8 sm:mt-12" {...enter(0)}>
+            <span className="hero-eyebrow">macOS launcher for developer projects</span>
+          </motion.div>
+
+          <motion.h1 className="hero-h" {...enter(0.09)}>
+            Jump to any project<br /><span className="accent">in two keystrokes.</span>
           </motion.h1>
 
           <motion.p className="hero-sub" {...enter(0.18)}>
@@ -95,9 +100,18 @@ export function Index() {
             <span className="dot"></span>
             <span>macOS 26+ · Apple Silicon</span>
           </motion.div>
-          
-          <motion.div 
-            className="mt-16 sm:mt-24 pb-12 flex justify-center text-white/30"
+
+          <motion.div
+            className="mt-10 sm:mt-14"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          >
+            <IdeMarquee />
+          </motion.div>
+
+          <motion.div
+            className="mt-8 sm:mt-12 pb-12 flex justify-center text-white/30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}

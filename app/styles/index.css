@@ -395,6 +395,68 @@ a.hero-bar:hover .arrow{transform:translateX(3px);color:var(--accent)}
 .hero-text{
   max-width:900px;margin:0 auto;
 }
+.ide-marquee{
+  width:100vw;
+  max-width:100%;
+  margin-left:50%;
+  transform:translateX(-50%);
+  overflow:hidden;
+  padding:18px 0;
+  -webkit-mask-image:linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image:linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.ide-marquee-track{
+  display:flex;
+  gap:48px;
+  width:max-content;
+  animation:ide-marquee 32s linear infinite;
+}
+.ide-marquee-item{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:rgba(255,255,255,.55);
+  font-family:var(--mono);
+  font-size:13px;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  opacity:.72;
+  transition:opacity .25s ease;
+}
+.ide-marquee-track:hover .ide-marquee-item{opacity:.5}
+.ide-marquee-track:hover .ide-marquee-item:hover{opacity:1;color:#fff}
+.ide-marquee-item img{
+  width:28px;height:28px;
+  object-fit:contain;
+  display:block;
+}
+@keyframes ide-marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+@media (prefers-reduced-motion: reduce){
+  .ide-marquee-track{animation:none;justify-content:center;flex-wrap:wrap}
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  margin-bottom:20px;
+  padding:6px 12px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:999px;
+  background:rgba(255,255,255,.02);
+}
+.hero-eyebrow::before{
+  content:"";
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent-glow);
+}
 h1.hero-h{
   font-family:var(--display);
   font-size:clamp(48px, 8vw, 112px);
@@ -933,16 +995,16 @@ h2.section-h .mute{color:var(--dim)}
    scroll only controls when the user is released past the section.
    On small screens we skip pinning — a 100dvh-tall pin behaves poorly
    on portrait phones and the natural flow already reads fine.
-   The 250dvh budget gives the user a clear "held" moment (~1.5 screens
-   of pin duration after sticky engages) without locking them on the
-   page longer than the video runtime allows. */
+   The 160dvh budget gives the user a brief "held" moment (~0.6 screens
+   of pin duration after sticky engages) — long enough to register the
+   pin without overstaying. */
 .mc-pin-wrap{
   position:relative;
   isolation:isolate;
 }
 @media (min-width: 721px){
   .mc-pin-wrap{
-    min-height:calc(100dvh * 2.5);
+    min-height:calc(100dvh * 1.6);
   }
 }
 @media (prefers-reduced-motion: reduce){
