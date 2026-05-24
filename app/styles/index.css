@@ -2800,16 +2800,22 @@ h2.section-h .mute{color:var(--dim)}
     background:none;border:0;
   }
   /* Mobile Odak cell: neutral white tint (no amber wash). The
-     ODAK label carries the brand color so the eye still sorts
+     Odak label carries the brand color so the eye still sorts
      which column is ours, but the cell itself stays monochrome
      to match the desktop treatment. */
   .pos-row .cell.us{
     background:color-mix(in oklch, var(--fg) 5%, transparent);
     border-radius:10px;
   }
+  /* Labels stay proper-case to match the desktop header treatment
+     (Odak / Raycast / AltTab / Spotlight). Earlier this rule was
+     text-transform:uppercase, which mangled "Odak" into "ODAK"
+     and inflated the competitor names enough to overflow the
+     6px gap between cells on small screens. */
   .pos-row .cell .lbl{
-    display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--mute);text-align:center;
+    display:block;font-family:var(--display);font-size:11px;
+    letter-spacing:-.005em;font-weight:500;
+    color:var(--mute);text-align:center;
   }
   .pos-row .cell.us .lbl{
     color:var(--accent);
@@ -4317,7 +4323,11 @@ section.mb-section{padding-top:24px;padding-bottom:var(--space-section);max-widt
   .f-split.rev .f-copy,.f-split.rev .f-stage{order:initial}
   .f-copy{position:static}
   .pricing{grid-template-columns:1fr}
-  .faq-grid{grid-template-columns:1fr;gap:24px}
+  /* No .faq-grid override here — the base rule is display:flex with
+     no gap, and adjacent items get a 1px border-top to separate them.
+     The earlier `grid-template-columns:1fr;gap:24px` here was stale
+     from an older grid layout and reintroduced spacing the design
+     was specifically built to avoid. */
   .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
 }
 

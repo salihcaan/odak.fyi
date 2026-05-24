@@ -175,7 +175,6 @@ export function Buy() {
                 <span className="curr">$</span>19
                 <span className="per">once</span>
               </div>
-              <div className="amount-sub">3 Macs · lifetime license</div>
 
               <ul className="benefits">
                 <li>
@@ -187,25 +186,21 @@ export function Buy() {
                 <li>
                   <Check />
                   <span>
-                    Use on <b>3 Macs</b> — desktop, laptop, work machine.
+                    Activates on <b>up to 3 Macs</b> — desktop, laptop, work
+                    machine.
                   </span>
                 </li>
                 <li>
                   <Check />
                   <span>
-                    <b>Lifetime license.</b> Bug fixes, security patches,
-                    and new features — free.
+                    Updates & security patches, <b>free forever</b>.
                   </span>
-                </li>
-                <li>
-                  <Check />
-                  <span>14-day free trial. No credit card.</span>
                 </li>
               </ul>
 
               <form className="checkout-form" onSubmit={onSubmit}>
                 <label className="field">
-                  <span className="field-label">Email for activation code</span>
+                  <span className="field-label">Email</span>
                   <input
                     id="email-input"
                     type="email"
@@ -218,7 +213,7 @@ export function Buy() {
                   />
                 </label>
                 <button id="checkout-btn" className="buy" type="submit">
-                  Buy Odak — $19
+                  Continue to checkout
                   <span className="arrow" aria-hidden="true">
                     <svg viewBox="0 0 12 12">
                       <path d="M3 6h6m-3-3l3 3-3 3" />
@@ -228,7 +223,7 @@ export function Buy() {
               </form>
 
               <p className="price-fine">
-                One-time payment · instant activation · Sparkle auto-updates ·{" "}
+                Instant activation · Sparkle auto-updates ·{" "}
                 <a href="/refund">14-day refund</a>
               </p>
             </article>
@@ -237,7 +232,7 @@ export function Buy() {
           {view === "success" && (
             <article
               id="success-state"
-              className="price-card state"
+              className="price-card state success-state"
               role="status"
               aria-live="polite"
             >
@@ -247,12 +242,37 @@ export function Buy() {
                 </svg>
               </div>
               <h2>You're set.</h2>
-              <p>
-                We've sent your activation code to your email. Open Odak, go to
-                <strong> Settings → License</strong>, and paste the code.
+              <p className="state-lead">
+                Your license is one click away — here's how to grab it.
               </p>
+
+              <ol className="success-steps">
+                <li>
+                  <span className="step-num">1</span>
+                  <div className="step-body">
+                    Open the email from{" "}
+                    <strong>Odak (via Polar)</strong>.
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">2</span>
+                  <div className="step-body">
+                    Click the{" "}
+                    <span className="email-cta-mock">Access purchase</span>{" "}
+                    button.
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">3</span>
+                  <div className="step-body">
+                    Copy your license, then paste it into Odak →{" "}
+                    <strong>Settings → License</strong>.
+                  </div>
+                </li>
+              </ol>
+
               <p className="price-fine">
-                Didn't get it? Check spam, then{" "}
+                Email lands in about a minute. Don't see it? Check spam, then{" "}
                 <a href="mailto:support@odak.fyi">email support</a>.
               </p>
             </article>
@@ -292,15 +312,34 @@ export function Buy() {
 
           <aside className="price-aside">
             <h3>
-              One-time <span className="accent">purchase.</span>
+              What happens <span className="accent">next.</span>
             </h3>
-            <p className="lead">
-              Saves a few seconds per window-switch, dozens of times a day.
-            </p>
-            <p>
-              No subscription, no renewal. The license is yours to keep — every
-              update, free, forever.
-            </p>
+            <ol className="next-steps">
+              <li>
+                <span className="step-num">1</span>
+                <div>
+                  <b>Pay with Polar.</b>
+                  <span>Apple Pay or any card. Takes about 30 seconds.</span>
+                </div>
+              </li>
+              <li>
+                <span className="step-num">2</span>
+                <div>
+                  <b>Email lands in your inbox.</b>
+                  <span>
+                    From <i>Odak (via Polar)</i> — with an{" "}
+                    <i>Access&nbsp;purchase</i> button that opens your license.
+                  </span>
+                </div>
+              </li>
+              <li>
+                <span className="step-num">3</span>
+                <div>
+                  <b>Paste into Odak.</b>
+                  <span>Settings → License. Unlocked on up to 3 Macs.</span>
+                </div>
+              </li>
+            </ol>
             <div className="seals">
               <span className="seal">Hardened runtime</span>
               <span className="seal">Apple Silicon</span>

@@ -73,6 +73,7 @@ const MPA_ENTRIES = [
   "refund",
   "terms",
   "docs/actions",
+  "docs/activate",
 ] as const;
 // Static HTML pages (currently /docs/actions.html) can't use the
 // __APP_VERSION__/__DMG_SIZE__ defines that React reads, so swap
@@ -93,7 +94,7 @@ const cleanUrlsPlugin = {
     server.middlewares.use((req, _res, next) => {
       const url = req.url ?? "";
       const match = url.match(
-        /^\/(buy|buy-stage|changelog|privacy|refund|terms|docs\/actions)(\?.*)?$/,
+        /^\/(buy|buy-stage|changelog|privacy|refund|terms|docs\/actions|docs\/activate)(\?.*)?$/,
       );
       if (match && MPA_ENTRIES.includes(match[1] as (typeof MPA_ENTRIES)[number])) {
         req.url = `/${match[1]}.html${match[2] ?? ""}`;
@@ -143,6 +144,7 @@ export default defineConfig({
         refund: path.resolve(__dirname, "app/refund.html"),
         terms: path.resolve(__dirname, "app/terms.html"),
         "docs-actions": path.resolve(__dirname, "app/docs/actions.html"),
+        "docs-activate": path.resolve(__dirname, "app/docs/activate.html"),
       },
     },
   },

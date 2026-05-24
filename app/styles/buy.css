@@ -102,13 +102,26 @@ button{font-family:inherit}
 }
 .buy-ambient-glow{
   position:absolute;
-  top:-12vw;left:50%;transform:translateX(-50%);
+  top:-12vw;left:50%;
   width:90vw;max-width:1200px;
   height:60vw;max-height:780px;
   border-radius:50%;
   filter:blur(140px);
   background:radial-gradient(ellipse 50% 60% at 50% 50%, var(--accent-glow), transparent 65%);
   opacity:.5;
+  /* Slow breathing drift so the surface doesn't feel static while users
+     read the checkout column. Kept long-period (24s) and small-amplitude
+     so it never competes with the form for attention. */
+  transform:translate(-50%, 0) scale(1);
+  animation:buy-ambient-drift 24s ease-in-out infinite;
+  will-change:transform, opacity;
+}
+@keyframes buy-ambient-drift{
+  0%, 100%{ transform:translate(-50%, 0) scale(1); opacity:.46 }
+  50%    { transform:translate(calc(-50% + 1.4vw), 1.8vw) scale(1.05); opacity:.62 }
+}
+@media (prefers-reduced-motion: reduce){
+  .buy-ambient-glow{ animation:none }
 }
 
 /* ==========================================================
@@ -281,18 +294,13 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
 .price-card .amount{
   font-family:var(--display);font-size:clamp(64px, 7.4vw, 88px);
   line-height:.95;letter-spacing:-.035em;font-weight:700;
-  margin:0;position:relative;z-index:1;
+  margin:0 0 28px;position:relative;z-index:1;
   display:flex;align-items:flex-start;gap:4px;
 }
 .price-card .amount .curr{font-size:.42em;color:var(--dim);margin-top:8px;font-weight:600}
 .price-card .amount .per{
   font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--dim);font-weight:500;margin-left:10px;margin-top:auto;padding-bottom:22px;
-}
-.price-card .amount-sub{
-  font-family:var(--mono);font-size:12px;color:var(--mute);
-  letter-spacing:.08em;text-transform:uppercase;
-  margin:4px 0 28px;position:relative;z-index:1;
 }
 
 .price-card ul.benefits{
@@ -420,7 +428,60 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
 }
 .price-card.state p strong{color:var(--fg);font-weight:600}
 .price-card.state .buy{max-width:280px;width:100%;margin-top:6px}
-.price-card.state .price-fine{margin-top:6px}
+.price-card.state .price-fine{margin-top:6px;text-align:center}
+
+/* ----- success state: 3-step Polar email recognition guide -----
+   The success card is centered (state variant), but the step rows
+   need to be left-aligned for readability — overrides scoped to
+   .success-state so the prelaunch card is unaffected. */
+.success-state{
+  /* Slightly wider feel for the steps to breathe. */
+  padding:clamp(36px, 5vw, 56px) clamp(24px, 4vw, 44px);
+}
+.success-state .state-lead{
+  margin:0 0 18px;
+  font-size:15px;color:var(--fg-2);
+  max-width:38ch;
+}
+.success-state ol.success-steps{
+  list-style:none;padding:0;margin:0 auto 18px;
+  display:flex;flex-direction:column;gap:14px;
+  width:100%;max-width:380px;
+  text-align:left;
+}
+.success-state ol.success-steps li{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px 14px;
+  background:rgba(0,0,0,.22);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.success-state ol.success-steps li .step-body{
+  color:var(--fg-2);
+  font-size:14px;line-height:1.5;
+  letter-spacing:-.005em;
+  padding-top:2px;
+}
+.success-state ol.success-steps li .step-body strong{
+  color:var(--fg);font-weight:600;
+}
+
+/* The Polar email's "Access purchase" CTA reproduced inline so users
+   recognize it when they open the email. Pure-white pill with black
+   ink (inverted from the dark theme) to match what they'll actually
+   see in their inbox. */
+.email-cta-mock{
+  display:inline-flex;align-items:center;
+  background:#fff;color:#0a0a0a;
+  padding:2px 11px;border-radius:999px;
+  font-family:inherit;
+  font-size:12.5px;font-weight:600;
+  letter-spacing:-.005em;
+  vertical-align:1px;
+  margin:0 1px;
+  box-shadow:0 1px 0 rgba(255,255,255,.06), 0 2px 10px rgba(0,0,0,.5);
+  white-space:nowrap;
+}
 
 /* ==========================================================
    PRICE ASIDE — right column. Reuses the home naming so the
@@ -438,8 +499,38 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
   color:var(--fg-2);line-height:1.55;margin:0 0 14px;
   font-size:15px;letter-spacing:-.005em;
 }
-.price-aside p.lead{
-  font-size:17px;color:var(--fg);margin-bottom:18px;
+/* ----- "What happens next" numbered timeline (right column) -----
+   Three rows of small numbered chips paired with a heading + line.
+   Mirrors the success card's numbered steps so the two surfaces feel
+   like one journey — same chip shape, same colors, same gap rhythm. */
+.price-aside ol.next-steps{
+  list-style:none;padding:0;margin:0 0 22px;
+  display:flex;flex-direction:column;gap:18px;
+  counter-reset:next;
+}
+.price-aside ol.next-steps li{
+  display:flex;gap:14px;align-items:flex-start;
+}
+.price-aside ol.next-steps li > div{
+  display:flex;flex-direction:column;gap:3px;
+}
+.price-aside ol.next-steps b{
+  color:var(--fg);font-weight:600;font-size:14.5px;letter-spacing:-.005em;
+}
+.price-aside ol.next-steps span{
+  color:var(--fg-2);font-size:13.5px;line-height:1.5;letter-spacing:-.005em;
+}
+.price-aside ol.next-steps i{font-style:normal;color:var(--fg)}
+.step-num{
+  flex-shrink:0;
+  width:24px;height:24px;border-radius:50%;
+  display:grid;place-items:center;
+  background:color-mix(in oklch, var(--accent) 18%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 38%, transparent);
+  color:var(--accent);
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  margin-top:1px;
+  letter-spacing:0;
 }
 .price-aside .seals{
   display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px;
@@ -489,12 +580,44 @@ footer.site-foot{
    MOBILE — tighten the section head, drop ambient glow size,
    and let the two columns stack vertically with the price
    card on top (the action) and the marketing aside below.
+   The default clamp() bottoms on .buy-main padding, .section-head
+   margin, and footer.site-foot margin all bottom out at desktop-
+   sized values (64/40/80px). On a 390px screen those add up to
+   ~190px of dead space below the content, which is what was
+   making the page feel hollow at the bottom.
    ========================================================== */
 @media (max-width:560px){
-  .buy-main{padding-top:32px}
+  .buy-main{padding-top:32px;padding-bottom:28px}
   h1.section-h{font-size:clamp(30px, 9vw, 40px)}
-  .price-card .amount{font-size:clamp(56px, 14vw, 72px)}
+  .section-head{margin-bottom:24px}
+  .section-sub{font-size:15.5px}
+  .env-banner{margin-bottom:18px;padding:10px 14px;font-size:13px}
+  .checkout-grid{gap:18px}
+  .price-card{padding:24px 22px}
+  .price-card .amount{font-size:clamp(56px, 14vw, 72px);margin-bottom:22px}
   .price-card .amount .per{padding-bottom:14px;font-size:12px}
+  .price-card ul.benefits{margin-bottom:22px;gap:10px}
+  .price-card.state{padding:32px 22px;gap:10px}
+  .success-state ol.success-steps{gap:10px;margin-bottom:14px}
+  .success-state ol.success-steps li{padding:11px 13px}
   .buy-ambient-glow{height:60vh;max-height:480px}
   .price-aside{padding:0}
+  .price-aside h3{font-size:22px;margin-bottom:12px}
+  .price-aside ol.next-steps{gap:14px;margin-bottom:18px}
+  .price-aside .seals{margin:14px 0 18px}
+  .price-aside .fine{margin-top:16px;padding-top:14px}
+
+  /* Footer: collapse the 80–128px clamp into a calmer 40px, drop
+     internal padding, and re-layout the foot-grid so the brand
+     row spans the full width (with its long mission paragraph)
+     and the three link lists share a tidy 3-up row underneath. */
+  footer.site-foot{margin-top:40px;padding:32px 22px 24px}
+  .foot-grid{grid-template-columns:repeat(3, 1fr);gap:22px 18px;margin-bottom:24px}
+  .foot-brand{grid-column:1 / -1}
+  .foot-brand .mission{max-width:none;margin-top:12px;font-size:14px}
+  .foot-col h4{margin-bottom:10px}
+  .foot-col ul{gap:8px}
+  .foot-col a{font-size:13.5px}
+  .foot-bottom{padding-top:16px;gap:10px;font-size:10.5px}
+  .foot-bottom > *{white-space:normal}
 }
