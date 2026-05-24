@@ -144,5 +144,45 @@ This release brings the licensing flow online (Paddle Billing checkout, in-app l
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.5/Odak-0.1.5.dmg" length="8460901" type="application/x-apple-diskimage" sparkle:edSignature="4nkIajRtm2xw2xzEdad/TDUpgawH7m8WiX0YteXn8xkqemKVh48H8Q3VrzXPu5FaOZ07/xZ5MCGMbYKak/puCg=="/>
         </item>
+            <item>
+            <title>Version 0.1.5</title>
+            <pubDate>Sat, 23 May 2026 06:53:53 +0000</pubDate>
+            <sparkle:version>9</sparkle:version>
+            <sparkle:shortVersionString>0.1.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.5 (build 9) — small Quick Switcher fix
+
+A respin of 0.1.5 with one user-facing fix.
+
+### Fixes
+- **Copy Path / Copy Name now dismisses Odak.** Both copy actions used to close the actions panel but leave the search window hovering on screen, so you'd Cmd+V into a still-open Odak. They now hide the panel after the copy fires — same behavior as Open in IDE, Reveal in Finder, and the action shortcuts.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.5/Odak-0.1.5.dmg" length="8461526" type="application/x-apple-diskimage" sparkle:edSignature="nUgcWCpAc01wJmimeVqRv64Rj1y5+S7khkS7LacOfGEsYi7kZ1m5i5Rv+QUKdj8JPykKAquVqVV0LQv7+OzfDQ=="/>
+        </item>
+            <item>
+            <title>Version 0.1.6</title>
+            <pubDate>Sun, 24 May 2026 06:56:39 +0000</pubDate>
+            <sparkle:version>10</sparkle:version>
+            <sparkle:shortVersionString>0.1.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.6 — calmer launch, snappier switcher, prettier notch on external displays
+
+A handful of polish fixes plus a small visual unification.
+
+### Improvements
+- **Dynamic Island silhouette matches the MacBook notch on external displays.** On non-notched displays, the expanded pill now uses the same concave-flared shape with horizontal tangents as the built-in display — the shape animates open from a degenerate rest pill, so the morph reads as a single object rather than two different ones depending on which screen you're on.
+- **Quick Switcher Cmd+W feels instant on slow apps.** Closing a window now runs the AX press off the main actor with a 1-second messaging cap, so a hung target app no longer queues up your next Cmd+W or arrow keystroke behind a 6-second timeout.
+
+### Fixes
+- **No more I-beam flash or position jump when Odak appears.** The search window used to briefly flicker at the SwiftUI default position with a text-cursor before teleporting to its anchor — caused by the off-screen parking workaround. Now it pre-positions correctly at the spotlight anchor and stays hit-test-disabled across the transparent phase, so the cursor never picks up the field's I-beam.
+- **License no longer drops when switching between Debug and Release builds.** Stage and prod tokens used to share one keychain slot, so opening a Debug build after a `make install` (or vice-versa) silently wiped the active license. Each environment now gets its own slot, and existing prod activations migrate automatically — you should never see "re-enter your license" again unless you actually need to.
+
+### Other
+- **Pricing now reads $19** to match odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.6/Odak-0.1.6.dmg" length="8468935" type="application/x-apple-diskimage" sparkle:edSignature="XZ34yDBgaVBVfkg2jj2uWsmNRDu8nQ/pY+YdMr3j010b/2+fKA+HwU23R7RtpyGRhBJzLfi7ukpAj66OyUXACw=="/>
+        </item>
     </channel>
 </rss>
