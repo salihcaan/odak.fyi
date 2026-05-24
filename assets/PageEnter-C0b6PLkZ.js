@@ -1,1 +1,0 @@
-import{f as i}from"./polish-CaTVpi3l.js";function r(){const t=i(),o=t?{duration:.22}:{duration:.55,ease:[.22,1,.36,1]};return{item:(e=0)=>({hidden:t?{opacity:0}:{opacity:0,y:10},show:{opacity:1,y:0,transition:{...o,delay:t?0:e}}}),reduced:t}}export{r as u};
