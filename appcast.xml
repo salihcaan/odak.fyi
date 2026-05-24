@@ -118,10 +118,10 @@ When two projects share a name (e.g. an `odak.fyi` checkout in `~/code/` and ano
             <description><![CDATA[
 ## Odak 0.1.5 — paid licensing, smoother onboarding, better notch & switcher
 
-This release brings the licensing flow online (Paddle Billing checkout, in-app license activation), tightens onboarding around the Accessibility prompt, and fixes a long list of papercuts across the notch, switcher, and search.
+This release brings the licensing flow online (Polar checkout, in-app license activation), tightens onboarding around the Accessibility prompt, and fixes a long list of papercuts across the notch, switcher, and search.
 
 ### New
-- **Paddle Billing checkout.** Buy a license directly from the in-app paywall — debug builds hit the staging URL, releases hit `/buy`, so you can't accidentally land on the wrong page. The Settings → License tab has been redesigned with a hero card and per-device row.
+- **Polar checkout.** Buy a license directly from the in-app paywall — debug builds hit the staging URL, releases hit `/buy`, so you can't accidentally land on the wrong page. The Settings → License tab has been redesigned with a hero card and per-device row.
 - **Dedicated Settings tab for the notch.** The Dynamic Island now has its own tab in Settings with a modifier-key picker and a live enable toggle, so you can change behavior without quitting the app.
 - **Detect non-git projects.** The scanner now picks up projects without a `.git` folder using a tiered marker scheme (`package.json`, `Package.swift`, `Cargo.toml`, `pyproject.toml`, etc.), so JetBrains scratch projects and language workspaces show up alongside your repos.
 
