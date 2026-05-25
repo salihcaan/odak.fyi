@@ -633,7 +633,7 @@ export function Buy() {
                 Apple Pay, Google Pay, and major cards (Visa, Mastercard,
                 Amex). Polar handles VAT and GST for EU and UK buyers
                 automatically; the receipt itemizes the tax. Seller of record
-                on your statement is <strong>Polar, Inc.</strong>, not Odak.
+                on your statement is <strong>Polar Software, Inc.</strong>, not Odak.
               </p>
             </details>
 
