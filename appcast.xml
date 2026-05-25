@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <title>Odak</title>
+        <link>https://odak.fyi/appcast.xml</link>
+        <description>Most recent updates to Odak</description>
+        <language>en</language>
+            <item>
+            <title>Version 0.1.7</title>
+            <pubDate>Mon, 25 May 2026 10:34:34 +0000</pubDate>
+            <sparkle:version>11</sparkle:version>
+            <sparkle:shortVersionString>0.1.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak — first release
+
+Odak is out. Try it free for 14 days.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.7/Odak-0.1.7.dmg" length="8462947" type="application/x-apple-diskimage" sparkle:edSignature="3MrtRwoEgGg+xOtHt04RDWojoaoqDMSPpDQ6IMAyyDs8QUGxaauyn1enO4MDbUJhEI3kgPrAxmt/DHev/X7KDQ=="/>
+        </item>
+    </channel>
+</rss>

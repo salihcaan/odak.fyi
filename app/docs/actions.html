@@ -1,0 +1,1367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Actions — Odak</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Actions are keyboard shortcuts that fire when a project is selected in Odak. Open apps, open URLs, run scripts — with variables for path, git state, and per-project values."/>
+<meta name="theme-color" content="#0a0908"/>
+<meta name="robots" content="index,follow"/>
+<link rel="icon" type="image/png" href="/assets/logo/odak.png"/>
+<link rel="apple-touch-icon" href="/assets/logo/odak.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* tokens — mirror index.html */
+:root{
+  --bg:#0a0908;--bg-2:#121010;--bg-3:#1b1816;
+  --surface:rgba(255,248,238,.04);--surface-2:rgba(255,248,238,.07);
+  --border:rgba(255,248,238,.08);--border-2:rgba(255,248,238,.14);
+  --fg:#f5ede0;--fg-2:rgba(245,237,224,.78);--dim:rgba(245,237,224,.56);--mute:rgba(245,237,224,.38);
+  --accent:oklch(78% 0.14 75);--accent-2:oklch(68% 0.16 55);--accent-glow:oklch(78% 0.18 75 / .55);--accent-ink:#1a1410;
+  --code-bg:rgba(0,0,0,.32);
+  --code-key:oklch(78% 0.14 75);
+  --code-str:oklch(72% 0.10 145);
+  --code-com:rgba(245,237,224,.42);
+  --sans:'Inter',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:780px;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-.005em}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+.aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.45}
+.aurora::before{content:'';position:absolute;width:60vw;height:60vw;top:-25vw;left:-15vw;border-radius:50%;filter:blur(140px);background:radial-gradient(circle,var(--accent-glow),transparent 60%)}
+
+/* NAV — identical to the home page so the bar reads as one component
+   across every URL. Layout values (1200px max, 32px gutter, ease curve)
+   are inlined because the home page's --maxw/--gutter/--ease-out tokens
+   aren't defined on this narrower content page. */
+.nav{
+  position:sticky;top:0;z-index:80;
+  /* Pin to home's body line-height (1.55). Without this, body's
+     long-form 1.7 leading inflates the brand text + Download button
+     by 2–4px and the bar visibly stretches when crossing pages. */
+  line-height:1.55;
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  background:color-mix(in oklch, var(--bg) 62%, transparent);
+  border-bottom:1px solid var(--border);
+  box-shadow:inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  transition:background .25s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter .25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav.scrolled{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  background:color-mix(in oklch, var(--bg) 92%, transparent);
+}
+@media (max-width:760px){
+  .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:color-mix(in oklch, var(--bg) 88%, transparent)}
+  .nav-links{display:none}
+}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:19px;letter-spacing:-.02em;text-decoration:none;color:#f5ede0}
+.nav-brand:hover{color:inherit}
+.nav-brand .mark{width:28px;height:28px;display:inline-block;flex-shrink:0;line-height:0}
+.nav-brand .mark img{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
+.nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s;text-decoration:none}
+.nav-links a:hover{color:var(--fg);background:var(--surface)}
+.nav-cta{display:flex;align-items:center;gap:8px}
+.nav-cta .icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--fg-2);transition:background .15s, color .15s}
+.nav-cta .icon-btn:hover{background:var(--surface-2);color:var(--fg)}
+.nav-cta .icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
+.btn-primary{background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:-.005em;border:1px solid var(--fg);display:inline-flex;align-items:center;gap:8px;transition:transform .15s, box-shadow .2s;cursor:pointer;white-space:nowrap;text-decoration:none}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px -4px color-mix(in oklch, var(--fg) 40%, transparent);color:var(--bg)}
+.nav-changelog{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:999px;color:var(--fg-2);font-size:12px;font-weight:500;letter-spacing:-.003em;white-space:nowrap;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-decoration:none;transition:background .15s cubic-bezier(.22,1,.36,1),border-color .15s cubic-bezier(.22,1,.36,1),transform .15s cubic-bezier(.22,1,.36,1),box-shadow .15s cubic-bezier(.22,1,.36,1)}
+.nav-changelog:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2);box-shadow:0 4px 12px rgba(0,0,0,.2);color:var(--fg-2)}
+.nav-changelog .tag{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--fg);opacity:.95}
+.nav-changelog .label{color:var(--fg-2);font-weight:500}
+.nav-changelog:hover .label{color:var(--fg)}
+.nav-changelog .arrow{display:inline-flex;align-items:center;width:10px;height:10px;color:var(--fg-2);transition:transform .2s cubic-bezier(.22,1,.36,1),color .2s cubic-bezier(.22,1,.36,1)}
+.nav-changelog:hover .arrow{color:var(--fg);transform:translateX(2px)}
+.nav-changelog .arrow svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:760px){.nav-changelog{display:none}}
+
+/* layout: sidebar + article */
+.shell{max-width:1180px;margin:0 auto;padding:48px 24px 96px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px}
+@media (max-width:980px){.shell{grid-template-columns:1fr;gap:24px;padding-top:28px}}
+
+aside.toc-side{position:sticky;top:80px;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto;padding:8px 0 24px;font-size:13px}
+aside.toc-side .toc-h{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin:0 0 12px;padding-left:12px}
+aside.toc-side ul{list-style:none;margin:0;padding:0}
+aside.toc-side li{margin:0}
+aside.toc-side a{display:block;padding:5px 12px;color:var(--fg-2);text-decoration:none;border-left:2px solid transparent;line-height:1.45;transition:color .15s,border-color .15s}
+aside.toc-side a:hover{color:var(--fg)}
+aside.toc-side a.is-active{color:var(--fg);border-left-color:var(--accent)}
+aside.toc-side ul ul a{padding-left:24px;font-size:12.5px;color:var(--dim)}
+aside.toc-side ul ul a:hover{color:var(--fg-2)}
+aside.toc-side::-webkit-scrollbar{width:6px}
+aside.toc-side::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
+
+@media (max-width:980px){
+  aside.toc-side{position:static;max-height:none;padding:18px 22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+  aside.toc-side .toc-h{padding-left:0}
+  aside.toc-side a{border-left:none;padding:3px 0}
+  aside.toc-side ul ul a{padding-left:14px}
+}
+
+main.article{min-width:0;max-width:var(--maxw)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h1{font-size:42px;line-height:1.1;letter-spacing:-.025em;font-weight:700;margin:0 0 16px}
+.lede{font-size:17px;color:var(--fg-2);margin:0 0 14px}
+.lede + p{font-size:15px;color:var(--fg-2);margin:0 0 8px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--mute);margin:24px 0 40px}
+.meta a{color:var(--fg-2);text-decoration:none;border-bottom:1px solid var(--border-2)}
+.meta a:hover{color:var(--accent);border-color:var(--accent)}
+
+h2{font-size:24px;letter-spacing:-.018em;font-weight:700;margin:56px 0 14px;scroll-margin-top:80px;color:var(--fg)}
+h3{font-size:17px;font-weight:600;margin:32px 0 10px;color:var(--fg);scroll-margin-top:80px}
+h2 + h3{margin-top:18px}
+h2 .anchor,h3 .anchor{opacity:0;color:var(--mute);text-decoration:none;font-weight:400;margin-left:.4em;transition:opacity .15s}
+h2:hover .anchor,h3:hover .anchor{opacity:.7}
+h2 .anchor:hover,h3 .anchor:hover{color:var(--accent);opacity:1}
+
+p,li{color:var(--fg-2)}
+ul,ol{padding-left:22px;margin:8px 0 16px}
+li{margin:6px 0}
+strong{color:var(--fg);font-weight:600}
+em{font-style:italic}
+
+/* inline code + code blocks */
+:not(pre) > code{font-family:var(--mono);font-size:.86em;padding:1.5px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:5px;color:var(--fg);white-space:nowrap}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:16px 0;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.65;color:var(--fg)}
+pre code{font-family:inherit;font-size:inherit;color:inherit;background:none;border:0;padding:0;white-space:pre}
+pre::-webkit-scrollbar{height:8px}
+pre::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px}
+
+/* tiny syntax tinting via classes added by JS */
+pre .tk{color:var(--code-key)}
+pre .ts{color:var(--code-str)}
+pre .tc{color:var(--code-com);font-style:italic}
+
+/* blockquote (Note callouts) */
+blockquote{margin:18px 0;padding:14px 18px 14px 22px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;color:var(--fg-2);font-size:14.5px}
+blockquote p{margin:0}
+blockquote p + p{margin-top:8px}
+blockquote strong{color:var(--fg)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--fg-2)}
+th{background:var(--surface);color:var(--fg);font-weight:600;font-size:12.5px;letter-spacing:.01em;border-bottom:1px solid var(--border-2)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface)}
+td code,th code{white-space:nowrap}
+td.center{text-align:center;width:1%;white-space:nowrap}
+
+hr{border:none;border-top:1px solid var(--border);margin:48px 0}
+
+/* footer — same shape as the home page so the bottom of every URL
+   matches: 4-col grid (brand+mission, Product, Resources, Company) and
+   a mono-set bottom row. Width/padding tokens are inlined because
+   subpages don't define --maxw at 1200px (their --maxw is the article
+   measure). */
+footer.site-foot{max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:48px 32px 32px;border-top:1px solid var(--border);line-height:1.55}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.foot-brand .mission{font-size:15px;line-height:1.5;color:var(--dim);margin:16px 0 0;max-width:32ch;letter-spacing:-.005em}
+.foot-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;font-weight:500}
+.foot-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.foot-col a{color:var(--fg-2);font-size:14px;text-decoration:none}
+.foot-col a:hover{color:var(--accent)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding:20px 0 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.02em}
+.foot-bottom > *{white-space:nowrap}
+.foot-bottom .istanbul{color:var(--fg-2)}
+.foot-bottom .istanbul b{color:var(--accent);font-weight:500}
+@media (max-width:960px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+
+@media (max-width:560px){h1{font-size:32px}h2{font-size:21px}h3{font-size:15.5px}.shell{padding:20px 18px 64px}}
+</style>
+</head>
+<body data-theme="dark">
+
+<div class="aurora" aria-hidden="true"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="mark">
+        <picture>
+          <source type="image/avif" srcset="/assets/logo/odak-dark.avif">
+          <source type="image/webp" srcset="/assets/logo/odak-dark.webp">
+          <img src="/assets/logo/odak-dark.png" alt="" width="44" height="44" decoding="async" fetchpriority="high">
+        </picture>
+      </div>
+      <span>Odak</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="/#comparison">Comparison</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/docs/actions.html">Docs</a>
+      <a href="/changelog.html#v{{APP_VERSION}}" class="nav-changelog" aria-label="What's new in v{{APP_VERSION}}">
+        <span class="tag">v{{APP_VERSION}}</span>
+        <span class="label">What's new</span>
+        <span class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 12 12"><path d="M3 6h6m-3-3l3 3-3 3"/></svg>
+        </span>
+      </a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg" class="btn-primary"><svg viewBox="0 0 14 17" aria-hidden="true" style="width:12px;height:14px;fill:currentColor;margin-top:-2px"><path fill="currentColor" d="M11.182 8.91c-.018-2.022 1.65-2.992 1.725-3.038-.94-1.376-2.404-1.564-2.925-1.586-1.247-.126-2.434.733-3.067.733-.633 0-1.61-.715-2.65-.696-1.363.02-2.62.793-3.32 2.013-1.416 2.456-.363 6.094 1.018 8.087.674.974 1.477 2.073 2.53 2.034 1.014-.04 1.397-.658 2.624-.658 1.226 0 1.572.658 2.65.638 1.094-.02 1.787-.997 2.456-1.974.774-1.13 1.093-2.224 1.112-2.28-.024-.012-2.135-.82-2.153-3.273zM9.176 2.985C9.737 2.31 10.114 1.371 10.011.434c-.806.033-1.78.537-2.36 1.21-.52.598-.974 1.553-.851 2.473.898.07 1.815-.456 2.376-1.132z"/></svg>Download <span style="font-family:var(--mono);font-size:11px;opacity:.65;font-weight:500">{{DMG_SIZE}}</span></a>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+  <aside class="toc-side" aria-label="On this page">
+    <p class="toc-h">On this page</p>
+    <ul>
+      <li><a href="#quick-start">Quick start</a></li>
+      <li><a href="#field-reference">Field reference</a></li>
+      <li><a href="#action-types">Action types</a>
+        <ul>
+          <li><a href="#app">App</a></li>
+          <li><a href="#url">URL</a></li>
+          <li><a href="#script">Script</a></li>
+        </ul>
+      </li>
+      <li><a href="#variables">Variables</a></li>
+      <li><a href="#environment-variables-scripts">Environment variables</a></li>
+      <li><a href="#script-output-modes">Script output modes</a></li>
+      <li><a href="#conditional-actions">Conditional actions</a></li>
+      <li><a href="#interactive-lists--chaining">Interactive lists &amp; chaining</a></li>
+      <li><a href="#per-project-configuration">Per-project configuration</a></li>
+      <li><a href="#validation">Validation</a></li>
+      <li><a href="#sharing--importing">Sharing &amp; importing</a></li>
+      <li><a href="#siri-shortcuts-and-spotlight">Siri, Shortcuts, Spotlight</a></li>
+      <li><a href="#workflows">Workflows</a></li>
+      <li><a href="#examples">Examples</a>
+        <ul>
+          <li><a href="#opening-apps">Opening apps</a></li>
+          <li><a href="#git--github">Git &amp; GitHub</a></li>
+          <li><a href="#testing--linting">Testing &amp; linting</a></li>
+          <li><a href="#build--run">Build &amp; run</a></li>
+          <li><a href="#cicd--deploys">CI/CD &amp; deploys</a></li>
+          <li><a href="#observability">Observability</a></li>
+          <li><a href="#team-collaboration">Team collaboration</a></li>
+          <li><a href="#project-navigation">Project navigation</a></li>
+          <li><a href="#interactive-workflows">Interactive workflows</a></li>
+          <li><a href="#language-specific">Language-specific</a></li>
+        </ul>
+      </li>
+      <li><a href="#schema-reference">Schema reference</a></li>
+      <li><a href="#shortcut-syntax">Shortcut syntax</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </aside>
+
+  <main class="article">
+    <div class="eyebrow">Documentation</div>
+    <h1>Actions</h1>
+    <p class="lede">Actions are keyboard shortcuts that fire when a project is selected in Odak's search panel. They open apps, open URLs, or run scripts — with variable substitution for the project's path, git state, and custom per-project values.</p>
+    <p>All actions live in a single YAML file: <code>~/.odak/config.yaml</code>. Edit it in your favourite editor — Odak watches the file and reloads automatically when you save.</p>
+    <p>The <strong>Settings → Actions</strong> tab is a <strong>read-only dashboard</strong>: it shows what's loaded, surfaces validation issues, and exposes <strong>Edit config.yaml</strong> + <strong>Reload</strong> buttons. Actions are not created, edited, or deleted from the UI — the file is the single source of truth.</p>
+
+    <hr/>
+
+    <h2 id="quick-start">Quick start <a href="#quick-start" class="anchor" aria-label="Anchor link">#</a></h2>
+    <p>Every action has a <strong>name</strong>, a <strong>type</strong>, and a <strong>shortcut</strong>. The shortcut fires when you've selected a project in the search panel.</p>
+<pre><code>actions:
+  - name: Cursor
+    type: app
+    shortcut: cmd+c
+    app: Cursor</code></pre>
+    <p>That's the whole vocabulary. Add more blocks under <code>actions:</code>, save the file, and Odak reloads.</p>
+    <blockquote><p><strong>Note.</strong> YAML is the native format, but JSON configs parse too (JSON is a subset of YAML). The file ships as YAML so you can add comments explaining what each action does. Legacy JSON configs migrate to YAML automatically on first load.</p></blockquote>
+
+    <hr/>
+
+    <h2 id="field-reference">Field reference <a href="#field-reference" class="anchor">#</a></h2>
+    <p>Every field at a glance. Only <code>name</code>, <code>type</code>, and <code>shortcut</code> are truly always required — other requirements depend on <code>type</code>.</p>
+
+    <h3 id="top-level">Top-level</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th class="center">Required</th><th>Default</th><th>Applies to</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>name</code></td><td class="center">✅</td><td>—</td><td>all</td><td>Display name. Also the target when referenced by <code>on_select</code>.</td></tr>
+        <tr><td><code>type</code></td><td class="center">✅</td><td>—</td><td>all</td><td><code>app</code> | <code>url</code> | <code>script</code></td></tr>
+        <tr><td><code>shortcut</code></td><td class="center">✅</td><td>—</td><td>all</td><td>Keyboard combo (e.g. <code>cmd+c</code>). Empty string means "no binding" — use that only when the action is the target of <code>on_select</code>.</td></tr>
+        <tr><td><code>icon</code></td><td class="center">⬜</td><td>type default</td><td>all</td><td>SF Symbol override.</td></tr>
+        <tr><td><code>conditions</code></td><td class="center">⬜</td><td>—</td><td>all</td><td>Gates when this action matches — see <a href="#conditional-actions">Conditional actions</a>.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="field-app"><code>type: app</code></h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th class="center">Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>app</code></td><td class="center">✅*</td><td>—</td><td>Application name. Resolved via <code>/Applications/{name}.app</code>, bundle-ID, or <code>~/Applications</code>.</td></tr>
+        <tr><td><code>app_path</code></td><td class="center">✅*</td><td>—</td><td>Absolute path to a <code>.app</code> bundle. Use only when <code>app</code> can't resolve.</td></tr>
+      </tbody>
+    </table></div>
+    <p>* Exactly one of <code>app</code> or <code>app_path</code> must be set. Prefer <code>app</code> — it's portable across machines.</p>
+
+    <h3 id="field-url"><code>type: url</code></h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th class="center">Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>url</code></td><td class="center">✅</td><td>—</td><td>URL template. Supports <code>{variables}</code>. Opens in the default browser.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="field-script"><code>type: script</code></h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th class="center">Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>script</code></td><td class="center">✅</td><td>—</td><td>Script source. Supports <code>{variables}</code>. 10-second timeout.</td></tr>
+        <tr><td><code>language</code></td><td class="center">⬜</td><td><code>zsh</code></td><td><code>zsh</code> | <code>bash</code> | <code>applescript</code> | <code>jxa</code></td></tr>
+        <tr><td><code>output</code></td><td class="center">⬜</td><td><code>silent</code></td><td><code>silent</code> | <code>notification</code> | <code>clipboard</code> | <code>hud</code> | <code>list</code></td></tr>
+        <tr><td><code>on_select</code></td><td class="center">⬜</td><td>—</td><td>Requires <code>output: list</code>. Name of another action to chain with <code>{selected}</code> bound.</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr/>
+
+    <h2 id="action-types">Action types <a href="#action-types" class="anchor">#</a></h2>
+
+    <h3 id="app">App</h3>
+    <p>Opens the selected project folder in a macOS application.</p>
+<pre><code>- name: VS Code
+  type: app
+  shortcut: cmd+v
+  app: Visual Studio Code</code></pre>
+    <p>Odak resolves <code>app:</code> by trying, in order:</p>
+    <ol>
+      <li><code>/Applications/{name}.app</code></li>
+      <li>System applications (<code>/System/Applications</code>, <code>/System/Applications/Utilities</code>)</li>
+      <li><code>~/Applications/{name}.app</code></li>
+      <li>NSWorkspace lookup by bundle identifier</li>
+    </ol>
+    <p>If none match you'll see a validation issue in Settings. Fix it by setting <code>app_path:</code> instead:</p>
+<pre><code>- name: Custom Build
+  type: app
+  shortcut: cmd+shift+b
+  app_path: /Users/me/MyApps/CustomBuild.app</code></pre>
+
+    <h3 id="url">URL</h3>
+    <p>Opens a URL (with variable substitution) in your default browser.</p>
+<pre><code>- name: GitHub Actions
+  type: url
+  shortcut: cmd+shift+a
+  url: "{remoteURL}/actions"</code></pre>
+
+    <h3 id="script">Script</h3>
+    <p>Runs a shell script with the project directory as the working directory.</p>
+<pre><code>- name: Run Tests
+  type: script
+  shortcut: cmd+shift+t
+  language: zsh
+  output: notification
+  script: |
+    swift test 2&gt;&amp;1 | tail -20</code></pre>
+    <p>Scripts run with a <strong>10-second timeout</strong> and receive every resolved variable as <a href="#environment-variables-scripts"><code>$ODAK_*</code> environment variables</a>. Use <code>language:</code> to pick the runtime — defaults to <code>zsh</code>.</p>
+    <p>For multi-line scripts, use YAML's <code>|</code> (literal) or <code>&gt;</code> (folded) block scalar — much nicer than escaped <code>\n</code>s:</p>
+<pre><code>- name: Smart push
+  type: script
+  shortcut: cmd+shift+u
+  output: notification
+  script: |
+    if [ -z "$(git log origin/{branch}..HEAD 2&gt;/dev/null)" ]; then
+      echo "Nothing to push on {branch}"
+    else
+      git push -u origin {branch}
+    fi</code></pre>
+
+    <hr/>
+
+    <h2 id="variables">Variables <a href="#variables" class="anchor">#</a></h2>
+    <p>Use <code>{variable}</code> anywhere in a <code>url:</code> or <code>script:</code> template. Every resolved variable is also exposed as a <code>$ODAK_*</code> environment variable inside scripts.</p>
+
+    <h3 id="vars-project">Project</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Token</th><th>Resolves to</th></tr></thead>
+      <tbody>
+        <tr><td><code>{path}</code></td><td>Full project path — <code>/Users/you/code/my-app</code></td></tr>
+        <tr><td><code>{name}</code></td><td>Project folder name — <code>my-app</code></td></tr>
+        <tr><td><code>{dir}</code></td><td>Parent directory path</td></tr>
+        <tr><td><code>{workspace}</code></td><td>First <code>.xcworkspace</code> in the project (if any)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="vars-git">Git</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Token</th><th>Resolves to</th></tr></thead>
+      <tbody>
+        <tr><td><code>{remoteURL}</code></td><td>Git remote URL, normalised to HTTPS form</td></tr>
+        <tr><td><code>{branch}</code></td><td>Current branch (via <code>git rev-parse --abbrev-ref HEAD</code>)</td></tr>
+        <tr><td><code>{gitHash}</code></td><td>Short HEAD commit hash (via <code>git rev-parse --short HEAD</code>)</td></tr>
+      </tbody>
+    </table></div>
+    <p>Git variables resolve to empty strings when the project isn't a git repo — the action still runs.</p>
+
+    <h3 id="vars-context">Context</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Token</th><th>Resolves to</th></tr></thead>
+      <tbody>
+        <tr><td><code>{clipboard}</code></td><td>Current macOS clipboard contents</td></tr>
+        <tr><td><code>{selection}</code></td><td>Current search query in Odak</td></tr>
+        <tr><td><code>{selected}</code></td><td>Line selected from a list-output action (see <a href="#interactive-lists--chaining">chaining</a>)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 id="vars-custom">Custom</h3>
+    <p>Any key under <code>variables:</code> in the project's <a href="#per-project-configuration"><code>.odak</code> file</a> resolves as <code>{myKey}</code> and is injected as <code>$ODAK_myKey</code>.</p>
+
+    <hr/>
+
+    <h2 id="environment-variables-scripts">Environment variables (scripts) <a href="#environment-variables-scripts" class="anchor">#</a></h2>
+    <p>In addition to <code>{variable}</code> substitution, every resolved variable is injected as <code>$ODAK_*</code> into the script's environment. Useful when you want to interpolate safely (no re-quoting), or when the value could contain characters that would break templated substitution.</p>
+<pre><code>- name: Open PR by branch
+  type: script
+  shortcut: cmd+shift+p
+  output: silent
+  script: |
+    # $ODAK_BRANCH and $ODAK_REMOTEURL are safer here than {branch}/{remoteURL}
+    gh pr view --web --repo "$ODAK_REMOTEURL" "$ODAK_BRANCH" \
+      || gh pr create --web --repo "$ODAK_REMOTEURL" --head "$ODAK_BRANCH"</code></pre>
+    <p>Naming: <code>$ODAK_</code> + the uppercase variable name — <code>{name}</code> → <code>$ODAK_NAME</code>, <code>{remoteURL}</code> → <code>$ODAK_REMOTEURL</code>, custom <code>{apiURL}</code> → <code>$ODAK_APIURL</code>.</p>
+
+    <hr/>
+
+    <h2 id="script-output-modes">Script output modes <a href="#script-output-modes" class="anchor">#</a></h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Mode</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td><code>silent</code></td><td>Run in the background. No feedback. (default)</td></tr>
+        <tr><td><code>notification</code></td><td>macOS notification with the first ~200 chars of stdout. On non-zero exit, shows stderr.</td></tr>
+        <tr><td><code>clipboard</code></td><td>Copy stdout to the clipboard. On non-zero exit, copies stderr.</td></tr>
+        <tr><td><code>hud</code></td><td>Brief on-screen HUD with the result (disappears after ~2s).</td></tr>
+        <tr><td><code>list</code></td><td>Parse stdout line-by-line into a selectable overlay. Selection can chain via <a href="#interactive-lists--chaining"><code>on_select</code></a>.</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr/>
+
+    <h2 id="conditional-actions">Conditional actions <a href="#conditional-actions" class="anchor">#</a></h2>
+    <p>Define the <strong>same shortcut</strong> multiple times with different <code>conditions</code>. The first action whose conditions match wins.</p>
+<pre><code>- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: swift test
+  conditions:
+    fileExists: Package.swift
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: go test ./...
+  conditions:
+    fileExists: go.mod
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: npm test
+  conditions:
+    fileExists: package.json</code></pre>
+
+    <h3 id="condition-fields">Condition fields</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>fileExists</code></td><td><code>string</code> | <code>string[]</code></td><td>File/directory that must exist at the project root. List form = any-of.</td></tr>
+        <tr><td><code>variables</code></td><td>mapping</td><td>Each entry must match a <code>.odak</code> variable exactly.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Actions without a <code>conditions</code> field always match.</p>
+
+    <hr/>
+
+    <h2 id="interactive-lists--chaining">Interactive lists &amp; chaining <a href="#interactive-lists--chaining" class="anchor">#</a></h2>
+    <p>Set <code>output: list</code> to turn script stdout into a <strong>selectable list overlay</strong>. The user picks an item; if you set <code>on_select:</code> to the name of another action, that action runs with <code>{selected}</code> bound to the chosen line.</p>
+
+    <h3 id="switch-branch">Switch branch</h3>
+<pre><code>- name: Switch branch
+  type: script
+  shortcut: cmd+b
+  output: list
+  on_select: checkout-branch
+  script: git branch --format='%(refname:short)'
+
+- name: checkout-branch
+  type: script
+  shortcut: ""          # no direct binding — only runs via on_select
+  output: notification
+  script: git checkout {selected}</code></pre>
+
+    <h3 id="open-a-pull-request-from-a-list">Open a pull request from a list</h3>
+<pre><code>- name: Open PR
+  type: script
+  shortcut: cmd+p
+  output: list
+  on_select: open-pr-web
+  script: gh pr list --json number,title --jq '.[] | "#\(.number) \(.title)"'
+
+- name: open-pr-web
+  type: script
+  shortcut: ""
+  output: silent
+  script: gh pr view $(echo '{selected}' | awk '{print $1}' | tr -d '#') --web</code></pre>
+    <blockquote><p>If you omit <code>on_select</code>, selecting a list item copies it to the clipboard.</p></blockquote>
+
+    <hr/>
+
+    <h2 id="per-project-configuration">Per-project configuration <a href="#per-project-configuration" class="anchor">#</a></h2>
+    <p>Drop a <code>.odak</code> JSON file at any project root to override defaults and define custom variables per-project. All fields optional.</p>
+<pre><code>{
+  "ide": "Cursor",
+  "terminal": "Warp",
+  "gitGUI": "Tower",
+  "variables": {
+    "apiURL": "https://staging.example.com",
+    "team": "platform"
+  }
+}</code></pre>
+<p>Valid values for <code>ide</code> are <code>"Cursor"</code>, <code>"Visual Studio Code"</code>, <code>"IntelliJ IDEA"</code>, and <code>"GoLand"</code>. To open a project in Xcode (or any other editor), define a custom action with the appropriate <code>app:</code> field instead.</p>
+    <p>Now <code>{apiURL}</code> and <code>{team}</code> resolve in any action run on this project, and scripts also see <code>$ODAK_APIURL</code> and <code>$ODAK_TEAM</code>.</p>
+    <p>Condition matching can reference these too:</p>
+<pre><code>- name: Deploy
+  type: script
+  shortcut: cmd+d
+  output: hud
+  script: make deploy-{team}
+  conditions:
+    variables:
+      team: platform</code></pre>
+
+    <hr/>
+
+    <h2 id="validation">Validation <a href="#validation" class="anchor">#</a></h2>
+    <p>Odak validates the config on every load and surfaces issues in <strong>Settings → Actions → Configuration Issues</strong>.</p>
+    <p>Detected problems:</p>
+    <ul>
+      <li><strong>Parse errors</strong> — invalid YAML with line/column when available.</li>
+      <li><strong>Missing required fields</strong> — e.g., <code>app:</code> missing for <code>type: app</code>.</li>
+      <li><strong>Unresolved apps</strong> — named app not found in standard locations.</li>
+      <li><strong>Invalid paths</strong> — <code>app_path:</code> that doesn't exist or isn't an <code>.app</code> bundle.</li>
+      <li><strong>Script dry-run failures</strong> — each script runs with dummy variables and a 3-second timeout to catch syntax errors early.</li>
+      <li><strong>Shortcut collisions</strong> — two actions bound to the same combo (first wins at runtime).</li>
+      <li><strong>macOS reserved shortcuts</strong> — <code>⌘Q</code>, <code>⌘H</code>, <code>⌘M</code>, <code>⌘W</code>, <code>⌘Tab</code>, <code>⌘Space</code> never fire.</li>
+      <li><strong>Unsupported language / output</strong> — with the list of valid values.</li>
+      <li><strong>Invalid <code>on_select</code></strong> — target action name doesn't exist, or <code>output:</code> isn't <code>list</code>.</li>
+      <li><strong>Malformed shortcut strings</strong> — unrecognised key names.</li>
+    </ul>
+    <p>A bad config does not break the previously-loaded state — Odak keeps running on the last-known-good config and shows the parse error until you fix the file.</p>
+
+    <hr/>
+
+    <h2 id="sharing--importing">Sharing &amp; importing <a href="#sharing--importing" class="anchor">#</a></h2>
+    <p>Any <code>https://</code> URL that serves action YAML (or JSON — both parse) can be imported with one click via Odak's URL scheme. Host on a GitHub Gist, a raw repo file, or a pastebin:</p>
+<pre><code>odak://import?url=https://gist.githubusercontent.com/you/abc/raw/my-action.yaml</code></pre>
+    <p>Inline JSON works too — handy for pasting into Slack/Discord where YAML's indentation would break:</p>
+<pre><code>odak://import?json={"name":"Deploy","type":"script","shortcut":"cmd+d","script":"make deploy"}</code></pre>
+    <p>Imports:</p>
+    <ul>
+      <li>Accept a single action, a list of actions, or an object with an <code>actions:</code> list.</li>
+      <li>Receive fresh UUIDs (no collisions with existing entries).</li>
+      <li>Append as a YAML block at the end of your <code>config.yaml</code> — existing comments and formatting are preserved.</li>
+      <li>Get validated like any other action.</li>
+      <li>Notify you of the result.</li>
+    </ul>
+
+    <hr/>
+
+    <h2 id="siri-shortcuts-and-spotlight">Siri, Shortcuts, and Spotlight <a href="#siri-shortcuts-and-spotlight" class="anchor">#</a></h2>
+    <p>Odak exposes two App Intents:</p>
+    <ul>
+      <li><strong>Open Project</strong> — <em>"Open my-app in Cursor"</em></li>
+      <li><strong>Run Odak Action</strong> — runs a named action on a project</li>
+    </ul>
+    <p>Both appear in Siri, Shortcuts.app, Spotlight, and Control Center. No extra setup.</p>
+
+    <hr/>
+
+    <h2 id="workflows">Workflows <a href="#workflows" class="anchor">#</a></h2>
+    <p>The per-category <a href="#examples">examples</a> below show individual actions. This section is the opposite: each vignette is a small <em>story</em> about how people compose actions into a larger workflow. Pick one that fits your day and steal the pattern.</p>
+
+    <h3 id="workflow-oncall">1 · The oncall responder</h3>
+    <blockquote><p>PagerDuty fires. You have 30 seconds to get situational awareness.</p></blockquote>
+    <p>You set up each service's <code>.odak</code> with its observability identifiers — service name, dashboard IDs, Sentry project. Your global <code>config.yaml</code> uses those variables to open the right dashboards for whichever project you happen to select.</p>
+<pre><code># ~/.odak/config.yaml (applies to every project with the variables set)
+- name: Logs (prod)
+  type: url
+  shortcut: cmd+l
+  url: "https://kibana.yourco.com/app/discover#/?_a=(query:(query:'service:{serviceName} AND env:prod'))"
+
+- name: Dashboard
+  type: url
+  shortcut: cmd+shift+d
+  url: "https://grafana.yourco.com/d/{grafanaId}?var-service={serviceName}&amp;from=now-1h"
+
+- name: Recent deploys
+  type: url
+  shortcut: cmd+shift+h
+  url: "{remoteURL}/actions?query=workflow:deploy+branch:main"
+
+- name: Oncall Slack channel
+  type: url
+  shortcut: cmd+shift+s
+  url: "https://yourco.slack.com/channels/{oncallChannel}"</code></pre>
+<pre><code># services/payments/.odak — per-service variables
+variables:
+  serviceName: payments-api
+  grafanaId: abc123
+  oncallChannel: payments-oncall</code></pre>
+    <p><strong>Keystroke flow:</strong> page → Odak → type <code>payments</code> → select project → <code>cmd+l</code> (logs) → <code>cmd+shift+d</code> (dashboard) → <code>cmd+shift+s</code> (oncall channel). Four shortcuts, zero URL typing.</p>
+
+    <h3 id="workflow-polyglot">2 · The polyglot maintainer</h3>
+    <blockquote><p>You contribute to Swift packages, Go services, Node apps, and Python scripts. Memorising different test commands is mental overhead.</p></blockquote>
+    <p>Bind <strong>one</strong> shortcut per action and let <code>conditions.fileExists</code> pick the right tool. Works the same way whether you're in <code>Odak</code> (Swift), <code>api</code> (Go), <code>web</code> (Node), or <code>etl</code> (Python).</p>
+<pre><code># "Run tests" — cmd+shift+t, dispatches on project shape
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: swift test 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: Package.swift
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: go test ./... 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: go.mod
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: npm test 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: package.json
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: pytest 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: pyproject.toml</code></pre>
+    <p>Do the same for <code>Build</code>, <code>Lint</code>, <code>Install deps</code>, <code>Open package manifest</code>. Your hands stop caring what language the project is in.</p>
+
+    <h3 id="workflow-reviewer">3 · The fast reviewer</h3>
+    <blockquote><p>You're a reviewer on 12 PRs today. The tax of "checkout, pull, open, run tests" is the whole reason you're behind.</p></blockquote>
+    <p>Turn PR list into a pickable overlay; selecting one checks it out and opens it. A second shortcut runs the tests; a third approves.</p>
+<pre><code>- name: Review a PR
+  type: script
+  shortcut: cmd+alt+r
+  output: list
+  on_select: checkout-and-open
+  script: gh pr list --json number,title,author --jq '.[] | "#\(.number) — \(.title) (@\(.author.login))"'
+
+- name: checkout-and-open
+  type: script
+  shortcut: ""
+  output: notification
+  script: |
+    num=$(echo '{selected}' | awk '{print $1}' | tr -d '#')
+    gh pr checkout "$num" &amp;&amp; cursor .
+
+- name: Approve current PR
+  type: script
+  shortcut: cmd+alt+a
+  output: notification
+  script: gh pr review --approve --body "LGTM ✅"</code></pre>
+    <p><strong>Flow:</strong> select repo → <code>cmd+alt+r</code> → pick PR → read → <code>cmd+shift+t</code> (runs the right test from workflow #2) → <code>cmd+alt+a</code>. One review, ~8 keypresses.</p>
+
+    <h3 id="workflow-release">4 · The release cutter</h3>
+    <blockquote><p>Friday release. You bump the version, generate notes from commit history, tag, push, open the GitHub release page with the body prefilled.</p></blockquote>
+<pre><code>- name: Cut release
+  type: script
+  shortcut: cmd+shift+v
+  output: hud
+  script: |
+    set -e
+    current=$(git describe --tags --abbrev=0 2&gt;/dev/null || echo "v0.0.0")
+    read -p "New version (current $current): " next &lt; /dev/tty
+    notes=$(git log "$current..HEAD" --pretty=format:'- %s')
+    git tag -a "$next" -m "$next"
+    git push origin "$next"
+    open "{remoteURL}/releases/new?tag=$next&amp;body=$(printf %s "$notes" | python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.stdin.read()))')"</code></pre>
+    <p><code>cmd+shift+v</code>, type the new version, and you're at GitHub's release page with every commit message already in the body. Edit and publish.</p>
+
+    <h3 id="workflow-onboard">5 · The team onboarder</h3>
+    <blockquote><p>A new teammate joins. Instead of a 2-page "how to set up your mac" doc, you ship them one file.</p></blockquote>
+    <p>Your team's dotfiles repo contains a <code>config.yaml</code> with every internal tool — Grafana, Sentry, Linear, internal admin panels, the staging console. On day one:</p>
+<pre><code>git clone git@github.com:yourco/dotfiles ~/dotfiles
+ln -s ~/dotfiles/odak/config.yaml ~/.odak/config.yaml</code></pre>
+    <p>The new teammate now has the same shortcuts as everyone else: <code>cmd+shift+1</code> opens the staging admin, <code>cmd+shift+2</code> opens Sentry, <code>cmd+l</code> opens Kibana filtered to whatever service they're on. Zero "hey what's the URL for…" questions in week one.</p>
+    <p>Per-company secrets (service identifiers, workspace slugs) live in per-project <code>.odak</code> files, so the shared <code>config.yaml</code> stays safe to commit publicly.</p>
+
+    <h3 id="workflow-context">6 · The context switcher</h3>
+    <blockquote><p>Work project: Cursor + Slack + Linear. Side project: VS Code + Discord + GitHub.</p></blockquote>
+    <p>Bind the same shortcut to different tools per project using <code>conditions.variables</code>. Each project's <code>.odak</code> sets a single <code>context</code> variable, and your config.yaml branches on it.</p>
+<pre><code># ~/.odak/config.yaml
+- name: IDE
+  type: app
+  shortcut: cmd+enter
+  app: Cursor
+  conditions:
+    variables:
+      context: work
+
+- name: IDE
+  type: app
+  shortcut: cmd+enter
+  app: Visual Studio Code
+  conditions:
+    variables:
+      context: personal
+
+- name: Chat
+  type: url
+  shortcut: cmd+shift+c
+  url: "https://yourco.slack.com/channels/{slackChannel}"
+  conditions:
+    variables:
+      context: work
+
+- name: Chat
+  type: url
+  shortcut: cmd+shift+c
+  url: "https://discord.com/channels/{discordGuild}/{discordChannel}"
+  conditions:
+    variables:
+      context: personal</code></pre>
+<pre><code># ~/code/work-project/.odak
+variables:
+  context: work
+  slackChannel: platform-team
+
+# ~/code/side-project/.odak
+variables:
+  context: personal
+  discordGuild: "123"
+  discordChannel: "456"</code></pre>
+    <p>Your fingers don't have to know which world they're in.</p>
+
+    <h3 id="workflow-newrepo">7 · The learn-a-new-repo ritual</h3>
+    <blockquote><p>You cloned a big unfamiliar repo. Before reading a line of code, you want a map.</p></blockquote>
+<pre><code>- name: Hot files
+  type: script
+  shortcut: cmd+alt+1
+  output: list
+  on_select: open-selected-file
+  script: |
+    git log --pretty=format: --name-only --since='90 days ago' \
+      | grep -v '^$' | sort | uniq -c | sort -rn | head -20 \
+      | awk '{print $2 " (" $1 " changes)"}'
+
+- name: Top contributors
+  type: script
+  shortcut: cmd+alt+2
+  output: hud
+  script: git shortlog -sn --no-merges | head -5
+
+- name: Recent commits
+  type: script
+  shortcut: cmd+alt+3
+  output: list
+  on_select: show-commit
+  script: git log --pretty=format:'%h %ad %s' --date=short -30
+
+- name: show-commit
+  type: script
+  shortcut: ""
+  output: silent
+  script: |
+    hash=$(echo '{selected}' | awk '{print $1}')
+    open "{remoteURL}/commit/$hash"
+
+- name: open-selected-file
+  type: script
+  shortcut: ""
+  output: silent
+  script: cursor "{path}/$(echo '{selected}' | awk '{print $1}')"</code></pre>
+    <p>Three shortcuts tell you: <em>which files churn the most</em> (start there), <em>who to ask</em> (the top contributors), and <em>what's happening now</em> (recent commits). 90 seconds from clone to oriented.</p>
+
+    <h3 id="workflow-speed">8 · The speed demon</h3>
+    <blockquote><p>You're in a flow state. A teammate drops a GitHub issue URL in Slack. You copy it and keep moving.</p></blockquote>
+<pre><code>- name: Open from clipboard
+  type: url
+  shortcut: cmd+shift+o
+  url: "{clipboard}"
+
+- name: Branch from clipboard issue
+  type: script
+  shortcut: cmd+shift+b
+  output: notification
+  script: |
+    # Expects a GitHub issue URL in the clipboard
+    num=$(echo "{clipboard}" | grep -oE 'issues/[0-9]+' | cut -d/ -f2)
+    slug=$(gh issue view "$num" --json title --jq .title \
+      | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9-' | cut -c1-40)
+    git checkout -b "issue-$num-$slug"</code></pre>
+    <p>Flow: copy the URL → select the right repo in Odak → <code>cmd+shift+b</code>. You're on a new branch named after the issue title, ready to code. No tabs opened, no context lost.</p>
+
+    <hr/>
+
+    <h2 id="examples">Examples <a href="#examples" class="anchor">#</a></h2>
+    <p>Drop-in YAML you can paste into <code>~/.odak/config.yaml</code>, grouped by category.</p>
+
+    <h3 id="opening-apps">Opening apps</h3>
+<pre><code>- name: Cursor
+  type: app
+  shortcut: cmd+c
+  app: Cursor
+
+- name: VS Code
+  type: app
+  shortcut: cmd+v
+  app: Visual Studio Code
+
+- name: Xcode
+  type: app
+  shortcut: cmd+x
+  app: Xcode
+  conditions:
+    fileExists:
+      - Package.swift
+      - "*.xcodeproj"
+
+- name: Terminal
+  type: app
+  shortcut: cmd+enter
+  app: Terminal
+
+- name: iTerm
+  type: app
+  shortcut: opt+enter
+  app: iTerm
+
+- name: Fork
+  type: app
+  shortcut: shift+enter
+  app: Fork</code></pre>
+
+    <h3 id="git--github">Git &amp; GitHub</h3>
+<pre><code>- name: Open on GitHub
+  type: url
+  shortcut: cmd+g
+  url: "{remoteURL}"
+
+- name: Open branch on GitHub
+  type: url
+  shortcut: cmd+shift+g
+  url: "{remoteURL}/tree/{branch}"
+
+- name: Open commit
+  type: url
+  shortcut: cmd+shift+h
+  url: "{remoteURL}/commit/{gitHash}"
+
+- name: Open PRs
+  type: url
+  shortcut: cmd+shift+p
+  url: "{remoteURL}/pulls"
+
+- name: Open Actions runs
+  type: url
+  shortcut: cmd+shift+a
+  url: "{remoteURL}/actions?query=branch:{branch}"
+
+- name: Compare branch to main
+  type: url
+  shortcut: cmd+shift+c
+  url: "{remoteURL}/compare/main...{branch}"
+
+- name: Copy branch name
+  type: script
+  shortcut: cmd+shift+b
+  output: clipboard
+  script: printf "{branch}"
+
+- name: Push current branch
+  type: script
+  shortcut: cmd+shift+u
+  output: notification
+  script: git push -u origin {branch}
+
+- name: Pull with rebase
+  type: script
+  shortcut: cmd+shift+y
+  output: notification
+  script: git pull --rebase</code></pre>
+
+    <h3 id="testing--linting">Testing &amp; linting</h3>
+<pre><code>- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: swift test 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: Package.swift
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: go test ./... 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: go.mod
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: npm test 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: package.json
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: pytest 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists:
+      - pytest.ini
+      - pyproject.toml
+
+- name: Test
+  type: script
+  shortcut: cmd+shift+t
+  output: notification
+  script: cargo test 2&gt;&amp;1 | tail -30
+  conditions:
+    fileExists: Cargo.toml
+
+- name: Lint
+  type: script
+  shortcut: cmd+shift+l
+  output: notification
+  script: swiftlint --quiet 2&gt;&amp;1 | tail -20
+  conditions:
+    fileExists: .swiftlint.yml
+
+- name: Lint
+  type: script
+  shortcut: cmd+shift+l
+  output: notification
+  script: eslint . 2&gt;&amp;1 | tail -20
+  conditions:
+    fileExists: .eslintrc.json</code></pre>
+
+    <h3 id="build--run">Build &amp; run</h3>
+<pre><code>- name: Build
+  type: script
+  shortcut: cmd+b
+  output: notification
+  script: xcodebuild -scheme {name} build 2&gt;&amp;1 | tail -20
+
+- name: Clean build
+  type: script
+  shortcut: cmd+shift+k
+  output: notification
+  script: xcodebuild -scheme {name} clean build 2&gt;&amp;1 | tail -20
+
+- name: Install deps
+  type: script
+  shortcut: cmd+i
+  output: notification
+  script: npm install
+  conditions:
+    fileExists: package.json
+
+- name: Install deps
+  type: script
+  shortcut: cmd+i
+  output: notification
+  script: go mod download
+  conditions:
+    fileExists: go.mod</code></pre>
+
+    <h3 id="cicd--deploys">CI/CD &amp; deploys</h3>
+<pre><code>- name: Deploy staging
+  type: script
+  shortcut: cmd+shift+d
+  output: hud
+  script: make deploy-staging
+
+- name: Deploy prod
+  type: script
+  shortcut: cmd+ctrl+d
+  output: hud
+  script: make deploy-prod
+
+- name: Trigger GitHub workflow
+  type: script
+  shortcut: cmd+w
+  output: notification
+  script: gh workflow run deploy.yml --ref {branch}</code></pre>
+
+    <h3 id="observability">Observability</h3>
+    <p>Per-project variables in <code>.odak</code> make these reusable across services:</p>
+<pre><code>- name: Datadog
+  type: url
+  shortcut: cmd+shift+1
+  url: "https://app.datadoghq.com/dashboard/{dashboardId}?tpl_var_service={serviceName}&amp;tpl_var_env=prod"
+
+- name: Grafana
+  type: url
+  shortcut: cmd+shift+2
+  url: "https://grafana.yourco.com/d/{grafanaId}?var-service={serviceName}"
+
+- name: Kibana logs
+  type: url
+  shortcut: cmd+l
+  url: "https://kibana.yourco.com/app/discover#/?_a=(query:(query:'service:{serviceName} AND env:prod'))"
+
+- name: Sentry
+  type: url
+  shortcut: cmd+shift+e
+  url: "https://sentry.io/organizations/yourco/issues/?project={sentryProject}"</code></pre>
+
+    <h3 id="team-collaboration">Team collaboration</h3>
+<pre><code>- name: Copy PR link
+  type: script
+  shortcut: cmd+alt+p
+  output: clipboard
+  script: gh pr view --json url --jq .url | tr -d '\n'
+
+- name: Copy Slack snippet
+  type: script
+  shortcut: cmd+alt+s
+  output: clipboard
+  script: |
+    printf '%s\n[%s] %s' "{remoteURL}/tree/{branch}" "{name}" "{branch}"
+
+- name: Search Linear
+  type: url
+  shortcut: cmd+alt+l
+  url: "https://linear.app/your-team/search?q={selection}"</code></pre>
+
+    <h3 id="project-navigation">Project navigation</h3>
+<pre><code>- name: Reveal in Finder
+  type: script
+  shortcut: cmd+f
+  output: silent
+  script: open {path}
+
+- name: Copy project path
+  type: script
+  shortcut: cmd+alt+c
+  output: clipboard
+  script: printf '{path}'
+
+- name: Open README
+  type: script
+  shortcut: cmd+r
+  output: silent
+  script: open README.md
+
+- name: Project size
+  type: script
+  shortcut: cmd+alt+z
+  output: hud
+  script: du -sh {path} | awk '{print $1}'
+
+- name: Recent files
+  type: script
+  shortcut: cmd+alt+r
+  output: list
+  script: find {path} -type f -mtime -7 -not -path '*/.*' | head -20</code></pre>
+
+    <h3 id="interactive-workflows">Interactive workflows</h3>
+    <p>Scripts that output a selectable list — pair with <code>on_select</code> to chain the next step.</p>
+<pre><code>- name: Switch branch
+  type: script
+  shortcut: cmd+b
+  output: list
+  on_select: checkout-branch
+  script: git branch --format='%(refname:short)'
+
+- name: checkout-branch
+  type: script
+  shortcut: ""
+  output: notification
+  script: git checkout {selected}
+
+- name: Run npm script
+  type: script
+  shortcut: cmd+alt+n
+  output: list
+  on_select: exec-npm-script
+  script: jq -r '.scripts | keys[]' package.json
+  conditions:
+    fileExists: package.json
+
+- name: exec-npm-script
+  type: script
+  shortcut: ""
+  output: hud
+  script: npm run {selected}
+
+- name: Make target
+  type: script
+  shortcut: cmd+alt+m
+  output: list
+  on_select: exec-make
+  script: grep -E '^[a-zA-Z_-]+:' Makefile | sed 's/:.*//'
+  conditions:
+    fileExists: Makefile
+
+- name: exec-make
+  type: script
+  shortcut: ""
+  output: hud
+  script: make {selected}
+
+- name: Recent commits
+  type: script
+  shortcut: cmd+alt+h
+  output: list
+  on_select: copy-commit-hash
+  script: git log --pretty=format:'%h %s' -20
+
+- name: copy-commit-hash
+  type: script
+  shortcut: ""
+  output: clipboard
+  script: printf %s "{selected}" | awk '{print $1}' | tr -d '\n'</code></pre>
+
+    <h3 id="language-specific">Language-specific</h3>
+    <p>Use <code>conditions.fileExists</code> to bind the same shortcut to the right tool per project.</p>
+<pre><code>- name: Open Package Manager
+  type: script
+  shortcut: cmd+alt+p
+  output: silent
+  script: open Package.swift
+  conditions:
+    fileExists: Package.swift
+
+- name: Open Package Manager
+  type: script
+  shortcut: cmd+alt+p
+  output: silent
+  script: open package.json
+  conditions:
+    fileExists: package.json
+
+- name: Open Package Manager
+  type: script
+  shortcut: cmd+alt+p
+  output: silent
+  script: open Cargo.toml
+  conditions:
+    fileExists: Cargo.toml
+
+- name: Open Package Manager
+  type: script
+  shortcut: cmd+alt+p
+  output: silent
+  script: open go.mod
+  conditions:
+    fileExists: go.mod
+
+- name: Open Package Manager
+  type: script
+  shortcut: cmd+alt+p
+  output: silent
+  script: open pyproject.toml
+  conditions:
+    fileExists:
+      - pyproject.toml
+      - requirements.txt</code></pre>
+
+    <hr/>
+
+    <h2 id="schema-reference">Schema reference <a href="#schema-reference" class="anchor">#</a></h2>
+    <p>Full action schema in YAML (every field; comments annotate requirements):</p>
+<pre><code>- name: string                        # required — display name + on_select target
+  type: app | url | script            # required
+  shortcut: cmd+c                     # required — "" = no binding (chain-only target)
+
+  # Optional (all types)
+  icon: terminal                      # SF Symbol name override
+  conditions:                         # first matching action wins
+    fileExists:                       # string or list of strings
+      - Package.swift
+      - go.mod
+    variables:
+      team: platform                  # all must match .odak variables
+
+  # type: app — exactly one of `app` or `app_path`
+  app: Cursor                         # name — preferred, portable
+  app_path: /Applications/Cursor.app  # absolute path
+
+  # type: url
+  url: "{remoteURL}/actions"
+
+  # type: script
+  script: swift test
+  language: zsh                       # zsh (default) | bash | applescript | jxa
+  output: notification                # silent (default) | notification | clipboard | hud | list
+  on_select: checkout-branch          # only valid with output: list</code></pre>
+    <p>Root object:</p>
+<pre><code>version: 1        # optional — reserved for future migrations
+actions:          # required
+  - …</code></pre>
+
+    <hr/>
+
+    <h2 id="shortcut-syntax">Shortcut syntax <a href="#shortcut-syntax" class="anchor">#</a></h2>
+    <p>Human-readable and case-insensitive: <code>cmd+c</code>, <code>opt+enter</code>, <code>cmd+shift+t</code>, <code>ctrl+space</code>.</p>
+    <p><strong>Modifiers:</strong> <code>cmd</code>, <code>opt</code> (alias: <code>alt</code>), <code>ctrl</code>, <code>shift</code>.<br/>
+    <strong>Keys:</strong> <code>a–z</code>, <code>0–9</code>, <code>return</code>/<code>enter</code>, <code>tab</code>, <code>space</code>, <code>escape</code>, <code>delete</code>, <code>left</code>/<code>right</code>/<code>up</code>/<code>down</code>, <code>f1–f19</code>.</p>
+    <p>Reserved by macOS (never fire): <code>cmd+q</code>, <code>cmd+h</code>, <code>cmd+m</code>, <code>cmd+w</code>, <code>cmd+tab</code>, <code>cmd+space</code>.</p>
+
+    <hr/>
+
+    <h2 id="faq">FAQ <a href="#faq" class="anchor">#</a></h2>
+    <p><strong>How do I back up my actions?</strong> The whole config is a single file — <code>cp ~/.odak/config.yaml ~/my-actions.yaml.bak</code>.</p>
+    <p><strong>Can I share one action with a teammate?</strong> Yes — paste the YAML block into Slack/GitHub and they paste it into their file, or use <code>odak://import?json=…</code> for one-click install.</p>
+    <p><strong>Why aren't my changes picking up?</strong> Check <strong>Settings → Actions → Configuration Issues</strong>. A parse error blocks the reload until you fix the syntax. Odak keeps running on the last-known-good config so you can keep working while you fix the file.</p>
+    <p><strong>Does <code>.odak</code> need to exist for a project?</strong> No — it's purely for overrides and custom variables. Actions work fine without it.</p>
+    <p><strong>My shortcut doesn't fire.</strong> Three common causes: (1) it's macOS-reserved (see above); (2) another action has the same combo and its conditions match first; (3) the app window isn't focused — Odak shortcuts only fire while the search panel is active.</p>
+    <p><strong>Why no GUI to add actions?</strong> By design. Odak is for developers; editing a single YAML file is faster than a form, portable across machines via a dotfile repo, and easier to share. The Settings panel still shows what's loaded and surfaces validation issues.</p>
+
+  </main>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a href="/" class="nav-brand" style="font-size:18px">
+        <div class="mark" style="width:28px;height:28px">
+          <picture>
+            <source type="image/avif" srcset="/assets/logo/odak-dark.avif">
+            <source type="image/webp" srcset="/assets/logo/odak-dark.webp">
+            <img src="/assets/logo/odak-dark.png" alt="" width="56" height="56" decoding="async" loading="lazy">
+          </picture>
+        </div>
+        <span>Odak</span>
+      </a>
+      <p class="mission">A keyboard-first project switcher for macOS. Made for developers who live in their editor.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="/#features">Features</a></li>
+        <li><a href="/#pricing">Pricing</a></li>
+        <li><a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">Download</a></li>
+        <li><a href="/changelog.html">Changelog</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="https://github.com/salihcaan/odak.fyi">GitHub</a></li>
+        <li><a href="/appcast.xml">Appcast</a></li>
+        <li><a href="mailto:support@odak.fyi">Support</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="mailto:hello@odak.fyi">Contact</a></li>
+        <li><a href="/privacy.html">Privacy</a></li>
+        <li><a href="/terms.html">Terms</a></li>
+        <li><a href="/refund.html">Refund</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 Odak</div>
+    <div class="istanbul">Made in Istanbul · <b>⌥ Space</b></div>
+  </div>
+</footer>
+
+<script>
+// Toggle .scrolled on the nav once the page leaves scrollY=0 — drops
+// the expensive backdrop-filter exactly when the nav is moving over
+// content, matching the home page's behaviour.
+(function(){
+  const nav=document.querySelector('.nav');
+  if(!nav)return;
+  let last=false,raf=null;
+  function update(){const s=window.scrollY>4;if(s!==last){nav.classList.toggle('scrolled',s);last=s}raf=null}
+  window.addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update)},{passive:true});
+  update();
+})();
+(function(){
+  // ----- Tiny YAML/shell tinting in <pre><code> -----
+  // Light-weight on purpose: highlights YAML keys, double-quoted strings,
+  // and shell-style comments. Skips anything else so we don't mangle code.
+  const blocks = document.querySelectorAll('pre > code');
+  if(!blocks.length) return;
+  const KEY_RE = /^(\s*-?\s*)([A-Za-z_][\w-]*)(\s*:)/;
+  blocks.forEach(code => {
+    const lines = code.innerHTML.split('\n');
+    const out = lines.map(line => {
+      // comments first — anything from a leading-hash to end of line
+      let m = line.match(/^(\s*)(#.*)$/);
+      if(m) return m[1] + '<span class="tc">' + m[2] + '</span>';
+      // Double-quoted strings first — must run BEFORE the key pass, otherwise
+      // the `"tk"` inside the just-inserted `<span class="tk">` matches and the
+      // attribute gets shredded into nested broken markup.
+      let r = line.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"/g, '<span class="ts">"$1"</span>');
+      // YAML key (only if `key:` near line start)
+      r = r.replace(KEY_RE, (_, lead, k, c) => lead + '<span class="tk">' + k + '</span>' + c);
+      return r;
+    });
+    code.innerHTML = out.join('\n');
+  });
+})();
+
+(function(){
+  // ----- TOC active-link highlighting via IntersectionObserver -----
+  // The sticky sidebar tracks which heading is currently in view; the matching
+  // link gets .is-active. Only runs when the sidebar is sticky (≥980px).
+  if(window.matchMedia && window.matchMedia('(max-width: 979px)').matches) return;
+  const links = Array.from(document.querySelectorAll('aside.toc-side a[href^="#"]'));
+  if(!links.length) return;
+  const map = new Map();
+  links.forEach(a => {
+    const id = decodeURIComponent(a.getAttribute('href').slice(1));
+    const target = document.getElementById(id);
+    if(target) map.set(target, a);
+  });
+  let visible = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) visible.add(e.target);
+      else visible.delete(e.target);
+    });
+    // Pick the topmost visible heading
+    let topMost = null;
+    visible.forEach(t => {
+      if(!topMost || t.getBoundingClientRect().top < topMost.getBoundingClientRect().top){
+        topMost = t;
+      }
+    });
+    if(topMost){
+      links.forEach(a => a.classList.remove('is-active'));
+      const a = map.get(topMost);
+      if(a) a.classList.add('is-active');
+    }
+  }, { rootMargin: '-72px 0px -65% 0px', threshold: 0 });
+  map.forEach((_, target) => io.observe(target));
+})();
+</script>
+</body>
+</html>

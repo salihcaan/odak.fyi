@@ -1,0 +1,11 @@
+      <svg class="notch-overlay" viewBox="0 0 619 377" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M277.219 7.67548H281.283C282.031 7.67548 282.637 8.2819 282.637 9.02997V13.9964C282.637 15.4926 283.85 16.7054 285.346 16.7054H333.656C334.903 16.7054 335.914 15.6947 335.914 14.4479V9.02997C335.914 8.2819 336.52 7.67548 337.268 7.67548H341.332H277.219Z" fill="black"/>
+        <circle cx="309.275" cy="9.93296" r="2.25748" fill="url(#mb-lens)"/>
+        <defs>
+          <radialGradient id="mb-lens" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(309.275 9.93296) rotate(90) scale(2.25748)">
+            <stop stop-color="#9797AB"/>
+            <stop offset="0.391646" stop-color="#2C2C46"/>
+            <stop offset="1" stop-color="#3F3F46"/>
+          </radialGradient>
+        </defs>
+      </svg>
