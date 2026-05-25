@@ -34,7 +34,7 @@ export function Footer() {
       >
         <motion.div className="foot-brand" variants={colVariants}>
           <a href="/" className="nav-brand">
-            <Mark size={28} loading="lazy" fetchPriority="auto" />
+            <Mark size={28} loading="lazy" fetchpriority="auto" />
             <span>Odak</span>
           </a>
           <p className="mission">

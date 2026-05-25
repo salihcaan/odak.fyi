@@ -5,18 +5,21 @@ import { Footer } from "@/components/site/Footer";
 import { usePageEnter } from "@/components/site/PageEnter";
 
 // Two URL surfaces:
-//   /buy        → live Polar. Until LIVE_CHECKOUT_URL is wired in, /buy renders
-//                  a pre-launch holding state and never falls back to sandbox —
-//                  real customers must not be able to mistake a test flow
-//                  for a real purchase.
-//   /buy-stage  → sandbox Polar, always. Linked from Debug builds for QA.
+//   /buy        live Polar. If VITE_POLAR_LIVE_URL is empty, /buy
+//                 renders a pre-launch holding state and never falls
+//                 back to sandbox. Real customers must not be able to
+//                 mistake a test flow for a real purchase.
+//   /buy-stage  sandbox Polar, always. Linked from Debug builds for
+//                 QA. If VITE_POLAR_SANDBOX_URL is empty, /buy-stage
+//                 also shows the prelaunch state.
 //
-// Both URLs come from the Polar dashboard (Products → Checkout Links).
+// Both URLs come from the Polar dashboard (Products  Checkout Links).
 // The link's success_url is configured server-side to point at
-// /buy?success=1 — Polar redirects there after a completed checkout.
-const LIVE_CHECKOUT_URL: string = "REPLACE_WHEN_LIVE";
+// /buy?success=1 so Polar redirects there after a completed checkout.
+const LIVE_CHECKOUT_URL: string =
+  import.meta.env.VITE_POLAR_LIVE_URL ?? "";
 const SANDBOX_CHECKOUT_URL: string =
-  "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_qu3kQfXBxavRwSo0OKWe77sqFj5qVLusWEBr11pVh63/redirect";
+  import.meta.env.VITE_POLAR_SANDBOX_URL ?? "";
 const POLAR_EMBED_SDK =
   "https://cdn.jsdelivr.net/npm/@polar-sh/checkout@latest/dist/embed.global.js";
 
@@ -56,7 +59,7 @@ function loadPolar(): Promise<PolarEmbedCheckout> {
   });
 }
 
-// Single checkmark used in the benefits list — same SVG shape as the
+// Single checkmark used in the benefits list. Same SVG shape as the
 // home pricing card so the eye reads the two surfaces as one product.
 function Check() {
   return (
@@ -66,18 +69,37 @@ function Check() {
   );
 }
 
+// Compact spinner glyph for the Continue button while the Polar SDK
+// is still loading. Sized to sit inline with the button label.
+function Spinner() {
+  return (
+    <svg
+      className="buy-spinner"
+      viewBox="0 0 16 16"
+      width="14"
+      height="14"
+      aria-hidden="true"
+    >
+      <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="2" strokeOpacity=".25" />
+      <path d="M14 8a6 6 0 0 0-6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function Buy() {
   const { item } = usePageEnter();
   const [view, setView] = useState<"form" | "success" | "prelaunch">("form");
   const [email, setEmail] = useState("");
   const [isStage, setIsStage] = useState(false);
+  const [sdkReady, setSdkReady] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const polarRef = useRef<PolarEmbedCheckout | null>(null);
 
   useEffect(() => {
     const stage = window.location.pathname === "/buy-stage";
     setIsStage(stage);
-    const liveReady = LIVE_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
-    const stageReady = SANDBOX_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
+    const liveReady = !!LIVE_CHECKOUT_URL;
+    const stageReady = !!SANDBOX_CHECKOUT_URL;
 
     // Pre-launch on public /buy: no Polar init at all. Defense against
     // silent sandbox checkouts confusing real customers between site
@@ -106,9 +128,12 @@ export function Buy() {
       .then((Polar) => {
         if (cancelled) return;
         polarRef.current = Polar;
+        setSdkReady(true);
       })
       .catch((err) => {
+        if (cancelled) return;
         console.error(err);
+        setLoadError(true);
       });
 
     return () => {
@@ -116,18 +141,81 @@ export function Buy() {
     };
   }, []);
 
+  // Pointer-tracked 3D tilt on the price card. Mirrors the home page
+  // pattern from /legacy/index-runtime.js. CSS in buy.css reads the
+  // five custom properties; reduced-motion users skip the effect.
+  useEffect(() => {
+    if (view !== "form" && view !== "success" && view !== "prelaunch") return;
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const card = document.querySelector<HTMLElement>(".price-card");
+    if (!card) return;
+
+    const MAX_DEG = 7;
+    const LIFT_PX = 14;
+    let rafId: number | null = null;
+    const target = { rx: 0, ry: 0, mx: 50, my: 0 };
+
+    const apply = () => {
+      rafId = null;
+      card.style.setProperty("--tilt-x", target.rx.toFixed(2) + "deg");
+      card.style.setProperty("--tilt-y", target.ry.toFixed(2) + "deg");
+      card.style.setProperty("--tilt-z", LIFT_PX + "px");
+      card.style.setProperty("--tilt-mx", target.mx.toFixed(1) + "%");
+      card.style.setProperty("--tilt-my", target.my.toFixed(1) + "%");
+    };
+    const schedule = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(apply);
+    };
+
+    const onEnter = () => card.setAttribute("data-tilt-active", "");
+    const onMove = (e: PointerEvent) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      target.ry = (px - 0.5) * 2 * MAX_DEG;
+      target.rx = -(py - 0.5) * 2 * MAX_DEG;
+      target.mx = px * 100;
+      target.my = py * 100;
+      schedule();
+    };
+    const onLeave = () => {
+      card.removeAttribute("data-tilt-active");
+      target.rx = 0;
+      target.ry = 0;
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
+      card.style.setProperty("--tilt-z", "0px");
+    };
+
+    card.addEventListener("pointerenter", onEnter);
+    card.addEventListener("pointermove", onMove);
+    card.addEventListener("pointerleave", onLeave);
+    return () => {
+      card.removeEventListener("pointerenter", onEnter);
+      card.removeEventListener("pointermove", onMove);
+      card.removeEventListener("pointerleave", onLeave);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [view]);
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const Polar = polarRef.current;
     if (!Polar) return;
     const value = email.trim();
     if (!value) return;
-    const useLive = !isStage && LIVE_CHECKOUT_URL !== "REPLACE_WHEN_LIVE";
+    const useLive = !isStage && !!LIVE_CHECKOUT_URL;
     const baseUrl = useLive ? LIVE_CHECKOUT_URL : SANDBOX_CHECKOUT_URL;
     const url = new URL(baseUrl);
     url.searchParams.set("customer_email", value);
     Polar.create(url.toString(), { theme: "dark" });
   };
+
+  const showLoadErrorCard = view === "form" && loadError;
+  const buttonDisabled = !sdkReady;
 
   return (
     <>
@@ -157,14 +245,14 @@ export function Buy() {
           <div className="env-banner" role="note">
             <span className="env-banner-tag">Sandbox</span>
             <span>
-              Test checkout — no real charge. Use any test card; activation
+              Test checkout, no real charge. Use any test card; activation
               codes only work in stage builds of Odak.
             </span>
           </div>
         )}
 
         <div className="checkout-grid">
-          {view === "form" && (
+          {view === "form" && !showLoadErrorCard && (
             <article className="price-card">
               <div className="head-row">
                 <span className="tier">One-time</span>
@@ -186,14 +274,14 @@ export function Buy() {
                 <li>
                   <Check />
                   <span>
-                    Activates on <b>up to 3 Macs</b> — desktop, laptop, work
+                    Activates on <b>up to 3 Macs</b>: desktop, laptop, work
                     machine.
                   </span>
                 </li>
                 <li>
                   <Check />
                   <span>
-                    Updates & security patches, <b>free forever</b>.
+                    Updates and security patches, <b>free forever</b>.
                   </span>
                 </li>
               </ul>
@@ -212,19 +300,69 @@ export function Buy() {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </label>
-                <button id="checkout-btn" className="buy" type="submit">
-                  Continue to checkout
-                  <span className="arrow" aria-hidden="true">
-                    <svg viewBox="0 0 12 12">
-                      <path d="M3 6h6m-3-3l3 3-3 3" />
-                    </svg>
-                  </span>
+                <button
+                  id="checkout-btn"
+                  className="buy"
+                  type="submit"
+                  disabled={buttonDisabled}
+                  aria-busy={buttonDisabled}
+                >
+                  {buttonDisabled ? (
+                    <>
+                      <Spinner />
+                      Loading checkout
+                    </>
+                  ) : (
+                    <>
+                      Continue to checkout
+                      <span className="arrow" aria-hidden="true">
+                        <svg viewBox="0 0 12 12">
+                          <path d="M3 6h6m-3-3l3 3-3 3" />
+                        </svg>
+                      </span>
+                    </>
+                  )}
                 </button>
               </form>
 
               <p className="price-fine">
                 Instant activation · Sparkle auto-updates ·{" "}
                 <a href="/refund">14-day refund</a>
+              </p>
+            </article>
+          )}
+
+          {view === "form" && showLoadErrorCard && (
+            <article
+              id="load-error-state"
+              className="price-card state error-state"
+              role="alert"
+              aria-live="assertive"
+            >
+              <div className="state-icon error">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M12 8v5M12 16.5v.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </div>
+              <h2>Checkout couldn't load.</h2>
+              <p className="state-lead">
+                Refresh the page, or buy directly by emailing us. We'll send
+                a payment link by reply.
+              </p>
+              <a
+                className="buy"
+                href="mailto:support@odak.fyi?subject=Buy%20Odak"
+              >
+                Email support@odak.fyi
+                <span className="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 12 12">
+                    <path d="M3 6h6m-3-3l3 3-3 3" />
+                  </svg>
+                </span>
+              </a>
+              <p className="price-fine">
+                Reply usually within 4 hours during weekdays.
               </p>
             </article>
           )}
@@ -243,7 +381,7 @@ export function Buy() {
               </div>
               <h2>You're set.</h2>
               <p className="state-lead">
-                Your license is one click away — here's how to grab it.
+                Your license is one click away. Here's how to grab it.
               </p>
 
               <ol className="success-steps">
@@ -281,20 +419,15 @@ export function Buy() {
           {view === "prelaunch" && (
             <article
               id="prelaunch-state"
-              className="price-card state"
+              className="price-card state prelaunch-state"
               role="status"
               aria-live="polite"
             >
-              <div className="state-icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3 2" />
-                </svg>
-              </div>
-              <h2>Purchases open soon.</h2>
+              <span className="prelaunch-tag">14 days free</span>
+              <h2>Try it free, today.</h2>
               <p>
-                While payment setup wraps up, the <strong>14-day trial</strong>{" "}
-                is fully unlocked — every feature, no credit card.
+                Every feature is unlocked during the trial. No credit card.
+                Purchases open in a few weeks; we'll email when they do.
               </p>
               <a
                 className="buy"
@@ -307,51 +440,222 @@ export function Buy() {
                   </svg>
                 </span>
               </a>
+              <p className="prelaunch-fine">
+                macOS 26 Tahoe · Apple Silicon · 8&nbsp;MB
+              </p>
             </article>
           )}
 
-          <aside className="price-aside">
-            <h3>
-              What happens <span className="accent">next.</span>
-            </h3>
-            <ol className="next-steps">
-              <li>
-                <span className="step-num">1</span>
-                <div>
-                  <b>Pay with Polar.</b>
-                  <span>Apple Pay or any card. Takes about 30 seconds.</span>
-                </div>
-              </li>
-              <li>
-                <span className="step-num">2</span>
-                <div>
-                  <b>Email lands in your inbox.</b>
-                  <span>
-                    From <i>Odak (via Polar)</i> — with an{" "}
-                    <i>Access&nbsp;purchase</i> button that opens your license.
-                  </span>
-                </div>
-              </li>
-              <li>
-                <span className="step-num">3</span>
-                <div>
-                  <b>Paste into Odak.</b>
-                  <span>Settings → License. Unlocked on up to 3 Macs.</span>
-                </div>
-              </li>
-            </ol>
-            <div className="seals">
-              <span className="seal">Hardened runtime</span>
-              <span className="seal">Apple Silicon</span>
-              <span className="seal">Telemetry off by default</span>
-            </div>
-            <p className="fine">
-              Secure checkout by <strong>Polar</strong> ·{" "}
-              <a href="/refund">Refund policy</a> · <a href="/terms">Terms</a> ·{" "}
-              <a href="/privacy">Privacy</a>
-            </p>
-          </aside>
+          {view === "form" && (
+            <aside className="price-aside">
+              <h3>
+                What happens <span className="accent">next.</span>
+              </h3>
+              <ol className="next-steps">
+                <li>
+                  <span className="step-num">1</span>
+                  <div>
+                    <b>Pay with Polar.</b>
+                    <span>Apple Pay or any card. Takes about 30 seconds.</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">2</span>
+                  <div>
+                    <b>Email lands in your inbox.</b>
+                    <span>
+                      From <i>Odak (via Polar)</i>, with an{" "}
+                      <i>Access&nbsp;purchase</i> button that opens your
+                      license.
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">3</span>
+                  <div>
+                    <b>Paste into Odak.</b>
+                    <span>Settings → License. Unlocks up to 3 Macs.</span>
+                  </div>
+                </li>
+              </ol>
+              <div className="seals">
+                <span className="seal">Hardened runtime</span>
+                <span className="seal">Apple Silicon</span>
+                <span className="seal">Telemetry off by default</span>
+              </div>
+              <p className="fine">
+                Secure checkout by <strong>Polar</strong> ·{" "}
+                <a href="/refund">Refund policy</a> · <a href="/terms">Terms</a> ·{" "}
+                <a href="/privacy">Privacy</a>
+              </p>
+            </aside>
+          )}
+
+          {view === "success" && (
+            <aside className="price-aside">
+              <h3>
+                Need <span className="accent">help?</span>
+              </h3>
+              <p className="aside-lead">
+                Email lands in about a minute. If it doesn't arrive, or
+                anything else looks off, write to us.
+              </p>
+              <a
+                className="aside-mail"
+                href="mailto:support@odak.fyi"
+              >
+                support@odak.fyi
+              </a>
+              <p className="aside-sub">
+                Replies usually within 4 hours during weekdays.
+              </p>
+              <div className="seals">
+                <span className="seal">Hardened runtime</span>
+                <span className="seal">Apple Silicon</span>
+                <span className="seal">Telemetry off by default</span>
+              </div>
+              <p className="fine">
+                <a href="/refund">Refund policy</a> ·{" "}
+                <a href="/terms">Terms</a> ·{" "}
+                <a href="/privacy">Privacy</a>
+              </p>
+            </aside>
+          )}
+
+          {view === "prelaunch" && (
+            <aside className="price-aside">
+              <h3>
+                What you'll <span className="accent">get.</span>
+              </h3>
+              <ol className="next-steps">
+                <li>
+                  <span className="step-num">1</span>
+                  <div>
+                    <b>One-time price, $19.</b>
+                    <span>No subscription, no renewal, no upgrade fees.</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">2</span>
+                  <div>
+                    <b>Up to 3 Macs per license.</b>
+                    <span>Desktop, laptop, work machine. Same license.</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="step-num">3</span>
+                  <div>
+                    <b>Updates, free forever.</b>
+                    <span>
+                      Security patches and new features keep arriving for as
+                      long as you use it.
+                    </span>
+                  </div>
+                </li>
+              </ol>
+              <div className="seals">
+                <span className="seal">Hardened runtime</span>
+                <span className="seal">Apple Silicon</span>
+                <span className="seal">Telemetry off by default</span>
+              </div>
+              <p className="fine">
+                Try the full app today. <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">Download the trial →</a>
+              </p>
+            </aside>
+          )}
         </div>
+
+        <section className="faq-buy" id="faq-buy" aria-labelledby="faq-buy-head">
+          <header className="faq-buy-head">
+            <span className="eyebrow">Buyer questions</span>
+            <h2 id="faq-buy-head" className="faq-buy-h">
+              Before you <span className="accent">click buy.</span>
+            </h2>
+          </header>
+          <div className="faq-buy-grid">
+            <details className="faq-buy-item">
+              <summary>
+                <span className="faq-ic" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" /></svg>
+                </span>
+                <span className="faq-q">What does the 3-Mac license cover?</span>
+              </summary>
+              <p>
+                Up to 3 Macs you personally use: desktop, laptop, work machine.
+                Each activation ties to a hardware fingerprint; revoke from{" "}
+                <strong>Settings → License</strong> if you sell or replace a
+                Mac. No concurrent-use restriction.
+              </p>
+            </details>
+
+            <details className="faq-buy-item" open={view === "success"}>
+              <summary>
+                <span className="faq-ic" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" /></svg>
+                </span>
+                <span className="faq-q">How does the 14-day refund work?</span>
+              </summary>
+              <p>
+                Email <a href="mailto:support@odak.fyi">support@odak.fyi</a>{" "}
+                within 14 days. No form, no questions. Refund posts via Polar
+                in 5 to 10 business days. After 14 days, refunds are case by
+                case.
+              </p>
+            </details>
+
+            <details className="faq-buy-item">
+              <summary>
+                <span className="faq-ic" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" /></svg>
+                </span>
+                <span className="faq-q">
+                  What happens after the 14-day trial?
+                </span>
+              </summary>
+              <p>
+                The app keeps working in a read-only mode: project switching
+                still functions, but new actions need a paid license. Your{" "}
+                <code>.odak</code> files and global config stay untouched, so
+                paying later picks up where you left off.
+              </p>
+            </details>
+
+            <details className="faq-buy-item">
+              <summary>
+                <span className="faq-ic" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" /></svg>
+                </span>
+                <span className="faq-q">
+                  Apple Pay, cards, EU VAT?
+                </span>
+              </summary>
+              <p>
+                Apple Pay, Google Pay, and major cards (Visa, Mastercard,
+                Amex). Polar handles VAT and GST for EU and UK buyers
+                automatically; the receipt itemizes the tax. Seller of record
+                on your statement is <strong>Polar, Inc.</strong>, not Odak.
+              </p>
+            </details>
+
+            <details className="faq-buy-item">
+              <summary>
+                <span className="faq-ic" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" /></svg>
+                </span>
+                <span className="faq-q">
+                  Where does my payment info go?
+                </span>
+              </summary>
+              <p>
+                Card details never touch Odak's servers. Polar processes the
+                payment end to end (PCI-DSS Level 1). Odak receives your
+                email, country code, and the license token Polar issues.
+                Nothing else.
+              </p>
+            </details>
+
+          </div>
+        </section>
       </motion.main>
       <Footer />
     </>

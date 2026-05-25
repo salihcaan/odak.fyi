@@ -1,10 +1,10 @@
 export function Mark({
   size = 32,
-  fetchPriority = "high",
+  fetchpriority = "high",
   loading = "eager",
 }: {
   size?: number;
-  fetchPriority?: "high" | "auto" | "low";
+  fetchpriority?: "high" | "auto" | "low";
   loading?: "eager" | "lazy";
 }) {
   const wh = size * 2;
@@ -20,7 +20,10 @@ export function Mark({
           height={wh}
           decoding="async"
           loading={loading}
-          fetchPriority={fetchPriority}
+          // React 18 doesn't know the camelCase `fetchPriority` prop yet
+          // and warns; lowercase `fetchpriority` is passed straight through
+          // as a regular HTML attribute and the browser honors it.
+          {...{ fetchpriority }}
         />
       </picture>
     </div>

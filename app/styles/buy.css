@@ -96,32 +96,63 @@ button{font-family:inherit}
   position:absolute;inset:0;
   background-image:radial-gradient(circle, var(--border-2) 1px, transparent 1px);
   background-size:36px 36px;
-  mask-image:radial-gradient(ellipse 60% 80% at 50% 30%, #000 0%, transparent 70%);
-  -webkit-mask-image:radial-gradient(ellipse 60% 80% at 50% 30%, #000 0%, transparent 70%);
-  opacity:.5;
+  mask-image:radial-gradient(ellipse 70% 90% at 50% 30%, #000 0%, transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 90% at 50% 30%, #000 0%, transparent 75%);
+  opacity:.85;
 }
+/* Primary warm halo: top-center, behind the price card. Pushed from
+   restrained .5 opacity to .85 so /buy reads as a Committed-saffron
+   surface, per the per-surface strategy override documented in
+   PRODUCT.md/DESIGN.md (One Voice is project default, not absolute). */
 .buy-ambient-glow{
   position:absolute;
-  top:-12vw;left:50%;
-  width:90vw;max-width:1200px;
-  height:60vw;max-height:780px;
+  top:-8vw;left:50%;
+  width:96vw;max-width:1280px;
+  height:64vw;max-height:820px;
   border-radius:50%;
   filter:blur(140px);
-  background:radial-gradient(ellipse 50% 60% at 50% 50%, var(--accent-glow), transparent 65%);
-  opacity:.5;
-  /* Slow breathing drift so the surface doesn't feel static while users
-     read the checkout column. Kept long-period (24s) and small-amplitude
-     so it never competes with the form for attention. */
+  background:radial-gradient(
+    ellipse 55% 65% at 50% 50%,
+    color-mix(in oklch, var(--accent) 60%, transparent),
+    transparent 65%
+  );
+  opacity:.85;
   transform:translate(-50%, 0) scale(1);
   animation:buy-ambient-drift 24s ease-in-out infinite;
   will-change:transform, opacity;
 }
+/* Secondary lower halo: a fainter saffron wash anchoring the page's
+   lower third. Pairs with the top halo as one warm composition
+   (Bridgemind-style — single accent across the whole page). */
+.buy-ambient::after{
+  content:'';
+  position:absolute;
+  bottom:-30vw;left:50%;
+  width:120vw;max-width:1600px;
+  height:80vw;max-height:1000px;
+  border-radius:50%;
+  filter:blur(160px);
+  background:radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    color-mix(in oklch, var(--accent-2) 30%, transparent),
+    transparent 60%
+  );
+  opacity:.4;
+  transform:translateX(-50%);
+  animation:buy-ambient-drift-rev 32s ease-in-out infinite;
+  will-change:transform, opacity;
+}
 @keyframes buy-ambient-drift{
-  0%, 100%{ transform:translate(-50%, 0) scale(1); opacity:.46 }
-  50%    { transform:translate(calc(-50% + 1.4vw), 1.8vw) scale(1.05); opacity:.62 }
+  0%, 100%{ transform:translate(-50%, 0) scale(1); opacity:.78 }
+  50%    { transform:translate(calc(-50% + 1.4vw), 1.8vw) scale(1.05); opacity:.92 }
+}
+@keyframes buy-ambient-drift-rev{
+  0%, 100%{ transform:translate(-50%, 0) scale(1); opacity:.5 }
+  50%    { transform:translate(calc(-50% - 2vw), -1.5vw) scale(1.08); opacity:.62 }
 }
 @media (prefers-reduced-motion: reduce){
   .buy-ambient-glow{ animation:none }
+  .buy-ambient::after{ animation:none }
 }
 
 /* ==========================================================
@@ -259,6 +290,14 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
    drop shadow, inset top highlight, stronger border. We drop
    the JS-driven tilt that the home card has — checkout pages
    should feel solid, not playful. */
+/* Pointer-tracked 3D tilt context. The parent .checkout-grid gives
+   perspective so the price-card's rotateX/rotateY actually project
+   into depth instead of looking like a 2D skew. Buy.tsx writes the
+   five tilt vars on pointermove; reduced-motion users get no tilt
+   so the static state below is what they see. */
+.checkout-grid{
+  perspective:1400px;
+}
 .price-card{
   position:relative;
   padding:clamp(28px, 3.4vw, 44px) clamp(24px, 3vw, 40px);
@@ -270,6 +309,51 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
     0 24px 48px -12px rgba(0,0,0,.35),
     inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
   overflow:hidden;
+  transform-style:preserve-3d;
+  will-change:transform;
+  transform:
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translateZ(var(--tilt-z, 0));
+  transition:
+    transform .5s var(--ease-out),
+    box-shadow .35s var(--ease-out);
+}
+.price-card[data-tilt-active]{
+  transition:
+    transform .12s linear,
+    box-shadow .35s var(--ease-out);
+  box-shadow:
+    0 40px 80px -20px rgba(0,0,0,.55),
+    0 12px 28px -8px rgba(0,0,0,.35),
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 7%, transparent),
+    0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
+}
+/* Cursor-following specular highlight; sells the "floating deck"
+   feel by adding a soft glint that moves with the pointer across
+   the card surface. Hidden by default so it only appears while
+   the cursor is actively over the card. */
+.price-card::after{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:inherit;
+  background:radial-gradient(
+    circle 320px at var(--tilt-mx, 50%) var(--tilt-my, 0%),
+    color-mix(in oklch, var(--fg) 9%, transparent),
+    transparent 55%
+  );
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s var(--ease-out);
+  mix-blend-mode:screen;
+  z-index:0;
+}
+.price-card[data-tilt-active]::after{ opacity:1 }
+@media (prefers-reduced-motion: reduce){
+  .checkout-grid{ perspective:none }
+  .price-card{ transform:none }
+  .price-card[data-tilt-active]{ transform:none }
+  .price-card::after{ display:none }
 }
 
 .price-card .head-row{
@@ -403,6 +487,44 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
   text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:14px;
   padding:clamp(36px, 5vw, 56px) clamp(28px, 4vw, 48px);
+}
+
+/* Prelaunch state: trial-first invitation, not a 503. The mono-caps
+   tag replaces the previous clock-icon, swapping "we're not ready"
+   energy for "you can use it right now" energy. */
+.prelaunch-state{
+  gap:18px;
+}
+.prelaunch-tag{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;font-weight:600;
+  padding:6px 14px;border-radius:999px;
+  background:color-mix(in oklch, var(--accent) 20%, transparent);
+  color:var(--accent);
+  border:1px solid color-mix(in oklch, var(--accent) 42%, transparent);
+  box-shadow:0 0 24px -8px color-mix(in oklch, var(--accent) 60%, transparent);
+  margin-bottom:6px;
+}
+.prelaunch-state h2{
+  font-family:var(--display);
+  font-size:clamp(28px, 3.6vw, 40px);
+  line-height:1.05;letter-spacing:-.028em;font-weight:700;
+  margin:0;color:var(--fg);
+}
+.prelaunch-state > p{
+  font-size:16px;line-height:1.6;
+  color:color-mix(in oklch, var(--fg) 68%, transparent);
+  margin:0 auto;max-width:36ch;letter-spacing:-.005em;
+}
+.prelaunch-state .buy{
+  margin-top:10px;
+  width:auto;
+  padding:14px 26px;
+}
+.prelaunch-fine{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  color:var(--mute);text-transform:uppercase;
+  margin:8px 0 0;
 }
 .price-card.state .state-icon{
   width:56px;height:56px;border-radius:50%;
@@ -554,6 +676,145 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
 .price-aside .fine a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
 /* ==========================================================
+   BUY BUTTON PULSE — slow breathing accent glow behind the
+   button. A separate ::before pseudo-element so the button's
+   own box-shadow (hover/active/disabled) stays untouched. The
+   pulse cycles a soft amber halo at the bottom edge of the
+   button at 3.4s, ≤5% scale amplitude. Reduced-motion users
+   see a static halo at half-strength.
+   ========================================================== */
+.buy{ isolation:isolate }
+.buy::before{
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border-radius:inherit;
+  z-index:-1;
+  background:radial-gradient(
+    ellipse 60% 100% at 50% 100%,
+    color-mix(in oklch, var(--accent) 65%, transparent),
+    transparent 70%
+  );
+  filter:blur(20px);
+  opacity:.55;
+  pointer-events:none;
+  animation:buy-glow-pulse 3.4s ease-in-out infinite;
+}
+@keyframes buy-glow-pulse{
+  0%, 100%{ opacity:.45; transform:scale(1); }
+  50%    { opacity:.78; transform:scale(1.04); }
+}
+.buy:disabled::before,
+.buy[aria-busy="true"]::before{
+  animation:none;
+  opacity:.25;
+}
+@media (prefers-reduced-motion: reduce){
+  .buy::before{ animation:none; opacity:.5; }
+}
+
+/* ==========================================================
+   #faq-buy — Buyer-specific FAQ. Same Bridgemind flat-stack
+   pattern as the home FAQ but scoped here (buy.css and
+   index.css are separate bundles; no cross-page CSS sharing).
+   ========================================================== */
+.faq-buy{
+  max-width:760px;margin:clamp(56px, 6vw, 88px) auto 0;
+  padding:0 var(--gutter);
+}
+.faq-buy-head{ margin-bottom:48px }
+.faq-buy-head .eyebrow{ margin-bottom:22px }
+.faq-buy-h{
+  font-family:var(--display);
+  font-size:clamp(40px, 5.2vw, 64px);
+  line-height:1.02;letter-spacing:-.034em;font-weight:700;
+  margin:0;max-width:18ch;color:var(--fg);
+}
+.faq-buy-h .accent{ color:rgba(255,255,255,.4) }
+
+/* Bridgemind-style edge-to-edge stacks. Solid slightly-darker rows
+   on the page bg with no bordered container. The home FAQ already
+   uses this pattern; matching it here keeps the brand coherent. */
+.faq-buy-grid{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.faq-buy-item{
+  background:transparent;
+  transition:background var(--dur-fast) var(--ease-out);
+}
+.faq-buy-item + .faq-buy-item{
+  border-top:1px solid var(--border);
+}
+.faq-buy-item:hover{ background:color-mix(in oklch, var(--fg) 2%, transparent) }
+.faq-buy-item[open]{ background:color-mix(in oklch, var(--fg) 4%, transparent) }
+.faq-buy-item[open]:hover{ background:color-mix(in oklch, var(--fg) 4%, transparent) }
+
+.faq-buy-item summary{
+  list-style:none;
+  display:flex;align-items:flex-start;gap:16px;
+  padding:20px 24px;
+  cursor:pointer;
+  font-family:var(--display);
+  font-size:16px;font-weight:500;letter-spacing:-.005em;
+  color:var(--fg);line-height:1.45;
+  user-select:none;
+}
+.faq-buy-item summary::-webkit-details-marker{ display:none }
+.faq-buy-item summary::marker{ content:'' }
+.faq-buy-item .faq-q{ flex:1;min-width:0;order:2 }
+.faq-buy-item .faq-ic{
+  flex-shrink:0;width:20px;height:20px;margin-top:2px;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:color-mix(in oklch, var(--fg) 50%, transparent);
+  transition:transform 380ms var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+  order:1;
+}
+.faq-buy-item .faq-ic svg{
+  width:14px;height:14px;stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.faq-buy-item[open] summary .faq-ic{
+  transform:rotate(45deg);
+  color:var(--accent);
+}
+.faq-buy-item summary:hover .faq-ic{ color:var(--fg) }
+.faq-buy-item[open] summary:hover .faq-ic{ color:var(--accent) }
+.faq-buy-item summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px;
+}
+.faq-buy-item > p{
+  margin:0;
+  padding:0 24px 22px 60px;
+  color:color-mix(in oklch, var(--fg) 55%, transparent);
+  font-size:15px;line-height:1.6;letter-spacing:-.003em;
+  animation:faq-buy-reveal .22s var(--ease-out);
+}
+.faq-buy-item p a{
+  color:var(--accent);text-decoration:none;
+  border-bottom:1px solid color-mix(in oklch, var(--accent) 50%, transparent);
+}
+.faq-buy-item p a:hover{ border-bottom-color:var(--accent) }
+.faq-buy-item p code,
+.faq-buy-item p strong + code{
+  font-family:var(--mono);font-size:.88em;
+  padding:1px 6px;border-radius:5px;
+  background:color-mix(in oklch, var(--bg) 60%, transparent);
+  border:1px solid var(--border);
+  color:var(--fg-2);
+}
+.faq-buy-item p strong{ color:var(--fg);font-weight:600 }
+@keyframes faq-buy-reveal{
+  from{ opacity:0;transform:translateY(-4px) }
+  to  { opacity:1;transform:translateY(0) }
+}
+@media (prefers-reduced-motion: reduce){
+  .faq-buy-item > p{ animation:none }
+  .faq-buy-item .faq-ic{ transition:none }
+}
+
+/* ==========================================================
    FOOTER — same chrome as the policy pages.
    ========================================================== */
 footer.site-foot{
@@ -620,4 +881,95 @@ footer.site-foot{
   .foot-col a{font-size:13.5px}
   .foot-bottom{padding-top:16px;gap:10px;font-size:10.5px}
   .foot-bottom > *{white-space:normal}
+
+  /* New sections compress on phones: lighter row padding, tighter
+     question type, shallow answer indent so the answer body doesn't
+     run too narrow under the icon gutter. */
+  .faq-buy{ padding:0 22px; margin-top:40px }
+  .faq-buy-h{ font-size:clamp(24px, 7vw, 32px) }
+  .faq-buy-item summary{ padding:16px 18px;font-size:15px;gap:12px }
+  .faq-buy-item > p{ padding:0 18px 18px 46px;font-size:14px }
 }
+
+/* ==========================================================
+   LOAD STATE — the Continue button while the Polar SDK is
+   still fetching. Disabled chrome already exists at .buy:disabled
+   above (opacity .55, no transform, no shadow); the spinner
+   visualizes "loading, not broken" so the user doesn't think
+   the button is dead.
+   ========================================================== */
+.buy-spinner{
+  display:inline-block;
+  animation:buy-spin 0.85s linear infinite;
+  margin-right:2px;
+}
+@keyframes buy-spin{
+  to{ transform:rotate(360deg) }
+}
+@media (prefers-reduced-motion: reduce){
+  .buy-spinner{ animation:none; opacity:.7 }
+}
+
+/* ==========================================================
+   ERROR STATE — fallback when the Polar SDK fails to load
+   (network block, CDN outage, ad-blocker). Reuses the
+   .price-card.state shell so the page rhythm doesn't shift;
+   the icon gets a desaturated dim treatment so it reads as
+   "informational, not catastrophic", and the CTA points the
+   user at a human (support email) instead of pretending the
+   button will work on retry.
+   ========================================================== */
+.price-card.state.error-state .state-icon.error{
+  background:color-mix(in oklch, var(--fg) 6%, transparent);
+  color:var(--fg-2);
+  border:1px solid var(--border-2);
+}
+
+/* ==========================================================
+   ASIDE — state-aware variants (success + prelaunch) for the
+   right column. The base .price-aside styles already live
+   above this block; these only carry the new elements.
+   ========================================================== */
+.price-aside .aside-lead{
+  font-size:16px;line-height:1.55;color:var(--fg-2);
+  margin:0 0 18px;letter-spacing:-.005em;
+}
+.price-aside .aside-mail{
+  display:inline-block;
+  font-family:var(--mono);font-size:14px;font-weight:500;
+  color:var(--accent);
+  padding:10px 14px;border-radius:10px;
+  background:color-mix(in oklch, var(--accent) 8%, transparent);
+  border:1px solid color-mix(in oklch, var(--accent) 28%, var(--border));
+  text-decoration:none;
+  transition:background var(--dur-fast) var(--ease-out),
+             border-color var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+}
+.price-aside .aside-mail:hover{
+  background:color-mix(in oklch, var(--accent) 14%, transparent);
+  border-color:color-mix(in oklch, var(--accent) 50%, var(--border));
+  color:var(--fg);
+}
+.price-aside .aside-sub{
+  font-family:var(--mono);font-size:11.5px;color:var(--mute);
+  letter-spacing:.02em;margin:12px 0 20px;
+}
+
+/* ==========================================================
+   EMAIL FIELD — inline validation. :user-valid and :user-invalid
+   only fire AFTER the user has interacted (so the initially-empty
+   required field doesn't render red on first paint). Treatment is
+   a leading hairline ring on the right edge of the input so the
+   chrome of the form doesn't change shape on state transitions
+   (no layout shift).
+   ========================================================== */
+.checkout-form .field input:user-valid{
+  border-color:color-mix(in oklch, var(--accent) 50%, var(--border));
+  box-shadow:0 0 0 3px color-mix(in oklch, var(--accent) 14%, transparent);
+}
+.checkout-form .field input:user-invalid{
+  border-color:color-mix(in oklch, oklch(64% 0.20 25) 60%, var(--border));
+  box-shadow:0 0 0 3px color-mix(in oklch, oklch(64% 0.20 25) 14%, transparent);
+}
+

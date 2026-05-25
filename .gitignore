@@ -13,6 +13,9 @@ design-system/
 # Playwright MCP debug logs/snapshots
 .playwright-mcp/
 
+# /impeccable skill scratch (generated design-system snapshot)
+.impeccable/
+
 # Throwaway visual-verification screenshots dropped by Playwright MCP
 # into the repo root when filename param lacks a directory prefix.
 /*.png

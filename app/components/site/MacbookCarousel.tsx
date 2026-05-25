@@ -41,7 +41,7 @@ const FEATURES: Feature[] = [
         Three letters in. <span className="accent">Window in focus.</span>
       </>
     ),
-    lead: "⌥ Space, three letters, ↵ — right window, in front.",
+    lead: "⌥ Space, three letters, ↵. Right window, in front.",
     clips: [
       {
         src: "/videos/1-windows.mp4",
@@ -57,7 +57,7 @@ const FEATURES: Feature[] = [
           { at: 3.5, text: "Find any project." },
           {
             at: 7.0,
-            text: "Open it — in any editor.",
+            text: "Open it in any editor.",
             ides: [IDE.cursor, IDE.vscode, IDE.intellij, IDE.antigravity, IDE.xcode, IDE.androidStudio],
           },
           { at: 11.5, text: "Same shortcut, every project." },
@@ -80,7 +80,7 @@ const FEATURES: Feature[] = [
       {
         src: "/videos/2-option-tab.mp4",
         captions: [
-          { at: 1.5, text: "⌥ Tab — every window you have open." },
+          { at: 1.5, text: "⌥ Tab. Every window you have open." },
           { at: 6.0, text: "Across every editor." },
           {
             at: 11.0,
@@ -131,7 +131,7 @@ const FEATURES: Feature[] = [
         captions: [
           { at: 1.5, text: "Click the notch." },
           { at: 4.5, text: "Every project window, one menu." },
-          { at: 9.5, text: "Pick — and you're there." },
+          { at: 9.5, text: "Pick, and you're there." },
           { at: 15.5, text: "Same project, another IDE.", ides: [IDE.cursor, IDE.vscode] },
           { at: 19.5, text: "From any app, always one click away." },
         ],
@@ -225,7 +225,9 @@ export function MacbookCarousel() {
           else if (ci === subIdx) elapsed += node?.currentTime || 0;
         });
         const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0;
-        fill.style.width = `${pct}%`;
+        fill.style.transform = `scaleX(${pct / 100})`;
+        if (pct >= 99.5) fill.dataset.full = "true";
+        else delete fill.dataset.full;
       }
 
       const t = v.currentTime;
@@ -247,7 +249,10 @@ export function MacbookCarousel() {
       if (!tab) return;
       const fill = tab.querySelector<HTMLElement>(".mc-tab-fill");
       if (!fill) return;
-      if (i !== activeIdx) fill.style.width = "0%";
+      if (i !== activeIdx) {
+        fill.style.transform = "scaleX(0)";
+        delete fill.dataset.full;
+      }
     });
   }, [activeIdx]);
 
