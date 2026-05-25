@@ -184,5 +184,25 @@ A handful of polish fixes plus a small visual unification.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.6/Odak-0.1.6.dmg" length="8468935" type="application/x-apple-diskimage" sparkle:edSignature="XZ34yDBgaVBVfkg2jj2uWsmNRDu8nQ/pY+YdMr3j010b/2+fKA+HwU23R7RtpyGRhBJzLfi7ukpAj66OyUXACw=="/>
         </item>
+            <item>
+            <title>Version 0.1.7</title>
+            <pubDate>Mon, 25 May 2026 10:34:34 +0000</pubDate>
+            <sparkle:version>11</sparkle:version>
+            <sparkle:shortVersionString>0.1.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.7 — your Mac's name stays on your Mac
+
+A small privacy tightening to how Odak's license server handles your devices.
+
+### Privacy
+- **Odak no longer stores your Mac's name on the license server.** The licensing system used to send your Mac's name (the one in System Settings → Sharing — often "Your Name's MacBook") to keep track of devices on your license. It now only sends a hardware identifier and your macOS version. Your Mac's name stays on this Mac.
+- **"At your Mac limit" picker now labels other Macs by macOS version and last-seen.** Previously the picker showed each Mac's name; now you'll see entries like "Another Mac · macOS 26.3.0 · last seen 3 days ago", with the current Mac still clearly marked "This Mac".
+
+### Under the hood
+- License server schema updated to drop the device-name columns. Existing names were removed during the migration. No action needed on your part — the change is invisible unless you hit the device-limit picker.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.7/Odak-0.1.7.dmg" length="8462947" type="application/x-apple-diskimage" sparkle:edSignature="3MrtRwoEgGg+xOtHt04RDWojoaoqDMSPpDQ6IMAyyDs8QUGxaauyn1enO4MDbUJhEI3kgPrAxmt/DHev/X7KDQ=="/>
+        </item>
     </channel>
 </rss>
