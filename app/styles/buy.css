@@ -102,8 +102,8 @@ button{font-family:inherit}
 }
 /* Primary warm halo: top-center, behind the price card. Pushed from
    restrained .5 opacity to .85 so /buy reads as a Committed-saffron
-   surface, per the per-surface strategy override documented in
-   PRODUCT.md/DESIGN.md (One Voice is project default, not absolute). */
+   surface — a deliberate per-surface override (the one-accent default
+   is a guideline, not absolute). */
 .buy-ambient-glow{
   position:absolute;
   top:-8vw;left:50%;

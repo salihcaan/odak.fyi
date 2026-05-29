@@ -422,6 +422,13 @@ h1.hero-h{
   color:#fff;
   padding-bottom: 0.15em; /* prevents y descender clipping */
 }
+/* Each headline line is its own block so the two reveal independently
+   (line-by-line cinematic entrance). filter:blur is animated by Framer on
+   the entrance; will-change keeps the blur→0 transition compositor-cheap. */
+h1.hero-h .hero-line{
+  display:block;
+  will-change:transform, opacity, filter;
+}
 /* Bridgemind-style gradient on the muted half of the headline:
    solid-looking text that fades from 65% white at the top of the
    glyphs to 28% at the bottom. Reads as "lit from above" and gives
