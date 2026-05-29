@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Footer } from "@/components/site/Footer";
 import { IdeMarquee } from "@/components/site/IdeMarquee";
@@ -17,6 +17,7 @@ import indexBody from "../legacy/index-body.html?raw";
 
 export function Index() {
   const prefersReducedMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -28,6 +29,22 @@ export function Index() {
     };
   }, []);
 
+  // Scroll-linked motion: the hero text drifts up and softens as the reader
+  // scrolls toward the MacBook demo below. Natural parallax tied to scroll —
+  // no scroll-jacking, no arrow-key hijack (Design Principle 1). The cue
+  // chevron fades out the moment scrolling begins so it stops looping forever.
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -64]);
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  // prefers-reduced-motion: hold the drift still (Design Principle, a11y).
+  const stillY = useTransform(scrollYProgress, () => 0);
+
+  // Cinematic entrance. A blur-in reveal (the signature cap.so / Bridgemind
+  // feel) layered on the existing y-rise, on the codebase's smooth ease.
+  // Reduced motion collapses to a plain, fast fade.
   const enter = (delay: number) => {
     if (prefersReducedMotion) {
       return {
@@ -37,10 +54,10 @@ export function Index() {
       };
     }
     return {
-      initial: { opacity: 0, y: 14 },
-      animate: { opacity: 1, y: 0 },
+      initial: { opacity: 0, y: 16, filter: "blur(10px)" },
+      animate: { opacity: 1, y: 0, filter: "blur(0px)" },
       transition: {
-        duration: 0.7,
+        duration: 0.72,
         delay,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       },
@@ -57,23 +74,31 @@ export function Index() {
 
       <div className="hero-stage-combined">
       <div className="stage-grid" aria-hidden="true" />
-      <section className="hero" id="hero" style={{ position: "relative" }}>
-        <div className="hero-text">
+      <section className="hero" id="hero" style={{ position: "relative" }} ref={heroRef}>
+        <motion.div
+          className="hero-text"
+          style={{ y: prefersReducedMotion ? stillY : textY }}
+        >
           <motion.div className="mt-2 sm:mt-4" {...enter(0)}>
             <span className="hero-eyebrow">Project launcher for developers</span>
           </motion.div>
 
-          <motion.h1 className="hero-h" {...enter(0.09)}>
-            Jump to any project<br /><span className="accent">in two keystrokes.</span>
-          </motion.h1>
+          <h1 className="hero-h">
+            <motion.span className="hero-line" {...enter(0.1)}>
+              Jump to any project
+            </motion.span>
+            <motion.span className="hero-line accent" {...enter(0.2)}>
+              in two keystrokes.
+            </motion.span>
+          </h1>
 
-          <motion.p className="hero-sub" {...enter(0.18)}>
+          <motion.p className="hero-sub" {...enter(0.3)}>
             Open or switch to any project from your keyboard. Hit ⌥ Space,
             type a few letters, press ↵ — Odak launches it or focuses
             the window if it's already open.
           </motion.p>
 
-          <motion.div className="hero-cta" {...enter(0.27)}>
+          <motion.div className="hero-cta" {...enter(0.4)}>
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
               className="btn-primary"
@@ -117,7 +142,7 @@ export function Index() {
             </button>
           </motion.div>
 
-          <motion.div className="hero-fine" {...enter(0.36)}>
+          <motion.div className="hero-fine" {...enter(0.5)}>
             <span>14-day trial · no card</span>
             <span className="dot"></span>
             <span>macOS 26+ · Apple Silicon</span>
@@ -132,21 +157,26 @@ export function Index() {
             <IdeMarquee />
           </motion.div>
 
-          <motion.a
-            href="#features"
-            className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40 hover:text-white/80 transition-colors"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          {/* Wrapper owns the scroll-driven fade-out; the inner link keeps its
+              one-time entrance fade-in. Kept on separate elements so the two
+              opacities compose instead of fighting over the same property. */}
+          <motion.div style={{ opacity: prefersReducedMotion ? undefined : cueOpacity }}>
+            <motion.a
+              href="#features"
+              className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40 hover:text-white/80 transition-colors"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-            </motion.div>
-          </motion.a>
-        </div>
+              <motion.div
+                animate={prefersReducedMotion ? undefined : { y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+              </motion.div>
+            </motion.a>
+          </motion.div>
+        </motion.div>
       </section>
       </div>
 
