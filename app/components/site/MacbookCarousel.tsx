@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { MacbookFrame, MacbookNotchOverlay } from "./MacbookFrame";
 
 /** A caption beat: shows `text` once `currentTime` of the parent clip
@@ -44,24 +44,24 @@ const FEATURES: Feature[] = [
     lead: "⌥ Space, three letters, ↵. Right window, in front.",
     clips: [
       {
-        src: "/videos/1-windows.mp4",
+        src: "/videos/0-windows.mp4",
         captions: [
-          { at: 2.5, text: "Wait, how many do I have open?" },
-          { at: 6.5, text: "Which one is the project you want?" },
+          { at: 1.5, text: "How many windows do you have open?" },
+          { at: 5.5, text: "Which one is the project you want?" },
         ],
       },
       {
         src: "/videos/1-search.mp4",
         captions: [
-          { at: 1.0, text: "⌥ Space." },
-          { at: 3.5, text: "Find any project." },
+          { at: 1.5, text: "⌥ Space, anywhere." },
+          { at: 4.0, text: "Find any project." },
           {
-            at: 7.0,
-            text: "Open it in any editor.",
+            at: 6.5,
+            text: "Open it in your editor.",
             ides: [IDE.cursor, IDE.vscode, IDE.intellij, IDE.antigravity, IDE.xcode, IDE.androidStudio],
           },
-          { at: 11.5, text: "Same shortcut, every project." },
-          { at: 16.5, text: "From anywhere." },
+          { at: 12.0, text: "Same shortcut, every project." },
+          { at: 18.0, text: "From any app you're in." },
         ],
       },
     ],
@@ -78,16 +78,16 @@ const FEATURES: Feature[] = [
     lead: "Every editor window, grouped by project, most-recent first.",
     clips: [
       {
-        src: "/videos/2-option-tab.mp4",
+        src: "/videos/2-quick-switcher.mp4",
         captions: [
-          { at: 1.5, text: "⌥ Tab. Every window you have open." },
-          { at: 6.0, text: "Across every editor." },
+          { at: 1.5, text: "⌥ Tab — your quick switcher." },
+          { at: 4.0, text: "Every open window, most-recent first." },
           {
-            at: 11.0,
-            text: "Same project, different IDE? Listed separately.",
-            ides: [IDE.cursor, IDE.vscode, IDE.intellij],
+            at: 8.0,
+            text: "Same project, different editor? Listed separately.",
+            ides: [IDE.cursor, IDE.vscode, IDE.antigravity],
           },
-          { at: 18.0, text: "Pick. Press. Done." },
+          { at: 13.5, text: "Pick. Switch. Done." },
         ],
       },
     ],
@@ -106,11 +106,11 @@ const FEATURES: Feature[] = [
       {
         src: "/videos/3-actions.mp4",
         captions: [
-          { at: 1.0, text: "Find your project." },
-          { at: 5.0, text: "Pick an action for it." },
-          { at: 8.0, text: "Open the repo on GitHub." },
-          { at: 13.5, text: "Same project, different action." },
-          { at: 18.0, text: "Reveal it in Finder." },
+          { at: 1.5, text: "Find your project." },
+          { at: 4.0, text: "⌘ K for its actions." },
+          { at: 7.0, text: "Open the repo on GitHub." },
+          { at: 14.0, text: "Same project, another action." },
+          { at: 19.5, text: "Reveal it in Finder." },
         ],
       },
     ],
@@ -129,11 +129,11 @@ const FEATURES: Feature[] = [
       {
         src: "/videos/4-notch.mp4",
         captions: [
-          { at: 1.5, text: "Click the notch." },
-          { at: 4.5, text: "Every project window, one menu." },
-          { at: 9.5, text: "Pick, and you're there." },
-          { at: 15.5, text: "Same project, another IDE.", ides: [IDE.cursor, IDE.vscode] },
-          { at: 19.5, text: "From any app, always one click away." },
+          { at: 1.5, text: "Hover the notch." },
+          { at: 3.5, text: "Every project, one menu." },
+          { at: 8.0, text: "Jump straight to any window." },
+          { at: 14.0, text: "Across every editor.", ides: [IDE.cursor, IDE.vscode, IDE.antigravity] },
+          { at: 20.0, text: "From any app — always one click away." },
         ],
       },
     ],
@@ -260,6 +260,16 @@ export function MacbookCarousel() {
 
   return (
     <div className="mc-pin-wrap" ref={pinWrapRef}>
+    <section
+      ref={sectionRef}
+      className="mc-section"
+      id="features"
+      data-active={active.id}
+    >
+      {/* Ambient backdrop lives INSIDE the sticky section so it pins with
+          the MacBook. It used to sit in .mc-pin-wrap (which scrolls) while
+          the section stayed pinned, so the gradient drifted behind the
+          device on scroll. */}
       <div className="mc-particles" aria-hidden="true">
         <div className="mc-particle-layer">
           <div className="mc-dot" style={{ top: "10%", left: "15%", width: 140, height: 140, opacity: 0.12 }} />
@@ -277,12 +287,6 @@ export function MacbookCarousel() {
           <div className="mc-dot" style={{ top: "95%", left: "30%", width: 100, height: 100, opacity: 0.15 }} />
         </div>
       </div>
-    <section
-      ref={sectionRef}
-      className="mc-section"
-      id="features"
-      data-active={active.id}
-    >
       <div className="mc-tabs" role="tablist" aria-label="Features">
         <div className="mc-tabs-pill">
           {FEATURES.map((f, i) => {

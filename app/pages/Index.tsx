@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Footer } from "@/components/site/Footer";
+import { HeroLauncher } from "@/components/site/HeroLauncher";
 import { IdeMarquee } from "@/components/site/IdeMarquee";
 import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
@@ -68,7 +69,6 @@ export function Index() {
     <>
       <SvgSprite />
       <Aurora />
-      <div className="grid-bg" />
 
       <Nav showBuy hashHrefs />
 
@@ -79,6 +79,8 @@ export function Index() {
           className="hero-text"
           style={{ y: prefersReducedMotion ? stillY : textY }}
         >
+          <div className="hero-split">
+          <div className="hero-col-text">
           <motion.div className="mt-2 sm:mt-4" {...enter(0)}>
             <span className="hero-eyebrow">Project launcher for developers</span>
           </motion.div>
@@ -148,11 +150,22 @@ export function Index() {
             <span>macOS 26+ · Apple Silicon</span>
           </motion.div>
 
+          </div>
+
+          {/* Media column: the product screenshot, alongside the copy on
+              desktop and stacked below it on mobile. */}
+          <motion.div className="hero-col-media" {...enter(0.35)}>
+            <HeroLauncher />
+          </motion.div>
+          </div>
+
+          {/* The editors Odak works with — a strip below the hero, spanning
+              the full width under both columns. */}
           <motion.div
-            className="mt-10 sm:mt-14"
+            className="hero-ide mt-9 sm:mt-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
           >
             <IdeMarquee />
           </motion.div>
