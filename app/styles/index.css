@@ -4470,30 +4470,39 @@ h2.section-h .mute {
   letter-spacing: -.005em;
   color: color-mix(in oklch, var(--fg) 55%, transparent);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
 }
 
-/* Odak header — the lone amber accent in the entire table. A
-   small dot prefix marks the brand column; the label itself stays
-   in the same family weight as competitors (no shouty 700/16px) and
-   in proper case to match Raycast/AltTab/Spotlight. */
+/* App-icon chip above each column name. Source icons already ship
+   their own rounded-square artwork, so we just clip + size them to a
+   consistent 24px tile and let a hairline ring tidy the edges. */
+.pos-compare-thead .cmp-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--fg) 8%, transparent);
+}
+
+/* Odak header — the lone amber accent in the entire table. The brand
+   column is now marked by its own logo (no dot prefix); the label
+   stays in the same family weight as competitors (no shouty 700/16px)
+   and in proper case to match Raycast/AltTab/Spotlight. */
 .pos-compare-thead .h-col.us {
   color: var(--fg);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -.005em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
-.pos-compare-thead .h-col.us::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px color-mix(in oklch, var(--accent) 60%, transparent);
+/* Amber halo keeps Odak's chip reading as the hero column. */
+.pos-compare-thead .h-col.us .cmp-logo {
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--accent) 45%, transparent),
+    0 0 12px color-mix(in oklch, var(--accent) 35%, transparent);
 }
 
 .pos-row {
