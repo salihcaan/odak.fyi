@@ -141,65 +141,11 @@ export function Buy() {
     };
   }, []);
 
-  // Pointer-tracked 3D tilt on the price card. Mirrors the home page
-  // pattern from /legacy/index-runtime.js. CSS in buy.css reads the
-  // five custom properties; reduced-motion users skip the effect.
-  useEffect(() => {
-    if (view !== "form" && view !== "success" && view !== "prelaunch") return;
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const card = document.querySelector<HTMLElement>(".price-card");
-    if (!card) return;
-
-    const MAX_DEG = 7;
-    const LIFT_PX = 14;
-    let rafId: number | null = null;
-    const target = { rx: 0, ry: 0, mx: 50, my: 0 };
-
-    const apply = () => {
-      rafId = null;
-      card.style.setProperty("--tilt-x", target.rx.toFixed(2) + "deg");
-      card.style.setProperty("--tilt-y", target.ry.toFixed(2) + "deg");
-      card.style.setProperty("--tilt-z", LIFT_PX + "px");
-      card.style.setProperty("--tilt-mx", target.mx.toFixed(1) + "%");
-      card.style.setProperty("--tilt-my", target.my.toFixed(1) + "%");
-    };
-    const schedule = () => {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(apply);
-    };
-
-    const onEnter = () => card.setAttribute("data-tilt-active", "");
-    const onMove = (e: PointerEvent) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      target.ry = (px - 0.5) * 2 * MAX_DEG;
-      target.rx = -(py - 0.5) * 2 * MAX_DEG;
-      target.mx = px * 100;
-      target.my = py * 100;
-      schedule();
-    };
-    const onLeave = () => {
-      card.removeAttribute("data-tilt-active");
-      target.rx = 0;
-      target.ry = 0;
-      card.style.setProperty("--tilt-x", "0deg");
-      card.style.setProperty("--tilt-y", "0deg");
-      card.style.setProperty("--tilt-z", "0px");
-    };
-
-    card.addEventListener("pointerenter", onEnter);
-    card.addEventListener("pointermove", onMove);
-    card.addEventListener("pointerleave", onLeave);
-    return () => {
-      card.removeEventListener("pointerenter", onEnter);
-      card.removeEventListener("pointermove", onMove);
-      card.removeEventListener("pointerleave", onLeave);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, [view]);
+  // No pointer-tracked tilt here on purpose. The price card is the
+  // checkout surface — a cursor-following 3D rotation made the Continue
+  // button a moving target as the pointer approached it. The card now
+  // sits solid; all the "premium" energy comes from the static accent
+  // ring, top edge, and glass sheen in buy.css instead.
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();

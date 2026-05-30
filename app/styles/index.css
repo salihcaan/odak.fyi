@@ -1840,6 +1840,10 @@ section.block::before {
   background: var(--border-2);
 }
 
+/* Focal pricing band. A faint white wash lifts the whole strip off the
+   dark page, and a centered saffron glow pools behind the price card so
+   the conversion moment reads as the warmest, most prominent point on
+   the page below the hero. */
 #pricing::after {
   content: "";
   position: absolute;
@@ -1849,7 +1853,9 @@ section.block::before {
   width: 100vw;
   margin-left: -50vw;
   pointer-events: none;
-  background: rgba(255, 255, 255, .035);
+  background:
+    radial-gradient(ellipse 58% 72% at 50% 50%, color-mix(in oklch, var(--accent) 13%, transparent), transparent 72%),
+    rgba(255, 255, 255, .035);
 }
 
 /* Apple-style eyebrow: pure caps type, no decorative bar. The page's
@@ -4838,91 +4844,78 @@ h2.section-h .mute {
   align-items: center;
   max-width: 1000px;
   margin: 0 auto;
-  /* 3D context for the price-card hover tilt. Perspective lives on
-     the parent so the card's rotateX/rotateY actually project into
-     depth instead of looking like a flat 2D skew. */
-  perspective: 1400px;
 }
 
+/* The price card is the conversion focal point — a solid, stationary
+   object. The old cursor-tracking 3D tilt was removed: rotating the card
+   under the pointer made the Buy button a moving target and read as
+   fidgety. Prominence now comes from a static accent ring + warm outer
+   glow lifting it off the page, a lit top edge, and a top-left glass
+   sheen. Hover deepens the ring/glow only — nothing translates. */
 .price-card {
   position: relative;
   padding: 44px 40px;
-  border: 1px solid var(--border-2);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, var(--border-2));
   border-radius: 22px;
   background:
-    radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%),
     linear-gradient(180deg, var(--bg-2), var(--bg));
   overflow: hidden;
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .35), inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-/* Tilt-on-hover. Selectors are specificity-bumped to win against
-   the global .reveal.in rule (which also sets transform). CSS vars
-   are written by /legacy/index-runtime.js (price-card tilt block)
-   from pointer position; defaults render the card flat. */
-.price-card,
-.price-card.reveal.in {
-  transform:
-    rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(var(--tilt-z, 0));
-  transition:
-    transform .5s var(--ease-out),
-    box-shadow .35s var(--ease-out);
-}
-
-/* While the cursor is hovering, switch to a near-instant transition
-   so the card tracks the pointer 1:1 instead of lagging behind. */
-.price-card[data-tilt-active],
-.price-card.reveal.in[data-tilt-active] {
-  transition:
-    transform .12s linear,
-    box-shadow .35s var(--ease-out);
   box-shadow:
-    0 40px 80px -20px rgba(0, 0, 0, .55),
-    0 12px 28px -8px rgba(0, 0, 0, .35),
-    inset 0 1px 0 color-mix(in oklch, var(--fg) 7%, transparent),
-    0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 8%, transparent),
+    0 28px 64px -22px rgba(0, 0, 0, .6),
+    0 0 0 1px color-mix(in oklch, var(--accent) 22%, transparent),
+    0 18px 80px -26px var(--accent-glow);
+  transition:
+    box-shadow .4s var(--ease-out),
+    border-color .4s var(--ease-out);
 }
 
-/* Cursor-following specular highlight — sells the "floating deck"
-   feel by adding a soft glint that moves with the pointer across
-   the card surface. */
+/* Specificity bumped past the global .reveal.in rule (which sets transform)
+   so the resting card keeps its hover affordance without a transform of
+   its own. */
+.price-card:hover,
+.price-card.reveal.in:hover {
+  border-color: color-mix(in oklch, var(--accent) 48%, var(--border-2));
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 11%, transparent),
+    0 36px 88px -24px rgba(0, 0, 0, .66),
+    0 0 0 1px color-mix(in oklch, var(--accent) 42%, transparent),
+    0 24px 100px -24px color-mix(in oklch, var(--accent) 46%, transparent);
+}
+
+/* Lit top edge — a crisp saffron filament that reads as "this is the
+   offer." Clipped to the rounded top by the card's overflow:hidden. */
+.price-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+      transparent,
+      color-mix(in oklch, var(--accent) 70%, transparent) 20%,
+      color-mix(in oklch, var(--accent) 92%, #fff 30%) 50%,
+      color-mix(in oklch, var(--accent) 70%, transparent) 80%,
+      transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Static glass sheen, lit from the top-left, balancing the warm radial
+   in the top-right corner so the whole surface reads as lit glass. */
 .price-card::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(circle 320px at var(--tilt-mx, 50%) var(--tilt-my, 0%),
-      color-mix(in oklch, var(--fg) 9%, transparent),
-      transparent 55%);
-  opacity: 0;
+  background: radial-gradient(120% 80% at 12% -12%,
+      color-mix(in oklch, var(--fg) 10%, transparent),
+      transparent 52%);
   pointer-events: none;
-  transition: opacity .35s var(--ease-out);
   mix-blend-mode: screen;
   z-index: 0;
-}
-
-.price-card[data-tilt-active]::after {
-  opacity: 1
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pricing {
-    perspective: none
-  }
-
-  .price-card {
-    transform: none
-  }
-
-  .price-card[data-tilt-active] {
-    transform: none
-  }
-
-  .price-card::after {
-    display: none
-  }
 }
 
 /* Removed: the redundant ::before top-down gradient overlay. The radial

@@ -286,74 +286,67 @@ h1.section-h .accent{color:rgba(255,255,255,.45)}
   .checkout-grid{grid-template-columns:1fr;gap:24px}
 }
 
-/* PRICE CARD — same chrome as home: corner radial accent, soft
-   drop shadow, inset top highlight, stronger border. We drop
-   the JS-driven tilt that the home card has — checkout pages
-   should feel solid, not playful. */
-/* Pointer-tracked 3D tilt context. The parent .checkout-grid gives
-   perspective so the price-card's rotateX/rotateY actually project
-   into depth instead of looking like a 2D skew. Buy.tsx writes the
-   five tilt vars on pointermove; reduced-motion users get no tilt
-   so the static state below is what they see. */
-.checkout-grid{
-  perspective:1400px;
-}
+/* PRICE CARD — the checkout focal point. No 3D tilt: rotating the card
+   under the pointer turned the Continue button into a moving target, so
+   the card is deliberately solid. Prominence comes from a static accent
+   ring + warm outer glow that lift it off the page, a lit top edge, and
+   a soft top-left glass sheen (Liquid-Glass vocabulary). Hover deepens
+   the ring and glow only — nothing translates, so the button stays put. */
 .price-card{
   position:relative;
   padding:clamp(28px, 3.4vw, 44px) clamp(24px, 3vw, 40px);
-  border:1px solid var(--border-2);border-radius:var(--radius-lg);
+  border:1px solid color-mix(in oklch, var(--accent) 30%, var(--border-2));
+  border-radius:var(--radius-lg);
   background:
-    radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%),
     linear-gradient(180deg, var(--bg-2), var(--bg));
   box-shadow:
-    0 24px 48px -12px rgba(0,0,0,.35),
-    inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 8%, transparent),
+    0 28px 64px -22px rgba(0,0,0,.6),
+    0 0 0 1px color-mix(in oklch, var(--accent) 22%, transparent),
+    0 18px 80px -26px var(--accent-glow);
   overflow:hidden;
-  transform-style:preserve-3d;
-  will-change:transform;
-  transform:
-    rotateX(var(--tilt-x, 0deg))
-    rotateY(var(--tilt-y, 0deg))
-    translateZ(var(--tilt-z, 0));
   transition:
-    transform .5s var(--ease-out),
-    box-shadow .35s var(--ease-out);
+    box-shadow .4s var(--ease-out),
+    border-color .4s var(--ease-out);
 }
-.price-card[data-tilt-active]{
-  transition:
-    transform .12s linear,
-    box-shadow .35s var(--ease-out);
+.price-card:hover{
+  border-color:color-mix(in oklch, var(--accent) 48%, var(--border-2));
   box-shadow:
-    0 40px 80px -20px rgba(0,0,0,.55),
-    0 12px 28px -8px rgba(0,0,0,.35),
-    inset 0 1px 0 color-mix(in oklch, var(--fg) 7%, transparent),
-    0 0 0 1px color-mix(in oklch, var(--accent) 18%, transparent);
+    inset 0 1px 0 color-mix(in oklch, var(--fg) 11%, transparent),
+    0 36px 88px -24px rgba(0,0,0,.66),
+    0 0 0 1px color-mix(in oklch, var(--accent) 42%, transparent),
+    0 24px 100px -24px color-mix(in oklch, var(--accent) 46%, transparent);
 }
-/* Cursor-following specular highlight; sells the "floating deck"
-   feel by adding a soft glint that moves with the pointer across
-   the card surface. Hidden by default so it only appears while
-   the cursor is actively over the card. */
+/* Lit top edge — a crisp saffron filament that reads as "this is the
+   offer." Clipped to the rounded top by the card's overflow:hidden. */
+.price-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--accent) 70%, transparent) 20%,
+    color-mix(in oklch, var(--accent) 92%, #fff 30%) 50%,
+    color-mix(in oklch, var(--accent) 70%, transparent) 80%,
+    transparent
+  );
+  z-index:2;pointer-events:none;
+}
+/* Static glass sheen, lit from the top-left, balancing the warm radial
+   in the top-right corner so the whole surface reads as lit glass. */
 .price-card::after{
   content:'';
   position:absolute;inset:0;
   border-radius:inherit;
   background:radial-gradient(
-    circle 320px at var(--tilt-mx, 50%) var(--tilt-my, 0%),
-    color-mix(in oklch, var(--fg) 9%, transparent),
-    transparent 55%
+    120% 80% at 12% -12%,
+    color-mix(in oklch, var(--fg) 10%, transparent),
+    transparent 52%
   );
-  opacity:0;
   pointer-events:none;
-  transition:opacity .35s var(--ease-out);
   mix-blend-mode:screen;
   z-index:0;
-}
-.price-card[data-tilt-active]::after{ opacity:1 }
-@media (prefers-reduced-motion: reduce){
-  .checkout-grid{ perspective:none }
-  .price-card{ transform:none }
-  .price-card[data-tilt-active]{ transform:none }
-  .price-card::after{ display:none }
 }
 
 .price-card .head-row{
