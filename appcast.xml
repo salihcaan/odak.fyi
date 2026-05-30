@@ -228,5 +228,30 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.8/Odak-0.1.8.dmg" length="8484133" type="application/x-apple-diskimage" sparkle:edSignature="j4its8sNXaEMrX6gYjCyZAdf16I/+nq7L7ACNQ/JwAqZ7FmyHVwzlJP6jHX9wmgdGId23G/x6dFhi31BGgk7Cg=="/>
         </item>
+            <item>
+            <title>Version 0.1.9</title>
+            <pubDate>Sat, 30 May 2026 11:00:12 +0000</pubDate>
+            <sparkle:version>13</sparkle:version>
+            <sparkle:shortVersionString>0.1.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.9 — onboarding that sets you up right
+
+Odak can only find your projects once it knows where they live, so first-run onboarding now makes that one step count — and drops you straight into search the moment you're done.
+
+### New
+- **Onboarding requires at least one project folder.** The final step now waits until you've picked a folder before letting you finish, with an inline hint so it's clear why. Your common dev folders (`code`, `Developer`, `Projects`, …) are still auto-detected and pre-selected, so most setups sail right through.
+- **Search opens automatically after onboarding.** Finishing setup now lands you in the search panel every time, instead of occasionally leaving you on an empty desktop on a fresh install.
+
+### Polish
+- The Odak mark now sits in the top-right of the onboarding window, balancing the window chrome and matching your chosen accent.
+
+### Known limits
+- macOS 26+ only.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.9/Odak-0.1.9.dmg" length="8490533" type="application/x-apple-diskimage" sparkle:edSignature="GNo6uzROunBT9R1Ew1QWdl9aipTtXEX8/82EpIhi3pkz8XC0Wurmk/5AwAOjRihYPtkJy14RlSu/wtPWYyZmBQ=="/>
+        </item>
     </channel>
 </rss>
