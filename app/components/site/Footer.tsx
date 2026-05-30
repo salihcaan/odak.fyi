@@ -77,6 +77,9 @@ export function Footer() {
           <h4>Resources</h4>
           <ul>
             <li>
+              <a href="/blog.html">Blog</a>
+            </li>
+            <li>
               <a href="https://github.com/salihcaan/odak.fyi">GitHub</a>
             </li>
             <li>

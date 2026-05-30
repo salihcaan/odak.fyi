@@ -1,0 +1,210 @@
+/* ==========================================================
+   BLOG / build-log prose — layered ON TOP of changelog.css.
+   changelog.css already supplies the base (fonts, :root tokens,
+   nav, footer, aurora, main, .eyebrow, h1, .lede, .meta). This
+   file only adds the article-body typography the changelog page
+   never needed: long-form headings, pull-quotes, code blocks,
+   figures, and the closing CTA.
+   ========================================================== */
+
+/* Back link above the title — mono, low-key, mirrors .rel-foot links. */
+.post-back{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.02em;
+  color:var(--mute);text-decoration:none;margin-bottom:28px;
+  transition:color .15s;
+}
+.post-back:hover{color:var(--accent)}
+.post-back svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.6}
+
+/* The byline row under the title: date · reading time · brand. */
+.post-byline{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;color:var(--mute);
+  margin:0 0 56px;
+}
+.post-byline .sep{opacity:.5}
+.post-byline .by{color:var(--fg-2)}
+
+/* Article measure + rhythm. */
+.post{font-size:16.5px;line-height:1.75}
+.post > p{color:var(--fg-2);margin:0 0 20px}
+.post > p:first-of-type{font-size:18px;color:var(--fg);line-height:1.7}
+.post strong{color:var(--fg);font-weight:600}
+.post em{color:var(--fg-2)}
+/* Prose links only. Excludes the CTA buttons (.btn-primary / .ghost):
+   .post a is more specific than the global .btn-primary, so without the
+   guard it painted the Download button's text in --fg-2 — white text on
+   the white button, i.e. invisible — and bottom-bordered it. */
+.post a:not(.btn-primary):not(.ghost){color:var(--fg-2);text-decoration:none;border-bottom:1px solid var(--border-2)}
+.post a:not(.btn-primary):not(.ghost):hover{color:var(--accent);border-color:var(--accent)}
+
+.post h2{
+  font-size:25px;line-height:1.2;letter-spacing:-.02em;font-weight:700;
+  color:var(--fg);margin:52px 0 16px;scroll-margin-top:88px;
+}
+.post h2 .num{
+  font-family:var(--mono);font-size:14px;font-weight:600;
+  color:var(--accent);margin-right:12px;letter-spacing:0;
+}
+.post h3{
+  font-size:18px;letter-spacing:-.01em;font-weight:650;
+  color:var(--fg);margin:36px 0 12px;
+}
+
+.post ul{padding-left:22px;margin:0 0 20px}
+.post li{margin:8px 0;color:var(--fg-2)}
+.post li strong{color:var(--fg)}
+
+/* Inline code, same chip as the changelog. */
+.post code{
+  font-family:var(--mono);font-size:.84em;padding:1.5px 6px;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:5px;color:var(--fg);white-space:nowrap;
+}
+
+/* Fenced code block — a real terminal/source card. */
+.post pre{
+  font-family:var(--mono);font-size:13px;line-height:1.65;
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;margin:0 0 24px;
+  overflow-x:auto;color:var(--fg-2);
+  box-shadow:inset 0 1px 0 color-mix(in oklch, var(--fg) 4%, transparent);
+}
+.post pre code{
+  all:unset;font-family:var(--mono);font-size:13px;color:var(--fg-2);
+  white-space:pre;
+}
+.post pre .c{color:var(--mute)}          /* comment   */
+.post pre .k{color:var(--accent)}        /* keyword   */
+.post pre .s{color:oklch(74% 0.13 150)} /* string    */
+
+/* Caption that can sit under a code block or image. */
+.post figure{margin:0 0 28px}
+.post figcaption{
+  font-family:var(--mono);font-size:11.5px;color:var(--mute);
+  margin-top:10px;text-align:center;letter-spacing:.01em;
+}
+
+/* Pull-quote — the emotional line of the piece. */
+.pullquote{
+  margin:40px 0;padding:4px 0 4px 24px;
+  border-left:2px solid var(--accent);
+  font-size:22px;line-height:1.4;letter-spacing:-.015em;
+  color:var(--fg);font-weight:600;
+}
+.pullquote span{color:var(--accent)}
+
+/* The step badges for the three rewrites. */
+.attempt-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:4px;
+}
+.attempt-tag .n{
+  width:20px;height:20px;display:grid;place-items:center;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--border-2);
+  color:var(--fg-2);font-size:11px;
+}
+.attempt-tag.fail .n{color:oklch(70% 0.15 25);border-color:color-mix(in oklch,oklch(70% 0.15 25) 35%,transparent)}
+.attempt-tag.win .n{color:oklch(74% 0.13 150);border-color:color-mix(in oklch,oklch(74% 0.13 150) 38%,transparent)}
+.attempt-tag.fail{color:oklch(70% 0.15 25)}
+.attempt-tag.win{color:oklch(74% 0.13 150)}
+
+/* Closing CTA — reuses the .subscribe card shape but with a button. */
+.post-cta{
+  margin-top:64px;padding:28px;border-radius:var(--radius);
+  background:var(--surface);border:1px solid var(--border);
+}
+.post-cta h3{margin:0 0 8px;font-size:19px;color:var(--fg)}
+.post-cta p{margin:0 0 18px;color:var(--fg-2);font-size:14.5px}
+.post-cta .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.post-cta .ghost{
+  font-size:13.5px;color:var(--fg-2);text-decoration:none;
+  border-bottom:1px solid var(--border-2);padding-bottom:1px;
+}
+.post-cta .ghost:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ==========================================================
+   "WALL OF IDENTICAL WINDOWS" — the alt-tab chaos, drawn in CSS.
+   Reuses the site's window-chrome vocabulary: macOS traffic lights,
+   dark glass panel, a corner app badge. Every window is the same
+   editor with the same blue icon — that's the point of the figure.
+   No screenshot asset; pure markup so it stays crisp and themed.
+   ========================================================== */
+.window-wall{margin:36px 0 30px}
+.ww-stage{
+  position:relative;height:300px;
+  border-radius:var(--radius);overflow:hidden;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(43,90,170,.10), transparent 60%),
+    var(--bg-2);
+  border:1px solid var(--border);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+/* faint desktop dot-grid behind the pile */
+.ww-stage::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 82% 82% at 50% 40%, #000, transparent 75%);
+  mask-image:radial-gradient(ellipse 82% 82% at 50% 40%, #000, transparent 75%);
+}
+.win{
+  position:absolute;width:208px;
+  background:rgba(18,16,20,.9);
+  border:1px solid var(--border-2);border-radius:11px;
+  box-shadow:0 18px 40px -14px rgba(0,0,0,.7), 0 2px 6px rgba(0,0,0,.4);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  transition:transform .25s var(--ease-out, cubic-bezier(.22,1,.36,1)),
+             box-shadow .25s var(--ease-out, cubic-bezier(.22,1,.36,1));
+}
+/* Hover lifts the one under the cursor flat + forward — the only way to
+   tell these apart is to stop and look, which is exactly the problem. */
+.win:hover{
+  transform:translateY(-5px) rotate(0deg) scale(1.04) !important;
+  z-index:30 !important;
+  box-shadow:0 28px 60px -16px rgba(0,0,0,.82), 0 0 0 1px rgba(43,90,170,.55);
+}
+.win-bar{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 10px;border-radius:11px 11px 0 0;
+  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+}
+.win-bar .tl{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.win-bar .tl.r{background:#ff5f57}
+.win-bar .tl.y{background:#febc2e}
+.win-bar .tl.g{background:#28c840}
+.win-title{
+  margin-left:4px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:-apple-system,system-ui,var(--sans);
+  font-size:10px;color:var(--dim);letter-spacing:-.01em;
+}
+.win-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:7px}
+.win-line{height:5px;border-radius:3px;background:rgba(255,255,255,.07)}
+.win-line.blue{background:rgba(43,90,170,.55)}
+/* The corner app badge — same #2B5AAA on every window: literally
+   "the same shade of blue". */
+.win-badge{
+  position:absolute;top:-9px;right:-9px;
+  width:30px;height:30px;border-radius:8px;
+  background:#2B5AAA;display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 4px 12px -2px rgba(43,90,170,.6), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.win-badge svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+@media (max-width:560px){
+  .post h2{font-size:22px}
+  .pullquote{font-size:19px}
+  .post > p:first-of-type{font-size:17px}
+
+  /* Shrink the pile and drop the two outermost windows so it stays
+     legible (not cramped) on a phone. */
+  .ww-stage{height:244px}
+  .win{width:150px}
+  .win-badge{width:25px;height:25px}
+  .win-badge svg{width:13px;height:13px}
+  .win:nth-child(n+6){display:none}
+}

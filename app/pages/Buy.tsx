@@ -169,7 +169,7 @@ export function Buy() {
         <div className="buy-ambient-grid" />
         <div className="buy-ambient-glow" />
       </div>
-      <Nav />
+      <Nav currentPath="/buy" />
       <motion.main
         className="buy-main"
         variants={item(0.05)}

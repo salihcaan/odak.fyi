@@ -53,6 +53,22 @@ export function Nav({
           </a>
         </div>
         <div className="nav-cta">
+          {/* Mobile-only "Buy" link. The nav-links menu (which carries the
+              desktop "Buy" link) is hidden under 760px, so without this the
+              bar had no path to checkout on a phone. Same plain accent
+              treatment as the desktop link — not a second button. Hidden on
+              /buy (redundant there). */}
+          {!currentPath.startsWith("/buy") && (
+            <a
+              href="/buy"
+              className="nav-buy"
+              onClick={() =>
+                captureEvent("buy_clicked", { source: "nav_mobile" })
+              }
+            >
+              Buy
+            </a>
+          )}
           <a
             href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg"
             className="btn-primary"

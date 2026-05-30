@@ -140,6 +140,7 @@ export default defineConfig({
         buy: path.resolve(__dirname, "app/buy.html"),
         "buy-stage": path.resolve(__dirname, "app/buy-stage.html"),
         changelog: path.resolve(__dirname, "app/changelog.html"),
+        blog: path.resolve(__dirname, "app/blog.html"),
         privacy: path.resolve(__dirname, "app/privacy.html"),
         refund: path.resolve(__dirname, "app/refund.html"),
         terms: path.resolve(__dirname, "app/terms.html"),

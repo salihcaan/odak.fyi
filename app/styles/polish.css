@@ -75,6 +75,36 @@
   .nav-changelog{display:none}
 }
 
+/* ----- Mobile "Buy" link in the nav. The desktop nav-links menu (which
+         carries the "Buy" link) is hidden under 760px, so without this the
+         bar had no path to checkout on a phone. Same plain accent text
+         treatment as the desktop link — deliberately not a second button.
+         Hidden on desktop (the menu covers it) and never rendered on /buy.
+         Lives here so every page's nav carries it without forking the
+         per-page sheets. ----- */
+.nav-buy{ display:none; }
+
+@media (max-width:760px){
+  .nav-buy{
+    display:inline-flex;align-items:center;
+    padding:7px 10px;border-radius:8px;
+    color:var(--accent);
+    font-size:14px;font-weight:600;letter-spacing:-.005em;
+    white-space:nowrap;text-decoration:none;
+    transition:color var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1)),
+               background var(--dur-fast,180ms) var(--ease-out, cubic-bezier(.22,1,.36,1));
+  }
+  .nav-buy:hover{ background:var(--surface, rgba(255,255,255,.04)); }
+}
+
+/* Very small / zoomed viewports only: tighten the bar's gap + side padding
+   so the added Buy link can't push it into horizontal scroll. The Download
+   button (and its "8 MB" size label) is never altered; only the chrome
+   around it gives. Real phone widths (≥360px) are untouched. */
+@media (max-width:360px){
+  .nav-inner{ gap:10px; padding-left:16px; padding-right:16px; }
+}
+
 /* ----- Buttons: add a real press state alongside the lift hover.
          transform composites cheaply; layered with the existing
          hover so the press lands inside the same transition. ----- */
