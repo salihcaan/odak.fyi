@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" fill="none">
+  <defs>
+    <linearGradient id="st-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcfcfe"/>
+      <stop offset="1" stop-color="#d7dbe2"/>
+    </linearGradient>
+    <linearGradient id="st-glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8c9099"/>
+      <stop offset="1" stop-color="#686d76"/>
+    </linearGradient>
+  </defs>
+  <rect width="56" height="56" rx="13" fill="url(#st-bg)"/>
+  <g fill="none" stroke="url(#st-glass)" stroke-linecap="round">
+    <circle cx="24.5" cy="24.5" r="11" stroke-width="4.4"/>
+    <line x1="32.6" y1="32.6" x2="42" y2="42" stroke-width="5"/>
+  </g>
+</svg>
