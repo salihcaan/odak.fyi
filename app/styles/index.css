@@ -12,7 +12,7 @@
   --fg: #ffffff;
   --fg-2: rgba(255, 255, 255, .78);
   --dim: rgba(255, 255, 255, .55);
-  --mute: rgba(255, 255, 255, .38);
+  --mute: rgba(255, 255, 255, .48);
   --faint: rgba(255, 255, 255, .18);
 
   /* accent — a slightly refined version of the original terracotta/saffron.
@@ -36,8 +36,10 @@
      scale so the rhythm step is consistent across the page. */
   --space-section: clamp(80px, 11vw, 128px);
   /* Per-section top/bottom padding. Adjacent sections each contribute this,
-     so the gap between any two stacked sections is a consistent 2×. */
-  --section-half: clamp(40px, 3.4vw, 48px);
+     so the gap between any two stacked sections is a consistent 2×. Raised
+     for a more generous, Raycast-airy rhythm (~120px between sections on
+     desktop, scaling down on narrow screens). */
+  --section-half: clamp(48px, 5.2vw, 75px);
   --space-head: clamp(40px, 5vw, 64px);
   --radius: 14px;
   --radius-lg: 26px;
@@ -702,7 +704,7 @@ h1.hero-h .accent {
      transparent. */
   background: linear-gradient(180deg,
       #ffffff 0%,
-      rgba(255, 255, 255, 0.2) 100%);
+      rgba(255, 255, 255, 0.45) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1044,19 +1046,20 @@ h1.hero-h .accent {
   }
 
   .hero-col-text {
-    flex: 1.12 1 0;
+    flex: 1.32 1 0;
     min-width: 0;
   }
 
   .hero-col-media {
-    flex: 0.95 1 0;
+    flex: 0.92 1 0;
     min-width: 0;
   }
 
-  /* Keep the display headline a genuine hero moment in the split — big and
-     bold, just sized to the column rather than the full centered version. */
+  /* Make the display headline the dominant hero moment in the split — sized
+     up so the copy, not the demo, carries the fold. Bigger text + a tighter
+     media column rebalances the two halves. */
   .hero-col-text .hero-h {
-    font-size: clamp(46px, 5vw, 72px);
+    font-size: clamp(54px, 5.6vw, 92px);
     margin-bottom: 24px;
   }
 
@@ -1076,9 +1079,14 @@ h1.hero-h .accent {
   }
 
   /* Media: vertically centered against the copy, angled away from it, and
-     lifted off the page by a stronger ambient bloom. */
+     lifted off the page by a stronger ambient bloom. Capped narrower than
+     the column and right-aligned so the demo reads as a supporting visual
+     beside the headline rather than competing with it for the fold. */
   .hero-col-media .hero-launcher {
     margin-top: 0;
+    width: min(var(--hero-media-w), 560px);
+    margin-left: auto;
+    margin-right: 0;
   }
 
   .hero-col-media .hero-launcher-frame {
@@ -1226,7 +1234,11 @@ h1.hero-h .accent {
 }
 
 .hero-stage-combined .hero {
-  padding-bottom: var(--section-half);
+  /* Modest tail below the hero — enough to separate from the pinned demo
+     without leaving a dead void. The hero now owns its fold through a
+     larger headline + tighter media (see the 960px split below), not
+     through empty padding. */
+  padding-bottom: clamp(48px, 6vh, 84px);
 }
 
 /* Note: MacbookCarousel is rendered as a sibling of .hero-stage-combined
@@ -2057,7 +2069,16 @@ h2.section-h .mute {
 
 @media (min-width: 721px) {
   .mc-pin-wrap {
-    min-height: 100dvh;
+    /* Pin-wrap is 13px taller than the sticky section (which is 100dvh−64px
+       nav), leaving a small pin "hold" while keeping the trailing gap to the
+       comparison section on the same ~96px rhythm as every other boundary.
+       (Previously a full 100dvh wrap left a 64px tail → ~147px gap.) */
+    min-height: calc(100dvh - 24px);
+    /* Lift the pinned demo onto the same inter-section rhythm as the stacked
+       .block sections below (~120px). The sticky section's own padding is
+       trimmed to fit the pinned viewport, so the gap lives here on the outer
+       wrap instead of the sticky internals. */
+    margin-top: 76px;
   }
 }
 
@@ -5342,8 +5363,13 @@ h2.section-h .mute {
 footer.site-foot {
   position: relative;
   max-width: var(--maxw);
-  margin: clamp(48px, 6vw, 80px) auto 0;
-  padding: 48px var(--gutter) 32px;
+  /* Join the section rhythm: no extra top margin and a token-driven top
+     pad so (faq padding-bottom + footer padding-top) == the same 2×
+     --section-half gap every stacked .block pair shares. Previously an
+     80px margin stacked on top of the 48px pad, making the footer gap
+     ~176px — nearly double the page's 96px section rhythm. */
+  margin: 0 auto;
+  padding: var(--section-half) var(--gutter) 32px;
   line-height: 1.55;
 }
 

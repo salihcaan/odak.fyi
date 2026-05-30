@@ -176,7 +176,7 @@ export function Index() {
           <motion.div style={{ opacity: prefersReducedMotion ? undefined : cueOpacity }}>
             <motion.a
               href="#features"
-              className="mt-2 sm:mt-4 pb-4 flex justify-center text-white/40 hover:text-white/80 transition-colors"
+              className="mt-8 sm:mt-12 pb-4 flex justify-center text-white/40 hover:text-white/80 transition-colors"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 1 }}
