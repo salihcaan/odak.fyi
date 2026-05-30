@@ -365,7 +365,16 @@ body.scrolling .aurora::after {
   gap: 12px;
   font-weight: 600;
   letter-spacing: -.02em;
-  font-size: 19px
+  font-size: 19px;
+  /* Cream wordmark. Declared here (not only polish.css) because in the
+     production build polish.css is linked before this sheet and loses the
+     cascade — the page's own rule is what renders. */
+  color: #f5ede0;
+  text-decoration: none;
+}
+
+.nav-brand:hover {
+  color: #f5ede0;
 }
 
 /* Brand mark — uses the real Odak app icon (terracotta ⌘) shipped from
@@ -373,8 +382,8 @@ body.scrolling .aurora::after {
    shadow + glow, so the wrapper is a clean inline-block — no gradient
    or box-shadow that would double up on the icon's own. */
 .nav-brand .mark {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   display: inline-block;
   flex-shrink: 0;
   line-height: 0;
