@@ -253,5 +253,28 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.9/Odak-0.1.9.dmg" length="8490533" type="application/x-apple-diskimage" sparkle:edSignature="GNo6uzROunBT9R1Ew1QWdl9aipTtXEX8/82EpIhi3pkz8XC0Wurmk/5AwAOjRihYPtkJy14RlSu/wtPWYyZmBQ=="/>
         </item>
+            <item>
+            <title>Version 0.1.10</title>
+            <pubDate>Sat, 06 Jun 2026 11:09:18 +0000</pubDate>
+            <sparkle:version>14</sparkle:version>
+            <sparkle:shortVersionString>0.1.10</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.10 — smoother switching, a sharper notch
+
+A polish pass on the two surfaces you touch most: the window switcher's close motion and the notch's selection look.
+
+### Polish
+- **Closing a window in the switcher now moves as one motion.** Whether you use ⌥W or the per-row × button, the row collapse and the panel resize now happen in the same beat — no more "the content vanished, then the window slid up to catch it." The closing row also fades out cleanly instead of briefly ghosting over the row taking its place.
+- **The notch highlights with your accent color.** Hovering a project in the notch now paints the row in your chosen accent palette — the same selection color the quick switcher uses — instead of a flat gray.
+- **The notch's bottom row sits flush in the corner.** The selection highlight now nests concentrically into the notch card's rounded bottom, matching how the switcher's bottom row hugs its panel, instead of leaving a curved shoulder around a squarer row.
+
+### Known limits
+- macOS 26+ only.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.10/Odak-0.1.10.dmg" length="8571998" type="application/x-apple-diskimage" sparkle:edSignature="S4dxl88vTBBNQhZaTFgcHGpIb+oXJ59/LcMkfL42JovCNFm54V0eRPEo/EOoG0OGb8xr5qZ3aQnHvuUBBkn4AA=="/>
+        </item>
     </channel>
 </rss>
