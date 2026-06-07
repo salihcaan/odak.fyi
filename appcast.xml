@@ -276,5 +276,32 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.10/Odak-0.1.10.dmg" length="8571998" type="application/x-apple-diskimage" sparkle:edSignature="S4dxl88vTBBNQhZaTFgcHGpIb+oXJ59/LcMkfL42JovCNFm54V0eRPEo/EOoG0OGb8xr5qZ3aQnHvuUBBkn4AA=="/>
         </item>
+            <item>
+            <title>Version 0.1.11</title>
+            <pubDate>Sun, 07 Jun 2026 10:50:32 +0000</pubDate>
+            <sparkle:version>15</sparkle:version>
+            <sparkle:shortVersionString>0.1.11</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.11 — hold Right ⌘ to find any window, now on macOS 15
+
+This release adds a second, faster way to reach a window — hold Right ⌘ and just type — and broadens Odak to run on macOS 15 Sequoia, not only Tahoe.
+
+### New
+- **Hold Right ⌘, type, release — land in the window.** A new rcmd-style trigger sits alongside ⌥Tab: hold the right Command key, type a few letters to fuzzy-match your open IDE windows, and release to switch. Numbered rows still work, so ⌘1–9 jumps straight to a result. The classic ⌥Tab switcher is unchanged.
+- **Runs on macOS 15 Sequoia.** Odak previously needed macOS 26 for its Liquid Glass panel. It now falls back to a native material on Sequoia, so the full app works on macOS 15 and later — and still lights up with Liquid Glass on macOS 26.
+- **Open a project straight in your editor from search.** Hover a search result and click the IDE icon to open it in your editor, without switching to an existing window first.
+
+### Polish
+- The type-to-search field renders the query as a single text run, so letters no longer jitter or shift as you type. The typed text is also crisper and higher-contrast in light mode.
+- Row hover is now driven from a single source of truth, fixing cases where the switcher and the result list could disagree about which row was highlighted, and the selection indicator is correctly centered.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.11/Odak-0.1.11.dmg" length="8650858" type="application/x-apple-diskimage" sparkle:edSignature="CcFN4tL3e3hDopojyWpYcyTpZHccXjiQQEr8qrtjn5xiVff4wgkCMkd3zoeynt+8iNTIJEVo5u52klhOE+oGBA=="/>
+        </item>
     </channel>
 </rss>
