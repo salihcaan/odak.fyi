@@ -283,7 +283,7 @@ export function Blog() {
           <div className="post-cta">
             <h3>Try the thing this story is about.</h3>
             <p>
-              macOS 26, Apple Silicon, native. Telemetry off by default. $19
+              macOS 15+, Apple Silicon, native. Telemetry is opt-in. $19
               once, no subscription. 14-day trial, no card.
             </p>
             <div className="row">

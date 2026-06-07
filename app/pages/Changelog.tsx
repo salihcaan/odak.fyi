@@ -41,11 +41,138 @@ export function Changelog() {
           </a>
         </p>
 
+        <Release id="v0-1-11">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.11</span>
+              <span className="rel-pill">Latest</span>
+            </div>
+            <span className="rel-date">2026-06-07</span>
+          </div>
+          <h2 className="rel-title">
+            Hold Right ⌘ to find any window — now on macOS 15
+          </h2>
+          <p className="rel-lead">
+            A second, faster way to reach a window lands alongside ⌥Tab: hold
+            the right Command key and just type. And Odak now runs on macOS 15
+            Sequoia, not only Tahoe.
+          </p>
+
+          <h3>New</h3>
+          <ul>
+            <li>
+              <strong>Hold Right ⌘, type, release — land in the window.</strong>{" "}
+              Hold the right Command key and type a few letters to fuzzy-match
+              your open IDE windows, then release to switch. Numbered rows still
+              work, so ⌘1–9 jumps straight to a result. The classic ⌥Tab
+              switcher is unchanged.
+            </li>
+            <li>
+              <strong>Runs on macOS 15 Sequoia.</strong> Odak previously needed
+              macOS 26 for its Liquid Glass panel. It now falls back to a native
+              material on Sequoia, so the full app works on macOS 15 and later —
+              and still lights up with Liquid Glass on macOS 26.
+            </li>
+            <li>
+              <strong>Open a project straight in your editor from search.</strong>{" "}
+              Hover a search result and click the IDE icon to open it in your
+              editor, without switching to an existing window first.
+            </li>
+          </ul>
+
+          <h3>Polish</h3>
+          <ul>
+            <li>
+              The type-to-search field renders the query as a single text run,
+              so letters no longer jitter or shift as you type — and the typed
+              text is crisper and higher-contrast in light mode.
+            </li>
+            <li>
+              Row hover is driven from a single source of truth, fixing cases
+              where the switcher and the result list could disagree about which
+              row was highlighted, and the selection indicator is correctly
+              centered.
+            </li>
+          </ul>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
+              Download Odak
+            </a>
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.11"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
+        <Release id="v0-1-10">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.10</span>
+            </div>
+            <span className="rel-date">2026-06-06</span>
+          </div>
+          <h2 className="rel-title">Smoother switching, a sharper notch</h2>
+          <p className="rel-lead">
+            A polish pass on the two surfaces you touch most: the window
+            switcher's close motion and the notch's selection look.
+          </p>
+
+          <h3>Polish</h3>
+          <ul>
+            <li>
+              <strong>
+                Closing a window in the switcher now moves as one motion.
+              </strong>{" "}
+              Whether you use ⌥W or the per-row × button, the row collapse and
+              the panel resize happen in the same beat — no more "the content
+              vanished, then the window slid up to catch it." The closing row
+              also fades out cleanly instead of briefly ghosting over the row
+              taking its place.
+            </li>
+            <li>
+              <strong>The notch highlights with your accent color.</strong>{" "}
+              Hovering a project in the notch paints the row in your chosen
+              accent palette — the same selection color the quick switcher uses
+              — instead of a flat gray.
+            </li>
+            <li>
+              <strong>The notch's bottom row sits flush in the corner.</strong>{" "}
+              The selection highlight nests concentrically into the notch card's
+              rounded bottom, matching how the switcher's bottom row hugs its
+              panel, instead of leaving a curved shoulder around a squarer row.
+            </li>
+          </ul>
+
+          <h3>Known limits</h3>
+          <ul>
+            <li>macOS 26+ only.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.10"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
         <Release id="v0-1-9">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.9</span>
-              <span className="rel-pill">Latest</span>
             </div>
             <span className="rel-date">2026-05-30</span>
           </div>

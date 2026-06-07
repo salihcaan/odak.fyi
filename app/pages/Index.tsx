@@ -147,7 +147,7 @@ export function Index() {
           <motion.div className="hero-fine" {...enter(0.5)}>
             <span>14-day trial · no card</span>
             <span className="dot"></span>
-            <span>macOS 26+ · Apple Silicon</span>
+            <span>macOS 15+ · Apple Silicon</span>
           </motion.div>
 
           </div>
