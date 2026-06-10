@@ -325,5 +325,27 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.12/Odak-0.1.12.dmg" length="8637039" type="application/x-apple-diskimage" sparkle:edSignature="Tyh4B9PeyQpXirLHZNv5xQOOP4u8dDkHTCaIjIclAxxUMgAY6x347u7oHDDqfXhauwhvULa5CPd7LEYDcOG1Aw=="/>
         </item>
+            <item>
+            <title>Version 0.1.13</title>
+            <pubDate>Wed, 10 Jun 2026 19:11:51 +0000</pubDate>
+            <sparkle:version>17</sparkle:version>
+            <sparkle:shortVersionString>0.1.13</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.13 — no more freezes during window activity, rescan works instantly
+
+A responsiveness release: Odak no longer stalls when editor windows open or close, and a project rescan shows up in search right away.
+
+### Fixed
+- **Odak no longer freezes while your IDE is busy.** Refreshing the window list talked to each editor synchronously on the main thread — if Cursor, VS Code, or a JetBrains IDE was mid-build or indexing, opening or closing one of its windows could lock Odak up for seconds. The whole window scan now runs in the background with a tight per-app timeout, and the switcher opens instantly with the latest list folding in the moment the scan lands.
+- **Rescan now updates search immediately.** Pressing Rescan in Settings (or the automatic background rescan picking up a freshly cloned repo) rebuilt the project index but search kept serving the old list until you relaunched Odak. New projects now appear in search the moment the scan finishes — no relaunch needed.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.13/Odak-0.1.13.dmg" length="8654370" type="application/x-apple-diskimage" sparkle:edSignature="/Ex0WFX29ogwFUYpq3PiFBvhMgJPElKNusRMOn+owOom6oZJLtiXVjCp8Ktr395ZhYsgPiKKBnXX9/voHNHPDg=="/>
+        </item>
     </channel>
 </rss>
