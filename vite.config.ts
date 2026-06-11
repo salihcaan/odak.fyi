@@ -66,6 +66,7 @@ const release = latestRelease();
 // <pre>, breaking the page). Tiny dev-only middleware matches the
 // known MPA entries and rewrites before Vite's resolver runs.
 const MPA_ENTRIES = [
+  "actions",
   "buy",
   "buy-stage",
   "changelog",
@@ -94,7 +95,7 @@ const cleanUrlsPlugin = {
     server.middlewares.use((req, _res, next) => {
       const url = req.url ?? "";
       const match = url.match(
-        /^\/(buy|buy-stage|changelog|privacy|refund|terms|docs\/actions|docs\/activate)(\?.*)?$/,
+        /^\/(actions|buy|buy-stage|changelog|privacy|refund|terms|docs\/actions|docs\/activate)(\?.*)?$/,
       );
       if (match && MPA_ENTRIES.includes(match[1] as (typeof MPA_ENTRIES)[number])) {
         req.url = `/${match[1]}.html${match[2] ?? ""}`;
@@ -137,6 +138,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: path.resolve(__dirname, "app/index.html"),
+        actions: path.resolve(__dirname, "app/actions.html"),
         buy: path.resolve(__dirname, "app/buy.html"),
         "buy-stage": path.resolve(__dirname, "app/buy-stage.html"),
         changelog: path.resolve(__dirname, "app/changelog.html"),

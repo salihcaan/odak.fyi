@@ -1,0 +1,53 @@
+{
+  "actions": [
+    {
+      "name": "Open in Xcode",
+      "type": "app",
+      "shortcut": "cmd+alt+x",
+      "app": "Xcode",
+      "conditions": {
+        "fileExists": ["Package.swift", "*.xcodeproj", "*.xcworkspace"]
+      }
+    },
+    {
+      "name": "Open Simulator",
+      "type": "app",
+      "shortcut": "cmd+alt+s",
+      "app": "Simulator"
+    },
+    {
+      "name": "Run tests",
+      "type": "script",
+      "shortcut": "cmd+shift+t",
+      "output": "notification",
+      "script": "swift test 2>&1 | tail -20",
+      "conditions": { "fileExists": "Package.swift" }
+    },
+    {
+      "name": "Resolve packages",
+      "type": "script",
+      "shortcut": "cmd+alt+r",
+      "output": "notification",
+      "script": "swift package resolve 2>&1 | tail -3",
+      "conditions": { "fileExists": "Package.swift" }
+    },
+    {
+      "name": "Clean DerivedData",
+      "type": "script",
+      "shortcut": "cmd+alt+k",
+      "output": "hud",
+      "script": "rm -rf ~/Library/Developer/Xcode/DerivedData/{name}-* && echo '{name} DerivedData cleaned'",
+      "conditions": {
+        "fileExists": ["*.xcodeproj", "*.xcworkspace"]
+      }
+    },
+    {
+      "name": "SwiftLint",
+      "type": "script",
+      "shortcut": "cmd+shift+l",
+      "output": "notification",
+      "script": "swiftlint --quiet 2>&1 | tail -10",
+      "conditions": { "fileExists": ".swiftlint.yml" }
+    }
+  ]
+}

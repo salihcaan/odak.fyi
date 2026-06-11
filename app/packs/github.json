@@ -1,0 +1,56 @@
+{
+  "actions": [
+    {
+      "name": "Open repo on GitHub",
+      "type": "url",
+      "shortcut": "cmd+g",
+      "url": "{remoteURL}"
+    },
+    {
+      "name": "Open pull requests",
+      "type": "url",
+      "shortcut": "cmd+shift+p",
+      "url": "{remoteURL}/pulls"
+    },
+    {
+      "name": "Open current branch",
+      "type": "url",
+      "shortcut": "cmd+shift+g",
+      "url": "{remoteURL}/tree/{branch}"
+    },
+    {
+      "name": "CI runs for branch",
+      "type": "url",
+      "shortcut": "cmd+shift+a",
+      "url": "{remoteURL}/actions?query=branch:{branch}"
+    },
+    {
+      "name": "Compare branch to main",
+      "type": "url",
+      "shortcut": "cmd+shift+c",
+      "url": "{remoteURL}/compare/main...{branch}"
+    },
+    {
+      "name": "Review a PR",
+      "type": "script",
+      "shortcut": "cmd+alt+r",
+      "output": "list",
+      "on_select": "open-pr-web",
+      "script": "gh pr list --json number,title,author --jq '.[] | \"#\\(.number) \\(.title) (@\\(.author.login))\"'"
+    },
+    {
+      "name": "open-pr-web",
+      "type": "script",
+      "shortcut": "",
+      "output": "silent",
+      "script": "gh pr view $(echo '{selected}' | awk '{print $1}' | tr -d '#') --web"
+    },
+    {
+      "name": "Copy PR link",
+      "type": "script",
+      "shortcut": "cmd+alt+p",
+      "output": "clipboard",
+      "script": "gh pr view --json url --jq .url | tr -d '\n'"
+    }
+  ]
+}

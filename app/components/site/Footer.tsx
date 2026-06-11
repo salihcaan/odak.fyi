@@ -76,6 +76,9 @@ export function Footer() {
             <li>
               <a href="/changelog.html">Changelog</a>
             </li>
+            <li>
+              <a href="/actions">Actions</a>
+            </li>
           </ul>
         </motion.div>
         <motion.div className="foot-col" variants={colVariants}>

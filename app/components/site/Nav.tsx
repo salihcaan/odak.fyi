@@ -37,6 +37,7 @@ export function Nav({
             </a>
           )}
           <a href={`${prefix}#faq`}>FAQ</a>
+          <a href="/actions">Actions</a>
           <a href="/docs/actions.html">Docs</a>
           <a
             href={`/changelog.html#v${__APP_VERSION__.replace(/\./g, "-")}`}

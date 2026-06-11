@@ -50,11 +50,67 @@ export function Changelog() {
           </a>
         </p>
 
+        <Release id="v0-1-15">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.15</span>
+              <span className="rel-pill">Latest</span>
+            </div>
+            <span className="rel-date">2026-06-12</span>
+          </div>
+          <h2 className="rel-title">The Actions Marketplace</h2>
+          <p className="rel-lead">
+            Actions are Odak's superpower, and now you don't have to write
+            them yourself: curated packs live at{" "}
+            <a href="/actions">odak.fyi/actions</a> and import with one click.
+          </p>
+
+          <h3>New</h3>
+          <ul>
+            <li>
+              <strong>Actions Marketplace.</strong> Six curated packs — Git,
+              GitHub, GitLab, Docker, Node/npm, and Xcode/Swift — at{" "}
+              <a href="/actions">odak.fyi/actions</a>. Every pack shows each
+              action and shortcut up front; <strong>Add to Odak</strong>{" "}
+              imports it after the usual confirmation dialog, and the actions
+              append to your <code>config.yaml</code> ready to edit.
+            </li>
+            <li>
+              <strong>Browse Marketplace from Settings.</strong> Settings →
+              Actions now links straight to the marketplace, next to Edit
+              config.yaml and Reload.
+            </li>
+            <li>
+              <strong>YAML imports.</strong> <code>odak://import?url=…</code>{" "}
+              now accepts YAML as well as JSON — a single action, a list, or
+              an <code>actions:</code> list. Share a snippet of your
+              config.yaml via a Gist and it imports verbatim.
+            </li>
+          </ul>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
+              Download Odak
+            </a>
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.15"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
         <Release id="v0-1-14">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.14</span>
-              <span className="rel-pill">Latest</span>
             </div>
             <span className="rel-date">2026-06-11</span>
           </div>
@@ -131,9 +187,6 @@ export function Changelog() {
           </ul>
 
           <div className="rel-foot">
-            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
-              Download Odak
-            </a>
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.14"
               target="_blank"
@@ -299,56 +352,6 @@ export function Changelog() {
           <div className="rel-foot">
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.11"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
-        <Release id="v0-1-10">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.10</span>
-            </div>
-            <span className="rel-date">2026-06-06</span>
-          </div>
-          <h2 className="rel-title">Smoother switching, a sharper notch</h2>
-          <p className="rel-lead">
-            A polish pass on the two surfaces you touch most: the window
-            switcher's close motion and the notch's selection look.
-          </p>
-
-          <h3>Polish</h3>
-          <ul>
-            <li>
-              <strong>
-                Closing a window in the switcher now moves as one motion.
-              </strong>{" "}
-              Whether you use ⌥W or the per-row × button, the row collapse and
-              the panel resize happen in the same beat — no more "the content
-              vanished, then the window slid up to catch it." The closing row
-              also fades out cleanly instead of briefly ghosting over the row
-              taking its place.
-            </li>
-            <li>
-              <strong>The notch highlights with your accent color.</strong>{" "}
-              Hovering a project in the notch paints the row in your chosen
-              accent palette — the same selection color the quick switcher uses
-              — instead of a flat gray.
-            </li>
-            <li>
-              <strong>The notch's bottom row sits flush in the corner.</strong>{" "}
-              The selection highlight nests concentrically into the notch card's
-              rounded bottom, matching how the switcher's bottom row hugs its
-              panel, instead of leaving a curved shoulder around a squarer row.
-            </li>
-          </ul>
-
-          <div className="rel-foot">
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.10"
               target="_blank"
               rel="noopener"
             >

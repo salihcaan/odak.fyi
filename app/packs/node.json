@@ -1,0 +1,52 @@
+{
+  "actions": [
+    {
+      "name": "Run npm script",
+      "type": "script",
+      "shortcut": "cmd+alt+n",
+      "output": "list",
+      "on_select": "exec-npm-script",
+      "script": "node -e 'console.log(Object.keys(require(\"./package.json\").scripts||{}).join(\"\\n\"))'",
+      "conditions": { "fileExists": "package.json" }
+    },
+    {
+      "name": "exec-npm-script",
+      "type": "script",
+      "shortcut": "",
+      "output": "notification",
+      "script": "npm run '{selected}' 2>&1 | tail -5"
+    },
+    {
+      "name": "Install deps",
+      "type": "script",
+      "shortcut": "cmd+alt+i",
+      "output": "notification",
+      "script": "npm install 2>&1 | tail -3",
+      "conditions": { "fileExists": "package.json" }
+    },
+    {
+      "name": "Outdated packages",
+      "type": "script",
+      "shortcut": "cmd+alt+o",
+      "output": "list",
+      "script": "npm outdated 2>/dev/null | tail -n +2",
+      "conditions": { "fileExists": "package.json" }
+    },
+    {
+      "name": "Open package.json",
+      "type": "script",
+      "shortcut": "cmd+alt+p",
+      "output": "silent",
+      "script": "open package.json",
+      "conditions": { "fileExists": "package.json" }
+    },
+    {
+      "name": "node_modules size",
+      "type": "script",
+      "shortcut": "cmd+alt+z",
+      "output": "hud",
+      "script": "du -sh node_modules 2>/dev/null | awk '{print \"node_modules: \" $1}'",
+      "conditions": { "fileExists": "package.json" }
+    }
+  ]
+}

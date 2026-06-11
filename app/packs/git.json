@@ -1,0 +1,62 @@
+{
+  "actions": [
+    {
+      "name": "Switch branch",
+      "type": "script",
+      "shortcut": "cmd+b",
+      "output": "list",
+      "on_select": "checkout-branch",
+      "script": "git branch --format='%(refname:short)'"
+    },
+    {
+      "name": "checkout-branch",
+      "type": "script",
+      "shortcut": "",
+      "output": "hud",
+      "script": "git checkout '{selected}'"
+    },
+    {
+      "name": "Push current branch",
+      "type": "script",
+      "shortcut": "cmd+shift+u",
+      "output": "notification",
+      "script": "git push -u origin {branch} 2>&1 | tail -3"
+    },
+    {
+      "name": "Pull with rebase",
+      "type": "script",
+      "shortcut": "cmd+shift+y",
+      "output": "notification",
+      "script": "git pull --rebase 2>&1 | tail -3"
+    },
+    {
+      "name": "Copy branch name",
+      "type": "script",
+      "shortcut": "cmd+shift+b",
+      "output": "clipboard",
+      "script": "printf '{branch}'"
+    },
+    {
+      "name": "Recent commits",
+      "type": "script",
+      "shortcut": "cmd+alt+h",
+      "output": "list",
+      "on_select": "copy-commit-hash",
+      "script": "git log --pretty=format:'%h %s' -20"
+    },
+    {
+      "name": "copy-commit-hash",
+      "type": "script",
+      "shortcut": "",
+      "output": "clipboard",
+      "script": "printf %s '{selected}' | awk '{print $1}' | tr -d '\n'"
+    },
+    {
+      "name": "Uncommitted changes",
+      "type": "script",
+      "shortcut": "cmd+alt+g",
+      "output": "list",
+      "script": "git status --short"
+    }
+  ]
+}
