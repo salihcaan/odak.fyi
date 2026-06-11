@@ -377,5 +377,28 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.14/Odak-0.1.14.dmg" length="8757945" type="application/x-apple-diskimage" sparkle:edSignature="ps3iGkPD5/K1JVO6/tOiAXeVvtdDAn4C68yBYkg/FinYGpUff8n1/LrSPdZ7iV3RFnW1/Y7/QOhFbxjy8fJYAw=="/>
         </item>
+            <item>
+            <title>Version 0.1.15</title>
+            <pubDate>Thu, 11 Jun 2026 22:10:15 +0000</pubDate>
+            <sparkle:version>19</sparkle:version>
+            <sparkle:shortVersionString>0.1.15</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.15 — the Actions Marketplace
+
+Actions are Odak's superpower, and now you don't have to write them yourself: curated packs live at [odak.fyi/actions](https://odak.fyi/actions) and import with one click.
+
+### New
+- **Actions Marketplace.** Six curated packs — Git, GitHub, GitLab, Docker, Node/npm, and Xcode/Swift — at [odak.fyi/actions](https://odak.fyi/actions). Every pack shows each action and shortcut up front; **Add to Odak** imports it after the usual confirmation dialog, and the actions append to your `config.yaml` ready to edit.
+- **Browse Marketplace from Settings.** Settings → Actions now links straight to the marketplace, next to Edit config.yaml and Reload.
+- **YAML imports.** `odak://import?url=…` now accepts YAML as well as JSON — a single action, a list, or an `actions:` list. Share a snippet of your config.yaml via a Gist and it imports verbatim.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.15/Odak-0.1.15.dmg" length="8801833" type="application/x-apple-diskimage" sparkle:edSignature="1asAjmYBiHATvc2qvjFK4CQF4iGqADAxsxfwHlJTEz8WfJ3LQcGGxT6ljqIGt+Cz8q8t5gZrFlp2CtdWGLwxBA=="/>
+        </item>
     </channel>
 </rss>
