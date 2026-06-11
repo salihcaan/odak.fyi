@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
+import { useLatestRelease } from "@/hooks/useLatestRelease";
 import { Mark } from "./Logo";
 
 // Footer columns stagger-in when the grid scrolls into view. Triggers
@@ -6,6 +7,7 @@ import { Mark } from "./Logo";
 // motion: a single fast fade with no transform.
 export function Footer() {
   const reduced = useReducedMotion();
+  const { version } = useLatestRelease();
   const colVariants = {
     hidden: reduced ? { opacity: 0 } : { opacity: 0, y: 14 },
     show: {
@@ -120,7 +122,7 @@ export function Footer() {
         <div>© 2026 Odak</div>
         <div className="foot-status" aria-label="Build status">
           <span className="foot-status-dot" aria-hidden="true" />
-          <span>v{__APP_VERSION__}</span>
+          <span>v{version}</span>
           <span className="foot-status-sep">·</span>
           <span>shipping</span>
         </div>

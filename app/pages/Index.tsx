@@ -8,6 +8,7 @@ import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
 import { SvgSprite } from "@/components/site/SvgSprite";
 import { captureEvent } from "@/lib/analytics";
+import { useLatestRelease } from "@/hooks/useLatestRelease";
 import indexBody from "../legacy/index-body.html?raw";
 
 // Index = home. Hero text on top, MacbookCarousel (compact tabbed card)
@@ -18,6 +19,7 @@ import indexBody from "../legacy/index-body.html?raw";
 
 export function Index() {
   const prefersReducedMotion = useReducedMotion();
+  const { version } = useLatestRelease();
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -107,7 +109,7 @@ export function Index() {
               onClick={() =>
                 captureEvent("download_clicked", {
                   source: "hero",
-                  version: __APP_VERSION__,
+                  version,
                 })
               }
             >

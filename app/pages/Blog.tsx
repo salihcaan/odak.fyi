@@ -2,6 +2,7 @@ import { Aurora } from "@/components/site/Aurora";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { captureEvent } from "@/lib/analytics";
+import { useLatestRelease } from "@/hooks/useLatestRelease";
 
 // The alt-tab chaos, illustrated. Every window is the same editor, the same
 // blue icon — that's the whole joke. Positions are hand-placed so the pile
@@ -22,6 +23,7 @@ const WINDOWS = [
 // pages (changelog/privacy/terms) — there's no CMS yet. When a second post
 // lands, this becomes /blog/<slug>.html and a small index page lists them.
 export function Blog() {
+  const { version, size } = useLatestRelease();
   return (
     <>
       <Aurora />
@@ -293,7 +295,7 @@ export function Blog() {
                 onClick={() =>
                   captureEvent("download_clicked", {
                     source: "blog",
-                    version: __APP_VERSION__,
+                    version,
                   })
                 }
               >
@@ -321,7 +323,7 @@ export function Blog() {
                     fontWeight: 500,
                   }}
                 >
-                  {__DMG_SIZE__}
+                  {size}
                 </span>
               </a>
               <a href="/#features" className="ghost">

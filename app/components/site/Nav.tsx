@@ -1,4 +1,5 @@
 import { useScrollNav } from "@/hooks/useScrollNav";
+import { useLatestRelease } from "@/hooks/useLatestRelease";
 import { captureEvent } from "@/lib/analytics";
 import { Mark } from "./Logo";
 
@@ -14,6 +15,7 @@ export function Nav({
   hashHrefs?: boolean;
 }) {
   useScrollNav();
+  const { version, size } = useLatestRelease();
   // Index page uses bare hash anchors (#features) since the targets live on
   // the same page. Other pages route back to / and then the hash.
   const prefix = hashHrefs ? "" : "/";
@@ -40,11 +42,11 @@ export function Nav({
           <a href="/actions">Actions</a>
           <a href="/docs/actions.html">Docs</a>
           <a
-            href={`/changelog.html#v${__APP_VERSION__.replace(/\./g, "-")}`}
+            href={`/changelog.html#v${version.replace(/\./g, "-")}`}
             className="nav-changelog"
-            aria-label={`What's new in v${__APP_VERSION__}`}
+            aria-label={`What's new in v${version}`}
           >
-            <span className="tag">v{__APP_VERSION__}</span>
+            <span className="tag">v{version}</span>
             <span className="label">What's new</span>
             <span className="arrow" aria-hidden="true">
               <svg viewBox="0 0 12 12">
@@ -76,7 +78,7 @@ export function Nav({
             onClick={() =>
               captureEvent("download_clicked", {
                 source: "nav",
-                version: __APP_VERSION__,
+                version,
               })
             }
           >
@@ -104,7 +106,7 @@ export function Nav({
                 fontWeight: 500,
               }}
             >
-              {__DMG_SIZE__}
+              {size}
             </span>
           </a>
         </div>
