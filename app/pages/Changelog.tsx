@@ -26,12 +26,12 @@ export function Changelog() {
         <div className="eyebrow">Changelog</div>
         <h1>What's new</h1>
         <p className="lede">
-          Notes for recent releases of Odak. Updates ship through Sparkle —
-          your copy will pick them up automatically.
+          Notes for the five most recent releases of Odak. Updates ship through
+          Sparkle — your copy will pick them up automatically.
         </p>
         <p className="meta">
-          Subscribe via the <a href="/appcast.xml">appcast</a> · See every
-          build on{" "}
+          Subscribe via the <a href="/appcast.xml">appcast</a> · Full release
+          history on{" "}
           <a
             href="https://github.com/salihcaan/odak.fyi/releases"
             target="_blank"
@@ -41,11 +41,203 @@ export function Changelog() {
           </a>
         </p>
 
+        <Release id="v0-1-14">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.14</span>
+              <span className="rel-pill">Latest</span>
+            </div>
+            <span className="rel-date">2026-06-11</span>
+          </div>
+          <h2 className="rel-title">
+            Move the search panel anywhere, smarter search, faster launch
+          </h2>
+          <p className="rel-lead">
+            The search panel is no longer pinned in place: drag it wherever you
+            like, with magnetic guides to snap it back. Plus noticeably smarter
+            fuzzy search, a ~2x faster launch, and fixes for vanishing windows
+            and license lockouts.
+          </p>
+
+          <h3>New</h3>
+          <ul>
+            <li>
+              <strong>Drag the search panel anywhere.</strong> Grab the panel
+              and place it where you want — dashed guides appear at the default
+              spot and the panel snaps magnetically when you get close. Drop it
+              back on the guides (or use Settings → Search → Reset Position) to
+              return to the default, and a new Top/Center anchor picker chooses
+              where that default lives.
+            </li>
+          </ul>
+
+          <h3>Improved</h3>
+          <ul>
+            <li>
+              <strong>Smarter search ranking.</strong> The fuzzy matcher now
+              always finds the best-scoring alignment and understands camelCase
+              humps, acronyms, and digit groups — "wsv" cleanly matches
+              WindowSwitcherView. Shorter and word-boundary matches rank first,
+              and projects and windows rank by the same rules.
+            </li>
+            <li>
+              <strong>~2x faster launch.</strong> The panel appears as soon as
+              its window is ready instead of waiting on a fixed delay, and Odak
+              no longer blocks launch on an IDE that's busy compiling or
+              indexing.
+            </li>
+            <li>
+              <strong>Unified look across panels.</strong> Search, the window
+              switcher, and the notch now share the same keycap-style shortcut
+              hints, dividers, and empty states. Selected rows are readable on
+              every accent palette — pale palettes like Bone and Periwinkle no
+              longer show white-on-white text.
+            </li>
+          </ul>
+
+          <h3>Fixed</h3>
+          <ul>
+            <li>
+              <strong>
+                Windows on other Spaces no longer vanish after login.
+              </strong>{" "}
+              IDE windows restored to other Spaces while their apps were still
+              starting up could disappear from the switcher until Odak
+              restarted. Odak now retries until apps are fully awake and
+              rescans during the first 90 seconds after startup.
+            </li>
+            <li>
+              <strong>Valid licenses no longer fall back to the paywall.</strong>{" "}
+              A mismatch between the revalidation cadence and the offline-grace
+              window could lock activated licenses out after 3 days.
+              Revalidation now runs daily with a 7-day offline grace, and
+              recovers automatically with a single online check — no
+              re-entering your code.
+            </li>
+          </ul>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
+              Download Odak
+            </a>
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.14"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
+        <Release id="v0-1-13">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.13</span>
+            </div>
+            <span className="rel-date">2026-06-10</span>
+          </div>
+          <h2 className="rel-title">
+            No more freezes during window activity, rescan works instantly
+          </h2>
+          <p className="rel-lead">
+            A responsiveness release: Odak no longer stalls when editor windows
+            open or close, and a project rescan shows up in search right away.
+          </p>
+
+          <h3>Fixed</h3>
+          <ul>
+            <li>
+              <strong>Odak no longer freezes while your IDE is busy.</strong>{" "}
+              Refreshing the window list talked to each editor synchronously on
+              the main thread — if Cursor, VS Code, or a JetBrains IDE was
+              mid-build or indexing, opening or closing one of its windows
+              could lock Odak up for seconds. The whole window scan now runs in
+              the background with a tight per-app timeout, and the switcher
+              opens instantly with the latest list folding in the moment the
+              scan lands.
+            </li>
+            <li>
+              <strong>Rescan now updates search immediately.</strong> Pressing
+              Rescan in Settings (or the automatic background rescan picking up
+              a freshly cloned repo) rebuilt the project index but search kept
+              serving the old list until you relaunched Odak. New projects now
+              appear in search the moment the scan finishes — no relaunch
+              needed.
+            </li>
+          </ul>
+
+          <div className="rel-foot">
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.13"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
+        <Release id="v0-1-12">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.12</span>
+            </div>
+            <span className="rel-date">2026-06-07</span>
+          </div>
+          <h2 className="rel-title">
+            Windows on other Spaces show up reliably
+          </h2>
+          <p className="rel-lead">
+            The switcher now finds IDE windows that live on other desktops
+            (Spaces) — including a second window of the same project — that
+            could previously go missing.
+          </p>
+
+          <h3>Fixed</h3>
+          <ul>
+            <li>
+              <strong>
+                Windows on other Spaces now appear in the switcher.
+              </strong>{" "}
+              When a window lived on a different desktop than the one you were
+              on, the switcher could miss it — most often a Cursor or VS Code
+              window whose internal accessibility handle fell just past Odak's
+              off-Space lookup limit. Off-Space windows are now resolved
+              reliably, and the result is cached so refreshes stay fast.
+            </li>
+            <li>
+              <strong>
+                Two windows of the same project no longer collapse into one
+                row.
+              </strong>{" "}
+              When the system couldn't hand Odak a stable window identifier
+              (minimized windows, and some Electron windows), two windows of
+              the same project in the same editor could fold into a single
+              entry. They're now kept distinct.
+            </li>
+          </ul>
+
+          <div className="rel-foot">
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.12"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
         <Release id="v0-1-11">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.11</span>
-              <span className="rel-pill">Latest</span>
             </div>
             <span className="rel-date">2026-06-07</span>
           </div>
@@ -95,15 +287,7 @@ export function Changelog() {
             </li>
           </ul>
 
-          <h3>Requirements</h3>
-          <ul>
-            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
-          </ul>
-
           <div className="rel-foot">
-            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
-              Download Odak
-            </a>
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.11"
               target="_blank"
@@ -153,11 +337,6 @@ export function Changelog() {
             </li>
           </ul>
 
-          <h3>Known limits</h3>
-          <ul>
-            <li>macOS 26+ only.</li>
-          </ul>
-
           <div className="rel-foot">
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.10"
@@ -169,184 +348,20 @@ export function Changelog() {
           </div>
         </Release>
 
-        <Release id="v0-1-9">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.9</span>
-            </div>
-            <span className="rel-date">2026-05-30</span>
-          </div>
-          <h2 className="rel-title">Onboarding that sets you up right</h2>
-          <p className="rel-lead">
-            Odak can only find your projects once it knows where they live,
-            so first-run onboarding now makes that one step count — and drops
-            you straight into search the moment you're done.
-          </p>
-
-          <h3>New</h3>
-          <ul>
-            <li>
-              <strong>Onboarding requires at least one project folder.</strong>{" "}
-              The final step waits until you've picked a folder before letting
-              you finish, with an inline hint so it's clear why. Your common
-              dev folders (<code>code</code>, <code>Developer</code>,{" "}
-              <code>Projects</code>, …) are still auto-detected and
-              pre-selected, so most setups sail right through.
-            </li>
-            <li>
-              <strong>Search opens automatically after onboarding.</strong>{" "}
-              Finishing setup now lands you in the search panel every time,
-              instead of occasionally leaving you on an empty desktop on a
-              fresh install.
-            </li>
-          </ul>
-
-          <h3>Polish</h3>
-          <ul>
-            <li>
-              The Odak mark now sits in the top-right of the onboarding
-              window, balancing the window chrome and matching your chosen
-              accent.
-            </li>
-          </ul>
-
-          <h3>Known limits</h3>
-          <ul>
-            <li>macOS 26+ only.</li>
-          </ul>
-
-          <div className="rel-foot">
-            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
-              Download Odak
-            </a>
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.9"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
-        <Release id="v0-1-8">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.8</span>
-            </div>
-            <span className="rel-date">2026-05-29</span>
-          </div>
-          <h2 className="rel-title">The Quick Switcher now sees every Space</h2>
-          <p className="rel-lead">
-            Until now the switcher only listed IDE windows on the Space you
-            were currently looking at. Editors on another desktop or
-            full-screen Space — especially Electron-based ones like Cursor and
-            VS Code — quietly went missing. Now the switcher shows your open
-            IDE windows across <strong>all</strong> Spaces, and focusing one
-            jumps you straight to it.
-          </p>
-
-          <h3>New</h3>
-          <ul>
-            <li>
-              <strong>
-                IDE windows from every Space appear in the Quick Switcher.
-              </strong>{" "}
-              A Cursor or VS Code window parked on another desktop now shows up
-              alongside your current-Space windows, with its real title, and
-              selecting it raises the window and switches you to its Space. No
-              Screen Recording permission required.
-            </li>
-          </ul>
-
-          <h3>Under the hood</h3>
-          <ul>
-            <li>
-              Off-Space windows are resolved once and cached for their
-              lifetime, so the steady-state cost is a couple of accessibility
-              reads per window rather than a scan on every refresh. Each read
-              is bounded by a short timeout, so a hung editor can't stall the
-              switcher.
-            </li>
-          </ul>
-
-          <h3>Known limits</h3>
-          <ul>
-            <li>macOS 26+ only.</li>
-          </ul>
-
-          <div className="rel-foot">
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.8"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
-        <Release id="v0-1-7">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.7</span>
-            </div>
-            <span className="rel-date">2026-05-25</span>
-          </div>
-          <h2 className="rel-title">Your Mac's name stays on your Mac</h2>
-          <p className="rel-lead">
-            A small privacy tightening to how Odak's license server handles
-            your devices.
-          </p>
-
-          <h3>Privacy</h3>
-          <ul>
-            <li>
-              <strong>
-                Odak no longer stores your Mac's name on the license server.
-              </strong>{" "}
-              It used to send your Mac's name (the one in System Settings →
-              Sharing — often "Your Name's MacBook") to track devices on your
-              license. It now only sends a hardware identifier and your macOS
-              version. Your Mac's name stays on this Mac.
-            </li>
-            <li>
-              <strong>
-                The "at your Mac limit" picker now labels other Macs by macOS
-                version and last-seen.
-              </strong>{" "}
-              Instead of names, you'll see entries like "Another Mac · macOS
-              26.3.0 · last seen 3 days ago", with the current Mac still
-              clearly marked "This Mac".
-            </li>
-          </ul>
-
-          <h3>Under the hood</h3>
-          <ul>
-            <li>
-              License server schema updated to drop the device-name columns;
-              existing names were removed during the migration. No action
-              needed on your part.
-            </li>
-          </ul>
-
-          <div className="rel-foot">
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.7"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
         <div className="subscribe">
           <p style={{ margin: 0 }}>
-            <strong>Want updates without checking?</strong> Odak's
-            auto-updater (Sparkle) handles that for you — installed copies
-            pick up new versions automatically. Or point your feed reader
-            at the <a href="/appcast.xml">appcast</a>.
+            <strong>Looking for older releases?</strong> Every version, with
+            full notes and downloads, lives on{" "}
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases"
+              target="_blank"
+              rel="noopener"
+            >
+              GitHub Releases
+            </a>
+            . And Odak's auto-updater (Sparkle) keeps installed copies current
+            automatically — or point your feed reader at the{" "}
+            <a href="/appcast.xml">appcast</a>.
           </p>
         </div>
       </main>
