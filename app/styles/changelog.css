@@ -98,7 +98,8 @@ h1{font-size:42px;line-height:1.1;letter-spacing:-.025em;font-weight:700;margin:
 .meta a:hover{color:var(--accent);border-color:var(--accent)}
 
 /* timeline of releases */
-.release{position:relative;padding:0 0 48px}
+/* scroll-margin keeps anchored releases (#v0-1-14) clear of the sticky nav. */
+.release{position:relative;padding:0 0 48px;scroll-margin-top:84px}
 .release + .release{border-top:1px solid var(--border);margin-top:48px;padding-top:40px}
 .release:last-child{padding-bottom:0}
 .rel-head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:6px}

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Aurora } from "@/components/site/Aurora";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
@@ -18,6 +18,15 @@ function Release({
 }
 
 export function Changelog() {
+  // The releases render client-side, so the browser's native jump to
+  // /changelog#v0-1-14 fires against an empty <div id="root"> and
+  // lands at the top. Re-run the anchor scroll once the content exists.
+  useEffect(() => {
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (!hash) return;
+    document.getElementById(hash)?.scrollIntoView();
+  }, []);
+
   return (
     <>
       <Aurora />
