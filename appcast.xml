@@ -347,5 +347,35 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.13/Odak-0.1.13.dmg" length="8654370" type="application/x-apple-diskimage" sparkle:edSignature="/Ex0WFX29ogwFUYpq3PiFBvhMgJPElKNusRMOn+owOom6oZJLtiXVjCp8Ktr395ZhYsgPiKKBnXX9/voHNHPDg=="/>
         </item>
+            <item>
+            <title>Version 0.1.14</title>
+            <pubDate>Thu, 11 Jun 2026 07:28:43 +0000</pubDate>
+            <sparkle:version>18</sparkle:version>
+            <sparkle:shortVersionString>0.1.14</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.14 — move the search panel anywhere, smarter search, faster launch
+
+The search panel is no longer pinned in place: drag it wherever you like, with magnetic guides to snap it back. Plus noticeably smarter fuzzy search, a ~2x faster launch, and fixes for vanishing windows and license lockouts.
+
+### New
+- **Drag the search panel anywhere.** Grab the panel and place it where you want — dashed guides appear at the default spot and the panel snaps magnetically when you get close. Drop it back on the guides (or use Settings → Search → Reset Position) to return to the default, and a new Top/Center anchor picker chooses where that default lives.
+
+### Improved
+- **Smarter search ranking.** The fuzzy matcher now always finds the best-scoring alignment and understands camelCase humps, acronyms, and digit groups — "wsv" cleanly matches WindowSwitcherView. Shorter and word-boundary matches rank first, and projects and windows rank by the same rules.
+- **~2x faster launch.** The panel appears as soon as its window is ready instead of waiting on a fixed delay, and Odak no longer blocks launch on an IDE that's busy compiling or indexing.
+- **Unified look across panels.** Search, the window switcher, and the notch now share the same keycap-style shortcut hints, dividers, and empty states. Selected rows are readable on every accent palette — pale palettes like Bone and Periwinkle no longer show white-on-white text.
+
+### Fixed
+- **Windows on other Spaces no longer vanish after login.** IDE windows restored to other Spaces while their apps were still starting up could disappear from the switcher until Odak restarted. Odak now retries until apps are fully awake and rescans during the first 90 seconds after startup.
+- **Valid licenses no longer fall back to the paywall.** A mismatch between the revalidation cadence and the offline-grace window could lock activated licenses out after 3 days. Revalidation now runs daily with a 7-day offline grace, and recovers automatically with a single online check — no re-entering your code.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.14/Odak-0.1.14.dmg" length="8757945" type="application/x-apple-diskimage" sparkle:edSignature="ps3iGkPD5/K1JVO6/tOiAXeVvtdDAn4C68yBYkg/FinYGpUff8n1/LrSPdZ7iV3RFnW1/Y7/QOhFbxjy8fJYAw=="/>
+        </item>
     </channel>
 </rss>
