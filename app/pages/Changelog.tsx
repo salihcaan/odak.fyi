@@ -50,11 +50,76 @@ export function Changelog() {
           </a>
         </p>
 
+        <Release id="v0-1-16">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.16</span>
+              <span className="rel-pill">Latest</span>
+            </div>
+            <span className="rel-date">2026-06-12</span>
+          </div>
+          <h2 className="rel-title">
+            Groups, brand icons, and a real import review
+          </h2>
+          <p className="rel-lead">
+            The actions panel grows up: imports get a proper review panel,
+            packs land in their own named sections, and rows finally wear the
+            right logos.
+          </p>
+
+          <h3>New</h3>
+          <ul>
+            <li>
+              <strong>Import review panel.</strong> <code>odak://import</code>{" "}
+              now opens a native review panel inside Odak — every action
+              listed with its icon and shortcut, script actions flagged —
+              instead of a bare confirmation dialog. Nothing is written until
+              you approve.
+            </li>
+            <li>
+              <strong>Action groups.</strong> Actions from a pack (or a{" "}
+              <code>group:</code> value in your config.yaml) render under
+              their own section header in the panel, between Open and Copy, in
+              config order.
+            </li>
+            <li>
+              <strong>Brand icons.</strong> Actions can declare an{" "}
+              <code>icon:</code> — Git, GitHub, GitLab, Docker, and Node logos
+              ship built in (the same set the{" "}
+              <a href="/actions">marketplace</a> shows), with any SF Symbol
+              name as a fallback. Rows resolve the real app icon first, as
+              before.
+            </li>
+            <li>
+              <strong>Action editor.</strong> Settings → Actions gains an
+              add/edit sheet, so one-off tweaks no longer require opening
+              config.yaml.
+            </li>
+          </ul>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
+              Download Odak
+            </a>
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.16"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
         <Release id="v0-1-15">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.15</span>
-              <span className="rel-pill">Latest</span>
             </div>
             <span className="rel-date">2026-06-12</span>
           </div>
@@ -288,70 +353,6 @@ export function Changelog() {
           <div className="rel-foot">
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.12"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
-        <Release id="v0-1-11">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.11</span>
-            </div>
-            <span className="rel-date">2026-06-07</span>
-          </div>
-          <h2 className="rel-title">
-            Hold Right ⌘ to find any window — now on macOS 15
-          </h2>
-          <p className="rel-lead">
-            A second, faster way to reach a window lands alongside ⌥Tab: hold
-            the right Command key and just type. And Odak now runs on macOS 15
-            Sequoia, not only Tahoe.
-          </p>
-
-          <h3>New</h3>
-          <ul>
-            <li>
-              <strong>Hold Right ⌘, type, release — land in the window.</strong>{" "}
-              Hold the right Command key and type a few letters to fuzzy-match
-              your open IDE windows, then release to switch. Numbered rows still
-              work, so ⌘1–9 jumps straight to a result. The classic ⌥Tab
-              switcher is unchanged.
-            </li>
-            <li>
-              <strong>Runs on macOS 15 Sequoia.</strong> Odak previously needed
-              macOS 26 for its Liquid Glass panel. It now falls back to a native
-              material on Sequoia, so the full app works on macOS 15 and later —
-              and still lights up with Liquid Glass on macOS 26.
-            </li>
-            <li>
-              <strong>Open a project straight in your editor from search.</strong>{" "}
-              Hover a search result and click the IDE icon to open it in your
-              editor, without switching to an existing window first.
-            </li>
-          </ul>
-
-          <h3>Polish</h3>
-          <ul>
-            <li>
-              The type-to-search field renders the query as a single text run,
-              so letters no longer jitter or shift as you type — and the typed
-              text is crisper and higher-contrast in light mode.
-            </li>
-            <li>
-              Row hover is driven from a single source of truth, fixing cases
-              where the switcher and the result list could disagree about which
-              row was highlighted, and the selection indicator is correctly
-              centered.
-            </li>
-          </ul>
-
-          <div className="rel-foot">
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.11"
               target="_blank"
               rel="noopener"
             >
