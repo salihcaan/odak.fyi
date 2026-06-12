@@ -99,7 +99,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
@@ -155,7 +155,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
@@ -248,7 +248,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
