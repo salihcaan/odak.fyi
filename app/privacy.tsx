@@ -2,7 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Privacy } from "./pages/Privacy";
 import { initAnalytics } from "./lib/analytics";
-import "./styles/privacy.css";
+import "./styles/base.css";
+import "./styles/legal.css";
 import "./styles/polish.css";
 
 initAnalytics();

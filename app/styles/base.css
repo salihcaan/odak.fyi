@@ -1,0 +1,256 @@
+/* ==========================================================
+   BASE — single source of truth shared by every entry.
+   Import order on every page: base.css → <page>.css → polish.css.
+   Page sheets carry only page-specific styles and may override
+   tokens (e.g. :root{--maxw:760px} on article pages).
+   ========================================================== */
+
+/* ----- fonts — self-hosted, latin + latin-ext subsets ----- */
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'Inter';
+  src:url('/assets/bundled/inter-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono';
+  src:url('/assets/bundled/jetbrains-mono-latin-ext.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF0-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ----- tokens — cool charcoal shell, single warm accent.
+   The accent triplet here is the refined landing-page value; the
+   per-page sheets used to carry a drifted older value, unified now. */
+:root{
+  --bg:#0f0f0f;--bg-2:#161618;--bg-3:#1c1c1f;
+  --surface:rgba(255,255,255,.03);--surface-2:rgba(255,255,255,.06);
+  --border:rgba(255,255,255,.08);--border-2:rgba(255,255,255,.14);
+  --fg:#ffffff;--fg-2:rgba(255,255,255,.78);--dim:rgba(255,255,255,.55);
+  --mute:rgba(255,255,255,.48);--faint:rgba(255,255,255,.18);
+
+  --accent:oklch(76% 0.16 60);
+  --accent-2:oklch(66% 0.16 55);
+  --accent-glow:oklch(76% 0.18 60 / .28);
+  --accent-ink:#161210;
+  --accent-warm-2:oklch(60% 0.14 45 / .12);
+
+  --sans:'Inter',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+
+  /* type scale — display sizes shared by page heroes */
+  --text-display:clamp(44px,5.5vw,64px);
+  --text-title:clamp(34px,4.2vw,46px);
+
+  --maxw:1200px;
+  --gutter:32px;
+  --radius:14px;
+  --radius-lg:22px;
+  --radius-pill:980px;
+
+  --ease-smooth:cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-snappy:cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bouncy:cubic-bezier(0.5, 1.6, 0.4, 1);
+  --ease-out:cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast:180ms;
+  --dur-snappy:380ms;
+  --dur-smooth:600ms;
+}
+
+/* ----- reset & body defaults ----- */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{
+  color:var(--fg);
+  font-family:var(--sans);
+  font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.005em;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ----- ambient backdrop — plain-CSS port of the old Tailwind-only
+   Aurora component so the same atmosphere renders on every entry
+   (it used to silently no-op on pages that don't load Tailwind). ----- */
+.ambient{
+  position:absolute;top:0;left:0;width:100%;height:110vh;
+  overflow:hidden;z-index:-1;pointer-events:none;
+  mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);
+}
+.ambient-grid{
+  position:absolute;inset:0;opacity:.22;
+  background-size:40px 40px;
+  background-image:linear-gradient(to right,rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.05) 1px,transparent 1px);
+}
+.ambient-grid--fine{
+  opacity:.14;background-size:10px 10px;
+  background-image:linear-gradient(to right,rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(255,255,255,.02) 1px,transparent 1px);
+}
+.ambient-orb{
+  position:absolute;border-radius:50%;
+  transform:translate(-50%,-50%);
+  filter:blur(64px);
+}
+.ambient-orb--white{
+  top:38%;left:50%;width:55vw;height:55vw;max-width:900px;max-height:900px;
+  background:#fff;opacity:.022;
+}
+.ambient-orb--warm{
+  top:52%;left:58%;width:40vw;height:40vw;max-width:640px;max-height:640px;
+  background:radial-gradient(circle,#DA5427 0%,transparent 70%);opacity:.035;
+}
+@media (min-width:768px){
+  .ambient-orb--white{filter:blur(140px)}
+  .ambient-orb--warm{filter:blur(120px)}
+}
+.ambient-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,transparent 0%,rgba(0,0,0,.55) 100%);
+}
+.ambient-dot{
+  position:absolute;width:4px;height:4px;border-radius:50%;
+  animation:ambient-pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+}
+@keyframes ambient-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.ambient-noise{
+  position:absolute;inset:0;opacity:.18;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ----- nav — one component across every URL.
+   Glass only while at rest: JS toggles .scrolled the moment the page
+   moves and the bar drops to an opaque tint (backdrop-filter is the
+   single biggest scroll-time cost, so it only runs when nothing
+   scrolls underneath it). ----- */
+.nav{
+  position:sticky;top:0;z-index:80;
+  line-height:1.55;
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  background:color-mix(in oklch, var(--bg) 62%, transparent);
+  border-bottom:1px solid var(--border);
+  box-shadow:inset 0 1px 0 color-mix(in oklch, var(--fg) 6%, transparent);
+  transition:background .25s var(--ease-out), backdrop-filter .25s var(--ease-out);
+}
+.nav.scrolled{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  background:color-mix(in oklch, var(--bg) 92%, transparent);
+}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px var(--gutter);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:19px;letter-spacing:-.02em;text-decoration:none;color:#f5ede0}
+.nav-brand:hover{color:#f5ede0}
+.nav-brand .mark{width:28px;height:28px;display:inline-block;flex-shrink:0;line-height:0}
+.nav-brand .mark img{width:100%;height:100%;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.nav-links{display:flex;align-items:center;gap:2px;font-size:13.5px;color:var(--dim);font-weight:500}
+.nav-links a{padding:7px 12px;border-radius:8px;transition:color .15s, background .15s;text-decoration:none}
+.nav-links a:hover{color:var(--fg);background:var(--surface)}
+.nav-links a.nav-link-accent{color:var(--accent);font-weight:600}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.nav-cta .icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--fg-2);transition:background .15s, color .15s}
+.nav-cta .icon-btn:hover{background:var(--surface-2);color:var(--fg)}
+.nav-cta .icon-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.6}
+/* Mobile: drop the glass (compositor budget) and the links menu.
+   Kept after the rules above — same specificity, so source order
+   must favour the media override. */
+@media (max-width:760px){
+  .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:color-mix(in oklch, var(--bg) 88%, transparent)}
+  .nav-links{display:none}
+}
+.btn-primary .btn-glyph{width:12px;height:14px;fill:currentColor;margin-top:-2px}
+.btn-primary .btn-meta{font-family:var(--mono);font-size:11px;opacity:.65;font-weight:500}
+
+/* ----- primary button — Apple-style pill, white on dark ----- */
+.btn-primary{
+  background:var(--fg);color:var(--bg);
+  padding:9px 18px;border-radius:var(--radius-pill);
+  font-size:13.5px;font-weight:600;letter-spacing:-.005em;
+  border:1px solid transparent;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:transform .3s ease, box-shadow .3s ease, background .3s ease;
+  cursor:pointer;white-space:nowrap;text-decoration:none;
+  position:relative;z-index:1;
+}
+.btn-primary:hover{
+  color:var(--bg);
+  transform:translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.25),
+    0 10px 40px -10px rgba(255,255,255,.3),
+    0 0 40px -8px rgba(218,84,39,.5);
+}
+
+/* ----- shared article head (subpages) ----- */
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lede{font-size:19px;line-height:1.55;color:var(--fg-2);margin:0 0 8px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--mute);margin:0}
+.meta a{color:var(--fg-2);text-decoration:none;border-bottom:1px solid var(--border-2)}
+.meta a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* shared "subscribe / share yours" strip used by changelog + actions */
+.subscribe{margin-top:64px;padding:24px 28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);font-size:14px;line-height:1.65;color:var(--fg-2)}
+.subscribe strong{color:var(--fg)}
+.subscribe a{text-decoration:none;color:var(--accent);border-bottom:1px solid color-mix(in oklch,var(--accent) 60%,transparent)}
+.subscribe a:hover{border-color:var(--accent)}
+.subscribe code{font-family:var(--mono);font-size:.88em;padding:1.5px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:5px;color:var(--fg-2);white-space:nowrap}
+
+/* ----- footer — same shape on every URL ----- */
+footer.site-foot{position:relative;max-width:1200px;margin:clamp(80px,11vw,128px) auto 0;padding:48px var(--gutter) 32px;line-height:1.55}
+footer.site-foot::before{
+  content:"";position:absolute;top:0;left:50%;width:100vw;margin-left:-50vw;height:1px;
+  pointer-events:none;background:var(--border);
+}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.foot-brand .mission{font-size:15px;line-height:1.5;color:var(--dim);margin:16px 0 0;max-width:32ch;letter-spacing:-.005em}
+.foot-social-row{margin-top:16px;display:inline-flex;align-items:center;gap:14px}
+.foot-social{display:inline-flex;color:var(--dim);transition:color .2s}
+.foot-social:hover{color:var(--fg)}
+.foot-social svg{width:18px;height:18px;fill:currentColor}
+.foot-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 14px;font-weight:500}
+.foot-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.foot-col a{color:var(--fg-2);font-size:14px;text-decoration:none}
+.foot-col a:hover{color:var(--accent)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;padding:20px 0 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--mute);letter-spacing:.02em}
+.foot-bottom > *{white-space:nowrap}
+.foot-bottom .istanbul{color:var(--fg-2)}
+.foot-bottom .istanbul b{color:var(--accent);font-weight:500}
+.foot-status{display:inline-flex;align-items:center;gap:6px;color:var(--mute)}
+.foot-status-dot{
+  width:7px;height:7px;border-radius:50%;background:#34c47a;
+  box-shadow:0 0 0 4px rgba(52,196,122,.16);
+  animation:foot-status-pulse 2.6s ease-in-out infinite;
+  flex:0 0 auto;
+}
+.foot-status-sep{color:var(--faint)}
+.foot-status-sha{color:var(--fg-2)}
+@keyframes foot-status-pulse{
+  0%,100%{box-shadow:0 0 0 4px rgba(52,196,122,.16)}
+  50%{box-shadow:0 0 0 7px rgba(52,196,122,.04)}
+}
+@media (max-width:960px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .foot-status-dot,.ambient-dot{animation:none}
+  .btn-primary,.nav-links a{transition:none}
+  .btn-primary:hover{transform:none}
+}

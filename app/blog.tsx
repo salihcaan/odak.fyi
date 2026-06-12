@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Blog } from "./pages/Blog";
 import { initAnalytics } from "./lib/analytics";
+import "./styles/base.css";
 import "./styles/changelog.css";
 import "./styles/blog.css";
 import "./styles/polish.css";

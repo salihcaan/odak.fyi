@@ -157,7 +157,7 @@ export function ActionsMarket() {
         </div>
 
         <div className="subscribe">
-          <p style={{ margin: 0 }}>
+          <p>
             <strong>Built a pack worth sharing?</strong> Any URL that serves
             action JSON or YAML imports the same way (YAML needs the latest
             Odak) — host yours on a Gist and share{" "}

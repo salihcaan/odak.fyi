@@ -1,0 +1,43 @@
+/* ==========================================================
+   Legal articles — /privacy, /terms, /refund share this sheet.
+   (They used to carry three near-identical copies.) Shared
+   chrome lives in base.css.
+   ========================================================== */
+
+:root{
+  --maxw:760px;
+}
+
+body{font-size:16px;line-height:1.7}
+a{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+.nav a,.site-foot a,.btn-primary{text-decoration:none}
+
+main{max-width:var(--maxw);margin:0 auto;padding:clamp(56px,7vw,88px) 24px 96px}
+h1{font-size:var(--text-title);line-height:1.08;letter-spacing:-.028em;font-weight:700;margin:0 0 16px}
+.meta{margin-bottom:48px}
+h2{font-size:22px;letter-spacing:-.018em;font-weight:700;margin:48px 0 12px;scroll-margin-top:80px}
+h3{font-size:16px;font-weight:600;margin:28px 0 8px;color:var(--fg)}
+p,li{color:var(--fg-2)}
+ul,ol{padding-left:22px;margin:8px 0 16px}
+li{margin:4px 0}
+strong{color:var(--fg);font-weight:600}
+hr{border:none;border-top:1px solid var(--border);margin:48px 0}
+
+.box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:18px 0}
+.box p:last-child{margin-bottom:0}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:0 0 40px}
+.toc ol{margin:0;padding-left:22px;columns:2;column-gap:24px}
+.toc li{margin:2px 0;font-size:14px}
+.toc a{text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+.callout{background:linear-gradient(135deg,color-mix(in oklch,var(--accent) 12%,transparent),color-mix(in oklch,var(--accent-2) 6%,transparent));border:1px solid var(--border-2);border-radius:var(--radius);padding:22px 24px;margin:20px 0 32px}
+.callout strong{color:var(--accent)}
+
+@media (max-width:560px){
+  .toc ol{columns:1}
+  h1{font-size:32px}
+  main{padding:32px 22px 64px}
+}

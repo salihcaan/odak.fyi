@@ -31,10 +31,7 @@ export function Nav({
           <a href={`${prefix}#comparison`}>Comparison</a>
           <a href={`${prefix}#pricing`}>Pricing</a>
           {showBuy && (
-            <a
-              href="/buy"
-              style={{ color: "var(--accent)", fontWeight: 600 }}
-            >
+            <a href="/buy" className="nav-link-accent">
               Buy
             </a>
           )}
@@ -82,32 +79,13 @@ export function Nav({
               })
             }
           >
-            <svg
-              viewBox="0 0 14 17"
-              aria-hidden="true"
-              style={{
-                width: 12,
-                height: 14,
-                fill: "currentColor",
-                marginTop: -2,
-              }}
-            >
+            <svg viewBox="0 0 14 17" aria-hidden="true" className="btn-glyph">
               <path
                 fill="currentColor"
                 d="M11.182 8.91c-.018-2.022 1.65-2.992 1.725-3.038-.94-1.376-2.404-1.564-2.925-1.586-1.247-.126-2.434.733-3.067.733-.633 0-1.61-.715-2.65-.696-1.363.02-2.62.793-3.32 2.013-1.416 2.456-.363 6.094 1.018 8.087.674.974 1.477 2.073 2.53 2.034 1.014-.04 1.397-.658 2.624-.658 1.226 0 1.572.658 2.65.638 1.094-.02 1.787-.997 2.456-1.974.774-1.13 1.093-2.224 1.112-2.28-.024-.012-2.135-.82-2.153-3.273zM9.176 2.985C9.737 2.31 10.114 1.371 10.011.434c-.806.033-1.78.537-2.36 1.21-.52.598-.974 1.553-.851 2.473.898.07 1.815-.456 2.376-1.132z"
               />
             </svg>
-            Download{" "}
-            <span
-              style={{
-                fontFamily: "var(--mono)",
-                fontSize: 11,
-                opacity: 0.65,
-                fontWeight: 500,
-              }}
-            >
-              {size}
-            </span>
+            Download <span className="btn-meta">{size}</span>
           </a>
         </div>
       </div>

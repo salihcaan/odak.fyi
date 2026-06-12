@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ActionsMarket } from "./pages/ActionsMarket";
 import { initAnalytics } from "./lib/analytics";
+import "./styles/base.css";
 import "./styles/actions.css";
 import "./styles/polish.css";
 

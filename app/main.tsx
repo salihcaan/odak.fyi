@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { Index } from "./pages/Index";
 import { initAnalytics } from "./lib/analytics";
 import "./styles.css";
+import "./styles/base.css";
 import "./styles/index.css";
 import "./styles/polish.css";
 
