@@ -427,7 +427,7 @@ export function Buy() {
               <div className="seals">
                 <span className="seal">Hardened runtime</span>
                 <span className="seal">Apple Silicon</span>
-                <span className="seal">Telemetry opt-in</span>
+                <span className="seal">Anonymous telemetry</span>
               </div>
               <p className="fine">
                 Secure checkout by <strong>Polar</strong> ·{" "}
@@ -458,7 +458,7 @@ export function Buy() {
               <div className="seals">
                 <span className="seal">Hardened runtime</span>
                 <span className="seal">Apple Silicon</span>
-                <span className="seal">Telemetry opt-in</span>
+                <span className="seal">Anonymous telemetry</span>
               </div>
               <p className="fine">
                 <a href="/refund">Refund policy</a> ·{" "}
@@ -502,7 +502,7 @@ export function Buy() {
               <div className="seals">
                 <span className="seal">Hardened runtime</span>
                 <span className="seal">Apple Silicon</span>
-                <span className="seal">Telemetry opt-in</span>
+                <span className="seal">Anonymous telemetry</span>
               </div>
               <p className="fine">
                 Try the full app today. <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">Download the trial →</a>

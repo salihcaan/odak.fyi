@@ -18,7 +18,7 @@ export function Privacy() {
           exactly what's collected, what isn't, and where the few pieces I do
           see end up.
         </p>
-        <p className="meta">Effective 2026-04-25 · Last updated 2026-05-23</p>
+        <p className="meta">Effective 2026-04-25 · Last updated 2026-06-12</p>
 
         <div className="toc" aria-label="Table of contents">
           <ol>
@@ -105,7 +105,7 @@ export function Privacy() {
         </p>
 
         <h2 id="app">3. The macOS app</h2>
-        <p><strong>Local by default. Telemetry only if you opt in.</strong></p>
+        <p><strong>Local by default. Telemetry is anonymous, and one switch turns it off.</strong></p>
         <div className="box">
           <p>
             <strong>Nothing about your work ever leaves your Mac.</strong> No
@@ -115,18 +115,20 @@ export function Privacy() {
           </p>
           <p>
             <strong>
-              Anonymous usage events and crash reports are off by default.
+              Anonymous usage events and crash reports are on by default for
+              new installs.
             </strong>{" "}
-            Opt in once during onboarding (or any time in{" "}
-            <strong>Settings → Privacy</strong>) and Odak will share the
-            events listed below — and nothing else. Flipping the toggle off
-            stops both immediately.
+            The onboarding privacy step puts the switch in front of you, and
+            the same toggle lives in <strong>Settings → Privacy</strong>.
+            Flipping it off stops both immediately, and an update will never
+            re-enable a choice you've made. What's shared is the event list
+            below — and nothing else.
           </p>
         </div>
         <p>
-          Four network paths exist: opted-in events, opted-in crash reports,
-          the daily Sparkle update check, and trial / license calls. Each is
-          detailed below.
+          Four network paths exist: anonymous events, anonymous crash
+          reports, the daily Sparkle update check, and trial / license
+          calls. Each is detailed below.
         </p>
 
         <h3>Stays on your device</h3>
@@ -145,7 +147,7 @@ export function Privacy() {
           <li>All settings and preferences</li>
         </ul>
 
-        <h3>Anonymous usage analytics — only if you opt in</h3>
+        <h3>Anonymous usage analytics — on unless you switch it off</h3>
         <p>
           Processor:{" "}
           <a href="https://posthog.com" target="_blank" rel="noopener">
@@ -202,7 +204,7 @@ export function Privacy() {
           . The PostHog project has IP collection disabled.
         </p>
 
-        <h3>Anonymous crash reports — only if you opt in</h3>
+        <h3>Anonymous crash reports — same switch</h3>
         <p>
           Captured via PostHog's error-tracking module: uncaught exceptions,
           Mach exceptions, POSIX signals. Each report is a symbolicated stack

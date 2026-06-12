@@ -285,8 +285,9 @@ export function Blog() {
           <div className="post-cta">
             <h3>Try the thing this story is about.</h3>
             <p>
-              macOS 15+, Apple Silicon, native. Telemetry is opt-in. $19
-              once, no subscription. 14-day trial, no card.
+              macOS 15+, Apple Silicon, native. Telemetry is anonymous, one
+              switch to kill. $19 once, no subscription. 14-day trial, no
+              card.
             </p>
             <div className="row">
               <a
