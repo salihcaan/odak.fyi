@@ -6,6 +6,7 @@ import { HeroLauncher } from "@/components/site/HeroLauncher";
 import { IdeMarquee } from "@/components/site/IdeMarquee";
 import { MacbookCarousel } from "@/components/site/MacbookCarousel";
 import { Nav } from "@/components/site/Nav";
+import { Outro } from "@/components/site/Outro";
 import { SvgSprite } from "@/components/site/SvgSprite";
 import { captureEvent } from "@/lib/analytics";
 import { useLatestRelease } from "@/hooks/useLatestRelease";
@@ -199,6 +200,8 @@ export function Index() {
 
       <div className="rest-of-page">
         <div dangerouslySetInnerHTML={{ __html: indexBody }} />
+
+        <Outro />
 
         <Footer />
       </div>

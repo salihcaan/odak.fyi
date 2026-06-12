@@ -176,6 +176,63 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
   .nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:color-mix(in oklch, var(--bg) 88%, transparent)}
   .nav-links{display:none}
 }
+
+/* ----- mobile menu — hamburger + dropdown sheet (≤760px only).
+   The links menu disappears under 760px; without this, phones had no
+   path to Features/FAQ/Docs except the footer. The sheet hangs off the
+   sticky nav so it scrolls with the bar. ----- */
+.nav-menu-btn{display:none}
+.nav-sheet{display:none}
+@media (max-width:760px){
+  .nav-menu-btn{
+    display:grid;place-items:center;
+    width:40px;height:40px;margin:-2px -6px -2px 0;
+    background:none;border:none;border-radius:10px;
+    color:var(--fg-2);cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .nav-menu-btn:hover,.nav-menu-btn[aria-expanded="true"]{background:var(--surface-2);color:var(--fg)}
+  .nav-menu-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round}
+  .nav-sheet{
+    display:flex;flex-direction:column;
+    position:absolute;top:100%;left:0;right:0;
+    padding:6px var(--gutter) 14px;
+    background:var(--bg-2);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 24px 48px -24px rgba(0,0,0,.6);
+    opacity:0;transform:translateY(-6px);
+    pointer-events:none;visibility:hidden;
+    transition:opacity .2s var(--ease-out), transform .25s var(--ease-out), visibility 0s .25s;
+  }
+  .nav-sheet.open{
+    opacity:1;transform:translateY(0);
+    pointer-events:auto;visibility:visible;
+    transition:opacity .2s var(--ease-out), transform .25s var(--ease-out);
+  }
+  .nav-sheet a{
+    padding:13px 4px;font-size:15.5px;font-weight:500;color:var(--fg-2);
+    border-bottom:1px solid var(--border);text-decoration:none;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .nav-sheet a:last-child{border-bottom:none}
+  .nav-sheet a:hover{color:var(--fg)}
+  .nav-sheet a.nav-link-accent{color:var(--accent)}
+  .nav-sheet .tag{
+    font-family:var(--mono);font-size:11px;color:var(--mute);
+    padding:2px 8px;border:1px solid var(--border);border-radius:999px;
+  }
+}
+
+/* Phones: the bar must fit brand + Buy + Download + hamburger in 390px.
+   Tighter gutter, drop the Download size meta, slim the pill. */
+@media (max-width:480px){
+  .nav-inner{padding:12px 20px;gap:12px}
+  .nav-cta{gap:8px}
+  .nav-cta .btn-primary{padding:8px 14px}
+  .btn-primary .btn-meta{display:none}
+  .nav-menu-btn{margin-right:-8px}
+  .nav-sheet{padding-inline:20px}
+}
 .btn-primary .btn-glyph{width:12px;height:14px;fill:currentColor;margin-top:-2px}
 .btn-primary .btn-meta{font-family:var(--mono);font-size:11px;opacity:.65;font-weight:500}
 
@@ -253,4 +310,5 @@ footer.site-foot::before{
   .foot-status-dot,.ambient-dot{animation:none}
   .btn-primary,.nav-links a{transition:none}
   .btn-primary:hover{transform:none}
+  .nav-sheet,.nav-sheet.open{transition:none;transform:none}
 }

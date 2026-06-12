@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useScrollNav } from "@/hooks/useScrollNav";
 import { useLatestRelease } from "@/hooks/useLatestRelease";
 import { captureEvent } from "@/lib/analytics";
@@ -19,6 +20,10 @@ export function Nav({
   // Index page uses bare hash anchors (#features) since the targets live on
   // the same page. Other pages route back to / and then the hash.
   const prefix = hashHrefs ? "" : "/";
+  // ≤760px the links menu is hidden; the hamburger opens this sheet
+  // instead. Closes on any link tap (every item navigates).
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
   return (
     <nav className="nav">
       <div className="nav-inner">
@@ -87,7 +92,45 @@ export function Nav({
             </svg>
             Download <span className="btn-meta">{size}</span>
           </a>
+          <button
+            type="button"
+            className="nav-menu-btn"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="nav-sheet"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <svg viewBox="0 0 18 18" aria-hidden="true">
+              {menuOpen ? (
+                <path d="M4 4l10 10M14 4L4 14" />
+              ) : (
+                <path d="M2 6h14M2 12h14" />
+              )}
+            </svg>
+          </button>
         </div>
+      </div>
+      <div
+        id="nav-sheet"
+        className={menuOpen ? "nav-sheet open" : "nav-sheet"}
+      >
+        <a href={`${prefix}#features`} onClick={closeMenu}>Features</a>
+        <a href={`${prefix}#comparison`} onClick={closeMenu}>Comparison</a>
+        <a href={`${prefix}#pricing`} onClick={closeMenu}>Pricing</a>
+        {showBuy && (
+          <a href="/buy" className="nav-link-accent" onClick={closeMenu}>
+            Buy
+          </a>
+        )}
+        <a href={`${prefix}#faq`} onClick={closeMenu}>FAQ</a>
+        <a href="/actions" onClick={closeMenu}>Actions</a>
+        <a href="/docs/actions.html" onClick={closeMenu}>Docs</a>
+        <a
+          href={`/changelog.html#v${version.replace(/\./g, "-")}`}
+          onClick={closeMenu}
+        >
+          What's new <span className="tag">v{version}</span>
+        </a>
       </div>
     </nav>
   );

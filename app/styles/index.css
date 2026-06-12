@@ -326,6 +326,9 @@ h1.hero-h {
 h1.hero-h .hero-line {
   display: block;
   will-change: transform, opacity, filter;
+  /* If a line still wraps (zoom, odd widths), wrap evenly instead of
+     leaving a one-word orphan. */
+  text-wrap: balance;
 }
 
 /* Bridgemind-style gradient on the muted half of the headline:
@@ -697,7 +700,10 @@ h1.hero-h .accent {
      up so the copy, not the demo, carries the fold. Bigger text + a tighter
      media column rebalances the two halves. */
   .hero-col-text .hero-h {
-    font-size: clamp(54px, 5.6vw, 92px);
+    /* Sized so each .hero-line stays a single line in the split column
+       (measured fit: 54px @960, 70px @1440+ where --maxw caps the column).
+       3vw+24px tracks that envelope with a couple px of slack. */
+    font-size: clamp(48px, 3vw + 24px, 70px);
     margin-bottom: 24px;
   }
 
@@ -7374,5 +7380,103 @@ section.mb-section {
     font-size: 12px;
     padding: 5px 10px;
     gap: 6px
+  }
+}
+/* ==========================================================
+   OUTRO — closing CTA band between the FAQ and the footer.
+   Rides the section.block scaffolding (hairline, rhythm) and
+   restates the hero's two paths so the page ends on an ask,
+   not on a collapsed FAQ row.
+   ========================================================== */
+.outro {
+  text-align: center;
+}
+
+/* Warm pool behind the closing ask — the same saffron vocabulary as the
+   pricing band, scaled up since this section has no card to anchor it. */
+.outro-bloom {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 64% at 50% 58%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 70%);
+}
+
+.outro-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 56px) 0;
+}
+
+h2.outro-h {
+  font-family: var(--display);
+  font-size: clamp(36px, 4.6vw, 64px);
+  line-height: 1.06;
+  letter-spacing: -.035em;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 20px;
+  text-wrap: balance;
+}
+
+/* Same lit-from-above gradient as the hero's second line, so the page
+   closes on the note it opened with. */
+h2.outro-h .accent {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.outro-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+  color: var(--fg-2);
+  margin: 0 0 32px;
+}
+
+.outro-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.outro-cta .btn-primary {
+  padding: 13px 26px;
+  font-size: 15px;
+  border-radius: var(--radius-pill);
+}
+
+.outro-fine {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .02em;
+  color: var(--mute);
+  margin: 0;
+}
+
+@media (max-width:480px) {
+  h2.outro-h {
+    font-size: clamp(30px, 9vw, 40px);
+  }
+
+  .outro-sub {
+    font-size: 16px;
+  }
+
+  .outro-cta {
+    flex-direction: column;
+    gap: 14px;
   }
 }
