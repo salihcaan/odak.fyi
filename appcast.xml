@@ -400,5 +400,29 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.15/Odak-0.1.15.dmg" length="8801833" type="application/x-apple-diskimage" sparkle:edSignature="1asAjmYBiHATvc2qvjFK4CQF4iGqADAxsxfwHlJTEz8WfJ3LQcGGxT6ljqIGt+Cz8q8t5gZrFlp2CtdWGLwxBA=="/>
         </item>
+            <item>
+            <title>Version 0.1.16</title>
+            <pubDate>Fri, 12 Jun 2026 07:41:52 +0000</pubDate>
+            <sparkle:version>20</sparkle:version>
+            <sparkle:shortVersionString>0.1.16</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.16 — groups, brand icons, and a real import review
+
+The actions panel grows up: imports get a proper review panel, packs land in their own named sections, and rows finally wear the right logos.
+
+### New
+- **Import review panel.** `odak://import` now opens a native review panel inside Odak — every action listed with its icon and shortcut, script actions flagged — instead of a bare confirmation dialog. Nothing is written until you approve.
+- **Action groups.** Actions from a pack (or a `group:` value in your config.yaml) render under their own section header in the panel, between Open and Copy, in config order.
+- **Brand icons.** Actions can declare an `icon:` — Git, GitHub, GitLab, Docker, and Node logos ship built in (the same set the [marketplace](https://odak.fyi/actions) shows), with any SF Symbol name as a fallback. Rows resolve the real app icon first, as before.
+- **Action editor.** Settings → Actions gains an add/edit sheet, so one-off tweaks no longer require opening config.yaml.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.16/Odak-0.1.16.dmg" length="8936278" type="application/x-apple-diskimage" sparkle:edSignature="DMGIV+gEbC9vE0jiPyghg5IOwJns5s0SRWHnzBPpBKYTTXKWzGxvrVmqU7PJlNuQesuAgTxo8bltAPDf+wS7Cw=="/>
+        </item>
     </channel>
 </rss>
