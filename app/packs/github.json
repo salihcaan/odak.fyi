@@ -3,36 +3,42 @@
     {
       "name": "Open repo on GitHub",
       "type": "url",
+      "icon": "github",
       "shortcut": "cmd+g",
       "url": "{remoteURL}"
     },
     {
       "name": "Open pull requests",
       "type": "url",
+      "icon": "github",
       "shortcut": "cmd+shift+p",
       "url": "{remoteURL}/pulls"
     },
     {
       "name": "Open current branch",
       "type": "url",
+      "icon": "github",
       "shortcut": "cmd+shift+g",
       "url": "{remoteURL}/tree/{branch}"
     },
     {
       "name": "CI runs for branch",
       "type": "url",
+      "icon": "github",
       "shortcut": "cmd+shift+a",
       "url": "{remoteURL}/actions?query=branch:{branch}"
     },
     {
       "name": "Compare branch to main",
       "type": "url",
+      "icon": "github",
       "shortcut": "cmd+shift+c",
       "url": "{remoteURL}/compare/main...{branch}"
     },
     {
       "name": "Review a PR",
       "type": "script",
+      "icon": "github",
       "shortcut": "cmd+alt+r",
       "output": "list",
       "on_select": "open-pr-web",
@@ -41,6 +47,7 @@
     {
       "name": "open-pr-web",
       "type": "script",
+      "icon": "github",
       "shortcut": "",
       "output": "silent",
       "script": "gh pr view $(echo '{selected}' | awk '{print $1}' | tr -d '#') --web"
@@ -48,6 +55,7 @@
     {
       "name": "Copy PR link",
       "type": "script",
+      "icon": "github",
       "shortcut": "cmd+alt+p",
       "output": "clipboard",
       "script": "gh pr view --json url --jq .url | tr -d '\n'"

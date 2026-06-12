@@ -1,12 +1,12 @@
-import type { LucideIcon } from "lucide-react";
+import type { SimpleIcon } from "simple-icons";
 import {
-  Container,
-  GitBranch,
-  Github,
-  Gitlab,
-  Hammer,
-  Package,
-} from "lucide-react";
+  siDocker,
+  siGit,
+  siGithub,
+  siGitlab,
+  siNodedotjs,
+  siXcode,
+} from "simple-icons";
 import dockerPack from "../packs/docker.json";
 import gitPack from "../packs/git.json";
 import githubPack from "../packs/github.json";
@@ -21,6 +21,8 @@ import xcodePack from "../packs/xcode.json";
 export type PackAction = {
   name: string;
   type: string;
+  /** Icon shown in Odak's actions panel: a bundled brand glyph or SF Symbol name. */
+  icon?: string;
   shortcut: string;
   app?: string;
   url?: string;
@@ -37,7 +39,8 @@ export type Pack = {
   slug: string;
   title: string;
   tagline: string;
-  icon: LucideIcon;
+  /** Brand glyph for the card — same Simple Icons set the app bundles as brand-* assets. */
+  icon: SimpleIcon;
   /** Extra requirement beyond Odak itself, e.g. a CLI tool. */
   requires?: string;
   /** When conditions scope the pack, a human note on where it appears. */
@@ -53,7 +56,7 @@ export const PACKS: Pack[] = [
     title: "Git",
     tagline:
       "Branch switching as a pickable list, push/pull, and copyable commits — on any repo.",
-    icon: GitBranch,
+    icon: siGit,
     actions: actionsOf(gitPack),
   },
   {
@@ -61,7 +64,7 @@ export const PACKS: Pack[] = [
     title: "GitHub",
     tagline:
       "Jump to the repo, PRs, CI runs, and branch compare. Review PRs from a list overlay.",
-    icon: Github,
+    icon: siGithub,
     requires: "PR actions use the gh CLI",
     actions: actionsOf(githubPack),
   },
@@ -70,7 +73,7 @@ export const PACKS: Pack[] = [
     title: "GitLab",
     tagline:
       "Repo, merge requests, pipelines for the current branch, and one-keystroke new MRs.",
-    icon: Gitlab,
+    icon: siGitlab,
     actions: actionsOf(gitlabPack),
   },
   {
@@ -78,7 +81,7 @@ export const PACKS: Pack[] = [
     title: "Docker",
     tagline:
       "Compose up/down, restart a service from a list, and see what's running.",
-    icon: Container,
+    icon: siDocker,
     appearsIn: "Compose actions appear only in projects with a compose file",
     actions: actionsOf(dockerPack),
   },
@@ -87,7 +90,7 @@ export const PACKS: Pack[] = [
     title: "Node / npm",
     tagline:
       "Pick an npm script from a list and run it, install deps, spot outdated packages.",
-    icon: Package,
+    icon: siNodedotjs,
     appearsIn: "Appears only in projects with package.json",
     actions: actionsOf(nodePack),
   },
@@ -96,7 +99,7 @@ export const PACKS: Pack[] = [
     title: "Xcode / Swift",
     tagline:
       "Open in Xcode, run swift test, resolve packages, and nuke DerivedData when it lies.",
-    icon: Hammer,
+    icon: siXcode,
     appearsIn: "Scoped to projects with Package.swift or an .xcodeproj",
     actions: actionsOf(xcodePack),
   },

@@ -25,11 +25,11 @@
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.460.0",
     "motion": "^12.38.0",
     "posthog-js": "^1.376.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "simple-icons": "^16.23.0",
     "tailwind-merge": "^2.6.1"
   }
 }

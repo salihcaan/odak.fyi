@@ -3,36 +3,42 @@
     {
       "name": "Open repo on GitLab",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+g",
       "url": "{remoteURL}"
     },
     {
       "name": "Open merge requests",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+shift+p",
       "url": "{remoteURL}/-/merge_requests"
     },
     {
       "name": "Pipelines for branch",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+shift+a",
       "url": "{remoteURL}/-/pipelines?ref={branch}"
     },
     {
       "name": "Open current branch",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+shift+g",
       "url": "{remoteURL}/-/tree/{branch}"
     },
     {
       "name": "New MR from branch",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+alt+n",
       "url": "{remoteURL}/-/merge_requests/new?merge_request[source_branch]={branch}"
     },
     {
       "name": "Container registry",
       "type": "url",
+      "icon": "gitlab",
       "shortcut": "cmd+alt+c",
       "url": "{remoteURL}/container_registry"
     }

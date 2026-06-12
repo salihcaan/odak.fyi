@@ -3,6 +3,7 @@
     {
       "name": "Switch branch",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+b",
       "output": "list",
       "on_select": "checkout-branch",
@@ -11,6 +12,7 @@
     {
       "name": "checkout-branch",
       "type": "script",
+      "icon": "git",
       "shortcut": "",
       "output": "hud",
       "script": "git checkout '{selected}'"
@@ -18,6 +20,7 @@
     {
       "name": "Push current branch",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+shift+u",
       "output": "notification",
       "script": "git push -u origin {branch} 2>&1 | tail -3"
@@ -25,6 +28,7 @@
     {
       "name": "Pull with rebase",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+shift+y",
       "output": "notification",
       "script": "git pull --rebase 2>&1 | tail -3"
@@ -32,6 +36,7 @@
     {
       "name": "Copy branch name",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+shift+b",
       "output": "clipboard",
       "script": "printf '{branch}'"
@@ -39,6 +44,7 @@
     {
       "name": "Recent commits",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+alt+h",
       "output": "list",
       "on_select": "copy-commit-hash",
@@ -47,6 +53,7 @@
     {
       "name": "copy-commit-hash",
       "type": "script",
+      "icon": "git",
       "shortcut": "",
       "output": "clipboard",
       "script": "printf %s '{selected}' | awk '{print $1}' | tr -d '\n'"
@@ -54,6 +61,7 @@
     {
       "name": "Uncommitted changes",
       "type": "script",
+      "icon": "git",
       "shortcut": "cmd+alt+g",
       "output": "list",
       "script": "git status --short"

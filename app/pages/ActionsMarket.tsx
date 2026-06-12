@@ -55,12 +55,13 @@ function ActionRow({ action }: { action: PackAction }) {
 function PackCard({ pack }: { pack: Pack }) {
   const [showJson, setShowJson] = useState(false);
   const bound = pack.actions.filter((a) => a.shortcut !== "").length;
-  const Icon = pack.icon;
   return (
     <article className="pack" id={pack.slug}>
       <header className="pack-head">
         <span className="pack-icon" aria-hidden="true">
-          <Icon size={20} strokeWidth={1.8} />
+          <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor">
+            <path d={pack.icon.path} />
+          </svg>
         </span>
         <h2 className="pack-title">{pack.title}</h2>
         <span className="pack-count">

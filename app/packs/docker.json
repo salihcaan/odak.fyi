@@ -3,37 +3,56 @@
     {
       "name": "Compose up",
       "type": "script",
+      "icon": "docker",
       "shortcut": "cmd+alt+u",
       "output": "hud",
       "script": "(docker compose up -d >/dev/null 2>&1 &) && echo 'Starting containers…'",
       "conditions": {
-        "fileExists": ["docker-compose.yml", "docker-compose.yaml", "compose.yaml", "compose.yml"]
+        "fileExists": [
+          "docker-compose.yml",
+          "docker-compose.yaml",
+          "compose.yaml",
+          "compose.yml"
+        ]
       }
     },
     {
       "name": "Compose down",
       "type": "script",
+      "icon": "docker",
       "shortcut": "cmd+alt+d",
       "output": "hud",
       "script": "(docker compose down >/dev/null 2>&1 &) && echo 'Stopping containers…'",
       "conditions": {
-        "fileExists": ["docker-compose.yml", "docker-compose.yaml", "compose.yaml", "compose.yml"]
+        "fileExists": [
+          "docker-compose.yml",
+          "docker-compose.yaml",
+          "compose.yaml",
+          "compose.yml"
+        ]
       }
     },
     {
       "name": "Restart a service",
       "type": "script",
+      "icon": "docker",
       "shortcut": "cmd+alt+s",
       "output": "list",
       "on_select": "restart-service",
       "script": "docker compose ps --services",
       "conditions": {
-        "fileExists": ["docker-compose.yml", "docker-compose.yaml", "compose.yaml", "compose.yml"]
+        "fileExists": [
+          "docker-compose.yml",
+          "docker-compose.yaml",
+          "compose.yaml",
+          "compose.yml"
+        ]
       }
     },
     {
       "name": "restart-service",
       "type": "script",
+      "icon": "docker",
       "shortcut": "",
       "output": "hud",
       "script": "docker compose restart '{selected}' && echo 'Restarted {selected}'"
@@ -41,6 +60,7 @@
     {
       "name": "Running containers",
       "type": "script",
+      "icon": "docker",
       "shortcut": "cmd+alt+c",
       "output": "list",
       "script": "docker ps --format '{{.Names}} · {{.Status}}'"
@@ -48,6 +68,7 @@
     {
       "name": "Open Docker Desktop",
       "type": "app",
+      "icon": "docker",
       "shortcut": "cmd+alt+o",
       "app": "Docker"
     }
