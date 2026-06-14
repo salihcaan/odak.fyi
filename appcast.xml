@@ -424,5 +424,35 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.16/Odak-0.1.16.dmg" length="8936278" type="application/x-apple-diskimage" sparkle:edSignature="DMGIV+gEbC9vE0jiPyghg5IOwJns5s0SRWHnzBPpBKYTTXKWzGxvrVmqU7PJlNuQesuAgTxo8bltAPDf+wS7Cw=="/>
         </item>
+            <item>
+            <title>Version 0.1.17</title>
+            <pubDate>Sun, 14 Jun 2026 20:38:32 +0000</pubDate>
+            <sparkle:version>21</sparkle:version>
+            <sparkle:shortVersionString>0.1.17</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.17 — git worktrees, idle windows, and sharper search
+
+Worktrees become a first-class Odak surface: spin one up, jump between them, and tear them down without leaving the launcher. The switcher learns which windows have gone stale, search shows you *why* a result matched, and actions can finally open your terminal of choice.
+
+### New
+- **Git worktrees (⌘Y).** Select a git project and press **⌘Y** to create, switch, or remove worktrees right from Odak. New worktrees copy your `.env` and can run a `postCreate` hook. A ⑂ branch badge follows each worktree across search, the switcher, and the notch, and rows show the worktree path inline. Configure with `worktreeRoot` / `copyOnCreate` / `postCreate` in your config. A `⌘Y Worktrees` hint surfaces in the search panel for git projects, and the shortcut is remappable in Settings → Shortcuts.
+- **Idle-time badges.** Windows untouched for over an hour wear a coarse idle badge (`3h`, `2d`, `1w`) in the switcher so stale windows are easy to spot and close. Idle history persists across relaunches. Toggle it in Settings → Quick Switcher (on by default).
+- **Preferred terminal.** A new `type: terminal` action opens your terminal of choice — Terminal, iTerm2, Warp, kitty, Ghostty, WezTerm, or Alacritty — honoring new-window vs new-tab where supported. Pick yours in Settings → General → Terminal.
+- **Tracked apps as actions.** Apps enabled in Settings → Applications now surface as an “Apps” section in the actions panel, deduped against your existing actions. Toggle with “Show as Actions”.
+- **Fuzzy-match highlighting.** Search results emphasize the exact characters that earned the match, and the switcher highlights whichever field won the rank.
+
+### Fixed
+- Navigate chords (default ⌥J/⌥K) now move the selection in the script/branch list overlay instead of typing stray characters into the filter.
+- Settings sidebar search gets a softer focus ring, opens with nothing focused, and the sidebar is narrowed to match System Settings.
+- Empty-state glyphs in the notch, search panel, and switcher no longer take the accent color — a “nothing here” moment is a state, not a highlight.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.17/Odak-0.1.17.dmg" length="9186933" type="application/x-apple-diskimage" sparkle:edSignature="nJZVJn9+QUd6AaDRFgMvbuzJlBq7xIsfe8Uq/O5Jb+Y8e8Elfk+eCdu6S+eSo+z4jWC+dNOVenzPHU2mJElPAA=="/>
+        </item>
     </channel>
 </rss>
