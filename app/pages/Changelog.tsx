@@ -50,11 +50,103 @@ export function Changelog() {
           </a>
         </p>
 
+        <Release id="v0-1-17">
+          <div className="rel-head">
+            <div className="rel-tag">
+              <span className="rel-version">v0.1.17</span>
+              <span className="rel-pill">Latest</span>
+            </div>
+            <span className="rel-date">2026-06-14</span>
+          </div>
+          <h2 className="rel-title">
+            Git worktrees, idle windows, and sharper search
+          </h2>
+          <p className="rel-lead">
+            Worktrees become a first-class Odak surface: spin one up, jump
+            between them, and tear them down without leaving the launcher. The
+            switcher learns which windows have gone stale, and search shows you
+            why a result matched.
+          </p>
+
+          <h3>New</h3>
+          <ul>
+            <li>
+              <strong>Git worktrees (⌘Y).</strong> Select a git project and
+              press <kbd>⌘Y</kbd> to create, switch, or remove worktrees right
+              from Odak. New worktrees copy your <code>.env</code> and can run
+              a <code>postCreate</code> hook; a ⑂ branch badge follows each one
+              across search, the switcher, and the notch. Configure with{" "}
+              <code>worktreeRoot</code> / <code>copyOnCreate</code> /{" "}
+              <code>postCreate</code>, and remap the shortcut in Settings →
+              Shortcuts.
+            </li>
+            <li>
+              <strong>Idle-time badges.</strong> Windows untouched for over an
+              hour wear a coarse idle badge (<code>3h</code>, <code>2d</code>,{" "}
+              <code>1w</code>) in the switcher so stale windows are easy to spot
+              and close. History persists across relaunches; toggle it in
+              Settings → Quick Switcher.
+            </li>
+            <li>
+              <strong>Preferred terminal.</strong> A new{" "}
+              <code>type: terminal</code> action opens your terminal of choice —
+              Terminal, iTerm2, Warp, kitty, Ghostty, WezTerm, or Alacritty —
+              honoring new-window vs new-tab where supported. Pick yours in
+              Settings → General → Terminal.
+            </li>
+            <li>
+              <strong>Tracked apps as actions.</strong> Apps enabled in
+              Settings → Applications now surface as an “Apps” section in the
+              actions panel, deduped against your existing actions.
+            </li>
+            <li>
+              <strong>Fuzzy-match highlighting.</strong> Search results
+              emphasize the exact characters that earned the match, and the
+              switcher highlights whichever field won the rank.
+            </li>
+          </ul>
+
+          <h3>Fixed</h3>
+          <ul>
+            <li>
+              Navigate chords (default ⌥J/⌥K) now move the selection in the
+              script/branch list overlay instead of typing stray characters
+              into the filter.
+            </li>
+            <li>
+              Settings sidebar search gets a softer focus ring, opens with
+              nothing focused, and the sidebar is narrowed to match System
+              Settings.
+            </li>
+            <li>
+              Empty-state glyphs in the notch, search panel, and switcher no
+              longer take the accent color.
+            </li>
+          </ul>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
+          </ul>
+
+          <div className="rel-foot">
+            <a href="https://github.com/salihcaan/odak.fyi/releases/latest/download/Odak.dmg">
+              Download Odak
+            </a>
+            <a
+              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.17"
+              target="_blank"
+              rel="noopener"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </Release>
+
         <Release id="v0-1-16">
           <div className="rel-head">
             <div className="rel-tag">
               <span className="rel-version">v0.1.16</span>
-              <span className="rel-pill">Latest</span>
             </div>
             <span className="rel-date">2026-06-12</span>
           </div>
@@ -99,7 +191,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
@@ -155,7 +247,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
@@ -248,7 +340,7 @@ export function Changelog() {
 
           <h3>Requirements</h3>
           <ul>
-            <li>macOS 26 Tahoe or later · Apple Silicon.</li>
+            <li>macOS 15 Sequoia or later · Apple Silicon.</li>
           </ul>
 
           <div className="rel-foot">
@@ -302,57 +394,6 @@ export function Changelog() {
           <div className="rel-foot">
             <a
               href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.13"
-              target="_blank"
-              rel="noopener"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </Release>
-
-        <Release id="v0-1-12">
-          <div className="rel-head">
-            <div className="rel-tag">
-              <span className="rel-version">v0.1.12</span>
-            </div>
-            <span className="rel-date">2026-06-07</span>
-          </div>
-          <h2 className="rel-title">
-            Windows on other Spaces show up reliably
-          </h2>
-          <p className="rel-lead">
-            The switcher now finds IDE windows that live on other desktops
-            (Spaces) — including a second window of the same project — that
-            could previously go missing.
-          </p>
-
-          <h3>Fixed</h3>
-          <ul>
-            <li>
-              <strong>
-                Windows on other Spaces now appear in the switcher.
-              </strong>{" "}
-              When a window lived on a different desktop than the one you were
-              on, the switcher could miss it — most often a Cursor or VS Code
-              window whose internal accessibility handle fell just past Odak's
-              off-Space lookup limit. Off-Space windows are now resolved
-              reliably, and the result is cached so refreshes stay fast.
-            </li>
-            <li>
-              <strong>
-                Two windows of the same project no longer collapse into one
-                row.
-              </strong>{" "}
-              When the system couldn't hand Odak a stable window identifier
-              (minimized windows, and some Electron windows), two windows of
-              the same project in the same editor could fold into a single
-              entry. They're now kept distinct.
-            </li>
-          </ul>
-
-          <div className="rel-foot">
-            <a
-              href="https://github.com/salihcaan/odak.fyi/releases/tag/v0.1.12"
               target="_blank"
               rel="noopener"
             >

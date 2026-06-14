@@ -387,7 +387,7 @@ export function Buy() {
                 </span>
               </a>
               <p className="prelaunch-fine">
-                macOS 26+ · Apple Silicon · 8&nbsp;MB
+                macOS 15+ · Apple Silicon · 8&nbsp;MB
               </p>
             </article>
           )}

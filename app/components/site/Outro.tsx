@@ -58,7 +58,7 @@ export function Outro() {
           </a>
         </div>
         <p className="outro-fine">
-          14-day trial · no card · macOS 26+ · Apple Silicon
+          14-day trial · no card · macOS 15+ · Apple Silicon
         </p>
       </motion.div>
     </section>

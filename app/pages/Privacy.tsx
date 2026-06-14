@@ -262,7 +262,7 @@ export function Privacy() {
             want a personal name on it.
           </li>
           <li>
-            <strong>macOS version</strong> — e.g. <code>macOS 26.1.0</code>.
+            <strong>macOS version</strong> — e.g. <code>macOS 15.6.0</code>.
           </li>
           <li>
             <strong>Your license code</strong> — only when you click Activate
