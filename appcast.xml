@@ -501,5 +501,26 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.19/Odak-0.1.19.dmg" length="9269377" type="application/x-apple-diskimage" sparkle:edSignature="SrDvbYZUXmb2cFHrjh9tKWshjAZnwq9AKH8SpGRmx8+nqFjPOMSvNgVQXhPrI0XOK0UC8qKuGe1Ok/OCaneyAA=="/>
         </item>
+            <item>
+            <title>Version 0.1.20</title>
+            <pubDate>Wed, 17 Jun 2026 15:03:14 +0000</pubDate>
+            <sparkle:version>24</sparkle:version>
+            <sparkle:shortVersionString>0.1.20</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.20 — the switcher opens where you are
+
+Hold Right ⌘ and the switcher now highlights the project you're working in right now — not the one you'd switch away to.
+
+### Fixed
+- **rcmd highlights your current project.** Holding Right ⌘ used to pre-select the *next* window (the Cmd+Tab convention), so pressing **.** opened quick actions for the wrong project. Now the rcmd switcher opens on the project you're in, and **.** drops straight into its actions. ⌥Tab still skips to the next window for quick tap-release switching.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.20/Odak-0.1.20.dmg" length="9272783" type="application/x-apple-diskimage" sparkle:edSignature="8Ku8U5inpg67co10aARykKYEgpZynZAy8jXLwaxestkis044Udklw8ioJ3Is7/soN75cMVeC0igDMcMTRqZNDg=="/>
+        </item>
     </channel>
 </rss>
