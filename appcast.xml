@@ -454,5 +454,31 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.17/Odak-0.1.17.dmg" length="9186933" type="application/x-apple-diskimage" sparkle:edSignature="nJZVJn9+QUd6AaDRFgMvbuzJlBq7xIsfe8Uq/O5Jb+Y8e8Elfk+eCdu6S+eSo+z4jWC+dNOVenzPHU2mJElPAA=="/>
         </item>
+            <item>
+            <title>Version 0.1.18</title>
+            <pubDate>Wed, 17 Jun 2026 13:57:06 +0000</pubDate>
+            <sparkle:version>22</sparkle:version>
+            <sparkle:shortVersionString>0.1.18</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.18 — quick actions in the switcher, a steadier panel
+
+The window switcher learns to *act*, not just switch: drop into any project's quick actions without leaving the rcmd hold. Search pins the project you're working in right now, and the switcher panel stays rock-steady as it grows.
+
+### New
+- **Actions in the switcher (rcmd + ".").** While holding Right ⌘ to switch, press **.** to drop into the highlighted window's project quick actions — open in your IDE, reveal in Finder, copy path, run a script, open your terminal. Type to filter, run with a digit or by releasing ⌘, and press **Esc** to pop back to the window list. App icons render inline so each action reads at a glance.
+- **"Current" project, pinned.** The project tied to your most-recently-focused IDE window is pinned to the top of the empty-query dashboard and pre-selected, wearing a ⌖ **Current** badge — so a quick action (pull latest, open terminal) is one keystroke away with zero navigation.
+
+### Fixed
+- **The switcher panel no longer drifts.** Switching rcmd → rcmd+"." or typing to filter used to nudge the panel up a few pixels as its content resized. Its top edge is now pinned for the lifetime of the session, so it only ever grows and shrinks from the bottom.
+- The search panel paints its dashboard — open windows and the "Current" project — on the very first frame instead of visibly updating a tick after it appears.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.18/Odak-0.1.18.dmg" length="9270012" type="application/x-apple-diskimage" sparkle:edSignature="NDFemw1JXCC9GQBc4130PT9PIZQ9h4V3P8njMGN73Nn02HQyyvQNlYcQ/8aAc3grYx5bw5rvmjK3haIqNEI/Cw=="/>
+        </item>
     </channel>
 </rss>
