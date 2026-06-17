@@ -480,5 +480,26 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.18/Odak-0.1.18.dmg" length="9270012" type="application/x-apple-diskimage" sparkle:edSignature="NDFemw1JXCC9GQBc4130PT9PIZQ9h4V3P8njMGN73Nn02HQyyvQNlYcQ/8aAc3grYx5bw5rvmjK3haIqNEI/Cw=="/>
         </item>
+            <item>
+            <title>Version 0.1.19</title>
+            <pubDate>Wed, 17 Jun 2026 14:30:41 +0000</pubDate>
+            <sparkle:version>23</sparkle:version>
+            <sparkle:shortVersionString>0.1.19</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.19 — quieter switcher dismissal
+
+Dismissing the window switcher without picking a window no longer triggers the macOS system alert sound.
+
+### Fixed
+- **No more alert beep on Esc.** When you dismissed the switcher without focusing a window, Odak stayed frontmost with no key window — so the next keystroke (including Esc) landed on nothing and macOS played its system alert. Odak now hands focus back to the app you came from, just like the search panel, so you pick up right where you left off — silently.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.19/Odak-0.1.19.dmg" length="9269377" type="application/x-apple-diskimage" sparkle:edSignature="SrDvbYZUXmb2cFHrjh9tKWshjAZnwq9AKH8SpGRmx8+nqFjPOMSvNgVQXhPrI0XOK0UC8qKuGe1Ok/OCaneyAA=="/>
+        </item>
     </channel>
 </rss>
