@@ -522,5 +522,30 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.20/Odak-0.1.20.dmg" length="9272783" type="application/x-apple-diskimage" sparkle:edSignature="8Ku8U5inpg67co10aARykKYEgpZynZAy8jXLwaxestkis044Udklw8ioJ3Is7/soN75cMVeC0igDMcMTRqZNDg=="/>
         </item>
+            <item>
+            <title>Version 0.1.21</title>
+            <pubDate>Wed, 17 Jun 2026 16:38:47 +0000</pubDate>
+            <sparkle:version>25</sparkle:version>
+            <sparkle:shortVersionString>0.1.21</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.21 — switch branches without leaving the switcher
+
+Quick actions that return a list now stay right inside the switcher. Hold Right ⌘, press **.** to open a project's actions, pick something like **Switch branch**, and its results appear in place — filter, pick, done. No detour through the search window.
+
+### Added
+- **Inline list actions in the switcher.** A list-output action (e.g. *Switch branch*, *Switch command*) committed from quick actions now drills into its results inside the switcher itself. Type to filter, ↑/↓ to navigate, ↩ to run the pick (e.g. check out the branch), ⎋ to step back to the action list.
+
+### Fixed
+- **Escape returns you where you were.** Dismissing the switcher with Escape now hands focus back to the app you were in, instead of leaving Odak frontmost with no window — which also silences the macOS alert sound on the next keystroke.
+- **Instant up/down in actions and lists.** Navigating quick actions and inline lists no longer animates the scroll — selection moves are instant, matching the window list.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.21/Odak-0.1.21.dmg" length="9319710" type="application/x-apple-diskimage" sparkle:edSignature="A65oR0IQKyijvevNDgRBeq/mhABQg8OYWpyubzzl/ol6pl4peb4eC96RHwdvW2u1vgKga+mBgqFGDyltE52nBQ=="/>
+        </item>
     </channel>
 </rss>
