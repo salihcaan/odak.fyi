@@ -547,5 +547,26 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.21/Odak-0.1.21.dmg" length="9319710" type="application/x-apple-diskimage" sparkle:edSignature="A65oR0IQKyijvevNDgRBeq/mhABQg8OYWpyubzzl/ol6pl4peb4eC96RHwdvW2u1vgKga+mBgqFGDyltE52nBQ=="/>
         </item>
+            <item>
+            <title>Version 0.1.22</title>
+            <pubDate>Tue, 23 Jun 2026 10:24:58 +0000</pubDate>
+            <sparkle:version>26</sparkle:version>
+            <sparkle:shortVersionString>0.1.22</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.22 — open any project from the switcher
+
+The Quick Switcher used to list only your open IDE windows. Now, when you type, it also surfaces matching **closed projects** — so you can reach a project that isn't open yet without leaving the switcher.
+
+### Added
+- **Closed projects in the switcher.** Hold Right ⌘ and type: matching projects with no open window appear beneath your live windows, marked with a folder tile and split off by a subtle divider. Press ↩ to open one in its editor, or **.** to run its quick actions — exactly like an open window. Results stay short (top few) so your open windows remain the focus, and the resting switcher is unchanged.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.22/Odak-0.1.22.dmg" length="9364321" type="application/x-apple-diskimage" sparkle:edSignature="MxWHcObmR0o3SeBH+pY3z8pgOCB0uSX6TBxIGG6ODMnz0QW3I9uTIWkznW9KFlQWs1+gZ9M1RXkJ0PE7Lx3KBQ=="/>
+        </item>
     </channel>
 </rss>
