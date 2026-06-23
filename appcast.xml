@@ -593,5 +593,33 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.23/Odak-0.1.23.dmg" length="9363886" type="application/x-apple-diskimage" sparkle:edSignature="VKlLSK+vTEPF4LP7DVvZ73Ul4x1BS86ZI7u+vLkXFts3kE7N0YgoR+rxGcDyRe6oMMy1vKAJY+H5R5DPZ+5FAw=="/>
         </item>
+            <item>
+            <title>Version 0.1.24</title>
+            <pubDate>Tue, 23 Jun 2026 15:13:46 +0000</pubDate>
+            <sparkle:version>28</sparkle:version>
+            <sparkle:shortVersionString>0.1.24</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.24 — faster, smoother, more reliable
+
+A performance and reliability pass. No new UI — everything you already use just got quicker to respond and steadier under load.
+
+### Improved
+- **Snappier search.** Typing in the project finder no longer re-does redundant work on every keystroke: results are coalesced and the fuzzy matcher reuses precomputed data, so fast typing stays smooth even with hundreds of projects.
+- **No more hangs when opening projects.** Resolving your editor's command path and a repo's git remote now happen off the main thread, so the first open of an IDE — or an action that uses `{remoteURL}`/`{branch}` — never freezes the window for a moment.
+- **Lower input latency.** The global hotkey handler does less work on every keystroke system-wide, keeping the Quick Switcher responsive.
+
+### Fixed
+- **Quick Switcher picks the right window more reliably.** Window focus events are now processed strictly in order, fixing rare cases where rapid switching could land on the wrong window.
+- **License no longer locks out valid users.** Hardened revalidation and keychain handling so an online, paid license can't be pushed to the paywall after a long offline stretch or while the screen is locked.
+- **Settings window closes correctly in all languages.**
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.24/Odak-0.1.24.dmg" length="9402021" type="application/x-apple-diskimage" sparkle:edSignature="ZDe7+p2uvi5svd9sl2RPPBIuV8pzf7L+Yl11kMkyK3dTP/2X/ywkRnHoGRcCHoNJfzyLrHvCgCKzpTqE8PTuCw=="/>
+        </item>
     </channel>
 </rss>
