@@ -621,5 +621,27 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.24/Odak-0.1.24.dmg" length="9402021" type="application/x-apple-diskimage" sparkle:edSignature="ZDe7+p2uvi5svd9sl2RPPBIuV8pzf7L+Yl11kMkyK3dTP/2X/ywkRnHoGRcCHoNJfzyLrHvCgCKzpTqE8PTuCw=="/>
         </item>
+            <item>
+            <title>Version 0.1.25</title>
+            <pubDate>Tue, 23 Jun 2026 16:12:37 +0000</pubDate>
+            <sparkle:version>29</sparkle:version>
+            <sparkle:shortVersionString>0.1.25</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.25 — small readability polish
+
+A few quiet refinements to the project finder rows.
+
+### Improved
+- **See the full name and path on hover.** Long project names and paths that truncate in a result row now reveal their full text in a tooltip when you hover — no more guessing which deeply-nested project a clipped name belongs to.
+- **Steadier git counts.** The uncommitted-changes count next to a project no longer shifts width as the number changes, so rows stay visually calm while a repo's status updates.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.25/Odak-0.1.25.dmg" length="9401849" type="application/x-apple-diskimage" sparkle:edSignature="FkyahrKQ2THHd5dyHoz1cdfjPx7NkLctY/aSz4pdB6fGlNoMAtUHqXiGzPkT1GI6IcDeoQluuRcwt/M0p/TJBg=="/>
+        </item>
     </channel>
 </rss>
