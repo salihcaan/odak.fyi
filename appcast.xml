@@ -568,5 +568,30 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.22/Odak-0.1.22.dmg" length="9364321" type="application/x-apple-diskimage" sparkle:edSignature="MxWHcObmR0o3SeBH+pY3z8pgOCB0uSX6TBxIGG6ODMnz0QW3I9uTIWkznW9KFlQWs1+gZ9M1RXkJ0PE7Lx3KBQ=="/>
         </item>
+            <item>
+            <title>Version 0.1.23</title>
+            <pubDate>Tue, 23 Jun 2026 11:14:25 +0000</pubDate>
+            <sparkle:version>27</sparkle:version>
+            <sparkle:shortVersionString>0.1.23</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.23 — tidier switcher rows
+
+A cleanup pass on the Quick Switcher rows: show *where* a project lives without the extra clutter.
+
+### Changed
+- **Folder chips instead of full paths.** The *Project — Path* title mode is now *Project — Folder*: each window shows its parent folder as a compact chip (e.g. a `code` chip) on the title line instead of a dim full path on a second line — one tidy line. The chip still tells same-named projects apart (`code` vs `forks`).
+- **Closed-project rows simplified.** Projects with no open window no longer carry a folder-icon tile. The name sits flush at the leading edge with its parent-folder chip beside it, so the closed tier reads cleaner and lighter.
+
+### Improved
+- **Cleaner chips.** Folder chips are now text-only — the redundant folder glyph is gone. App chips keep their icon, so the two never blur together when they sit side by side.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.23/Odak-0.1.23.dmg" length="9363886" type="application/x-apple-diskimage" sparkle:edSignature="VKlLSK+vTEPF4LP7DVvZ73Ul4x1BS86ZI7u+vLkXFts3kE7N0YgoR+rxGcDyRe6oMMy1vKAJY+H5R5DPZ+5FAw=="/>
+        </item>
     </channel>
 </rss>
