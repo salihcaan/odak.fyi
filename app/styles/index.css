@@ -118,12 +118,17 @@ body {
    HERO
    ========================================================== */
 .hero {
+  /* width:100% so that, as a flex child of the full-height stage, the hero
+     fills the container instead of shrinking to content width — without it the
+     cross-axis auto margins size it to its (wide) content and overflow on
+     mobile. With max-width it still caps + centers on desktop. */
+  width: 100%;
   max-width: var(--maxw);
   margin: 0 auto;
-  /* Compressed hero — punchier, less negative space so the headline
-     reads as a single forceful beat and the macbook demo immediately
-     follows. Was 48/28; the single-line H1 lets us drop to 28/16. */
-  padding: 28px var(--gutter) 16px;
+  /* Hero breathing room: enough negative space that the headline reads as
+     a deliberate beat, without the old airy 48px top. Was 28/16 (very
+     compressed); loosened the top so the eyebrow clears the nav. */
+  padding: 40px var(--gutter) 16px;
   position: relative;
   text-align: center;
 }
@@ -290,7 +295,7 @@ a.hero-bar:hover .arrow {
   letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--fg-2);
-  margin-bottom: 20px;
+  margin-bottom: 26px;
   padding: 6px 12px;
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 255, 255, .04) 0%, rgba(255, 255, 255, .01) 100%);
@@ -313,7 +318,7 @@ h1.hero-h {
   line-height: .82;
   letter-spacing: -.05em;
   font-weight: 800;
-  margin-bottom: 28px;
+  margin-bottom: 34px;
   max-width: 100%;
   color: #fff;
   padding-bottom: 0.15em;
@@ -356,12 +361,67 @@ h1.hero-h .accent {
   margin: 0 -0.05em;
 }
 
+/* Typewriter headline (HeroHeadline.tsx). A hidden ghost reserves the full
+   two-line box so the visible copy can type in over the top with zero layout
+   shift. */
+h1.hero-h.hero-type {
+  position: relative;
+}
+
+.hero-type-ghost {
+  /* Establishes the headline's height/width; painted version sits on top. */
+  visibility: hidden;
+}
+
+.hero-type-live {
+  position: absolute;
+  inset: 0;
+}
+
+/* The cursor: an accent bar that rides the end of the typed text. Solid while
+   typing (reads as a real caret), blinking once the headline lands. */
+.hero-caret {
+  display: inline-block;
+  width: 0.028em;
+  height: 0.78em;
+  margin-left: 0.06em;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.72);
+  transform: translateY(0.06em);
+  vertical-align: baseline;
+}
+
+.hero-caret[data-done="true"] {
+  animation: hero-caret-blink 1.4s ease-in-out infinite;
+}
+
+/* Smooth pulse rather than a hard on/off blink — the caret eases out and back
+   in, with a short hold at full so it reads as a gentle breath, not a flicker. */
+@keyframes hero-caret-blink {
+  0%,
+  25% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-caret {
+    animation: none;
+  }
+}
+
 .hero-sub {
   font-size: 18px;
   line-height: 1.55;
   color: rgba(255, 255, 255, .7);
   max-width: 60ch;
-  margin: 0 auto 22px;
+  margin: 0 auto 28px;
   font-weight: 400;
   letter-spacing: -.005em;
 }
@@ -372,7 +432,7 @@ h1.hero-h .accent {
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 10px
+  margin-bottom: 16px
 }
 
 .hero-cta .btn-primary {
@@ -700,11 +760,19 @@ h1.hero-h .accent {
      up so the copy, not the demo, carries the fold. Bigger text + a tighter
      media column rebalances the two halves. */
   .hero-col-text .hero-h {
-    /* Sized so each .hero-line stays a single line in the split column
-       (measured fit: 54px @960, 70px @1440+ where --maxw caps the column).
-       3vw+24px tracks that envelope with a couple px of slack. */
-    font-size: clamp(48px, 3vw + 24px, 70px);
-    margin-bottom: 24px;
+    /* Shorter two-word lines leave the column room to go bigger so the
+       headline, not the demo, owns the fold. Capped at 84px: the column maxes
+       ~665px and the long line ("Two keystrokes.") needs ~7.44px of width per
+       font-px, so 84 keeps it on one line with slack at every width >=960. */
+    font-size: clamp(64px, 5vw + 16px, 84px);
+    margin-bottom: 30px;
+  }
+
+  /* In the split, hold each line on a single line — the bigger type would
+     otherwise wrap "Two keystrokes." and orphan "Two". (Stacked/mobile keeps
+     normal wrapping, which centers and balances fine.) */
+  .hero-col-text .hero-h .hero-line {
+    white-space: nowrap;
   }
 
   /* Undo the centering the stacked layout applied. */
@@ -746,6 +814,18 @@ h1.hero-h .accent {
     inset: -18% -14% -22%;
     opacity: .8;
     filter: blur(56px);
+  }
+
+  /* In the split layout the hero copy is left-aligned, so the editor strip
+     must share that axis. The base rule centers a 720px band (min-content
+     width + margin-inline:auto), which left it floating in the viewport
+     center — aligned to neither the headline nor the screenshot. Span the
+     full content width instead so its edges meet the headline-left and
+     media-right, the "strip under both columns" the markup intends. The
+     stacked layout keeps the centered band (viewport < 960 ⇒ width already
+     100%). */
+  .hero-ide .ide-marquee {
+    width: 100%;
   }
 }
 
@@ -837,6 +917,55 @@ h1.hero-h .accent {
   overflow: hidden;
   /* clips the corner bloom + grid bleed */
   scroll-snap-align: start;
+  /* Own the full first screen: fill the viewport below the nav so the
+     Features demo sits entirely below the fold on load (on taller screens
+     its tab pill used to peek in). The hero content is centered in the
+     freed vertical space. 100svh stays stable on mobile (no reflow as the
+     address bar hides); 70px ≈ the sticky nav's height. If the hero content
+     is ever taller than this floor, the container simply grows — a single
+     flex child can't overflow its own min-height, so nothing clips. */
+  min-height: calc(100svh - 70px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Desktop: spread the hero up the full screen instead of centering it as a
+   tight cluster. Auto top-margins on BOTH the copy block and the editor strip
+   split the spare height in two: the copy drifts down off the nav and the
+   editor strip + scroll cue anchor the bottom, with the rest as breathing room
+   between. Tying the shift to actual spare space (not a vh value) is what keeps
+   it safe — on a tall display the copy sits lower; on a short one the excess is
+   tiny so it barely moves and the copy↔editors gap can never collapse.
+   Scoped to ≥960 (the split layout): narrower/stacked viewports keep the
+   centered fill, and tall mobile content overflows the floor anyway so there
+   is nothing to spread. `.hero-text .hero-ide` (two classes) outranks the
+   element's own `mt-9/sm:mt-12` utility on desktop while the stacked layout
+   keeps that gap. */
+@media (min-width: 960px) {
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-split {
+    margin-top: auto;
+  }
+
+  .hero-text .hero-ide {
+    /* auto still floats the strip toward the bottom of the fold; the padding
+       guarantees a generous gap above it so it reads as its own band well
+       below the hero content, not crowded under the launcher. */
+    margin-top: auto;
+    padding-top: clamp(72px, 9vh, 132px);
+  }
 }
 
 /* Warm center bloom + vignette. The vignette is the second stop
@@ -2010,45 +2139,49 @@ h2.section-h .mute {
   z-index: 5;
 }
 
-/* Subtitle anchored low inside the macbook screen — keynote-style
-   placement, well under the action area. */
+/* Caption sits in the lower third of the screen (anchored to .macbook-wrap
+   so a long line may still bleed past the side bezels), kept clear of the
+   silver base. Sticker styling driven by the tokens below. */
 .mc-subtitle {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 9%;
+  left: 50%;
+  bottom: 15%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  padding: 0 5%;
-  z-index: 6;
+  width: max-content;
+  max-width: 94%;
+  z-index: 30;               /* above frame + notch overlay */
   pointer-events: none;
-  min-height: 1.6em;
 }
 
 .mc-subtitle-text {
+  /* --sub-bg / --sub-fg / --sub-* tune the whole sticker in one place. */
+  --sub-bg: linear-gradient(180deg, #ffffff 0%, #f1efeb 100%);
+  --sub-fg: #17110b;
+  --sub-rim: rgba(0, 0, 0, .08);
+  --sub-ink: transparent;
+  position: relative;
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: .55em;
+  gap: .3em .45em;
   font-family: var(--sans);
-  font-size: clamp(13px, 1.7vw, 22px);
-  font-weight: 600;
-  letter-spacing: -0.018em;
-  line-height: 1.22;
-  color: #fff;
+  font-size: clamp(14px, 2.05vw, 28px);
+  font-weight: 750;
+  letter-spacing: -0.022em;
+  line-height: 1.1;
+  color: var(--sub-fg);
   text-align: center;
-  padding: .42em 1.05em .48em;
-  border-radius: 12px;
-  background: rgba(10, 10, 14, .72);
-  backdrop-filter: blur(14px) saturate(180%);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  padding: .34em .8em .4em;
+  border-radius: 13px;
+  background: var(--sub-bg);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, .04) inset,
-    0 0 0 .5px rgba(255, 255, 255, .08) inset,
-    0 8px 30px rgba(0, 0, 0, .45),
-    0 2px 8px rgba(0, 0, 0, .35);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+    0 0 0 1px var(--sub-rim),                  /* hairline rim for light bg */
+    0 8px 20px rgba(0, 0, 0, .28),             /* soft lift */
+    0 2px 6px rgba(0, 0, 0, .18);
+  text-shadow: 0 1px 1px var(--sub-ink);
   will-change: opacity, transform;
 }
 

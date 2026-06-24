@@ -47,21 +47,17 @@ const FEATURES: Feature[] = [
         src: "/videos/0-windows.mp4",
         captions: [
           { at: 1.5, text: "How many windows do you have open?" },
-          { at: 5.5, text: "Which one is the project you want?" },
         ],
       },
       {
         src: "/videos/1-search.mp4",
         captions: [
           { at: 1.5, text: "⌥ Space, anywhere." },
-          { at: 4.0, text: "Find any project." },
           {
             at: 6.5,
             text: "Open it in your editor.",
             ides: [IDE.cursor, IDE.vscode, IDE.intellij, IDE.antigravity, IDE.xcode, IDE.androidStudio],
           },
-          { at: 12.0, text: "Same shortcut, every project." },
-          { at: 18.0, text: "From any app you're in." },
         ],
       },
     ],
@@ -81,13 +77,7 @@ const FEATURES: Feature[] = [
         src: "/videos/2-quick-switcher.mp4",
         captions: [
           { at: 1.5, text: "⌥ Tab — your quick switcher." },
-          { at: 4.0, text: "Every open window, most-recent first." },
-          {
-            at: 8.0,
-            text: "Same project, different editor? Listed separately.",
-            ides: [IDE.cursor, IDE.vscode, IDE.antigravity],
-          },
-          { at: 13.5, text: "Pick. Switch. Done." },
+          { at: 8.0, text: "Pick. Switch. Done." },
         ],
       },
     ],
@@ -106,11 +96,8 @@ const FEATURES: Feature[] = [
       {
         src: "/videos/3-actions.mp4",
         captions: [
-          { at: 1.5, text: "Find your project." },
-          { at: 4.0, text: "⌘ K for its actions." },
-          { at: 7.0, text: "Open the repo on GitHub." },
-          { at: 14.0, text: "Same project, another action." },
-          { at: 19.5, text: "Reveal it in Finder." },
+          { at: 2.0, text: "⌘ K for its actions." },
+          { at: 12.0, text: "Same project, another action." },
         ],
       },
     ],
@@ -130,10 +117,7 @@ const FEATURES: Feature[] = [
         src: "/videos/4-notch.mp4",
         captions: [
           { at: 1.5, text: "Hover the notch." },
-          { at: 3.5, text: "Every project, one menu." },
           { at: 8.0, text: "Jump straight to any window." },
-          { at: 14.0, text: "Across every editor.", ides: [IDE.cursor, IDE.vscode, IDE.antigravity] },
-          { at: 20.0, text: "From any app — always one click away." },
         ],
       },
     ],
@@ -382,34 +366,36 @@ export function MacbookCarousel() {
                     style={{ opacity: i === activeSlot ? 1 : 0 }}
                   />
                 ))}
-                <div className="mc-subtitle" aria-live="polite">
-                  <AnimatePresence mode="wait" initial={false}>
-                    {activeCaption && (
-                      <motion.span
-                        key={activeCaption.text}
-                        className="mc-subtitle-text"
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{
-                          duration: prefersReducedMotion ? 0 : 0.28,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                      >
-                        <span className="mc-subtitle-copy">{activeCaption.text}</span>
-                        {activeCaption.ides && activeCaption.ides.length > 0 && (
-                          <span className="mc-subtitle-ides" aria-hidden="true">
-                            {activeCaption.ides.map((src) => (
-                              <img key={src} src={src} alt="" loading="lazy" />
-                            ))}
-                          </span>
-                        )}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
               </div>
               <MacbookNotchOverlay />
+            </div>
+            {/* Caption lives in .macbook-wrap (not .screen) so it can break
+               past the device edges — overflowing the frame on purpose. */}
+            <div className="mc-subtitle" aria-live="polite">
+              <AnimatePresence mode="wait" initial={false}>
+                {activeCaption && (
+                  <motion.span
+                    key={activeCaption.text}
+                    className="mc-subtitle-text"
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.96 }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.32,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <span className="mc-subtitle-copy">{activeCaption.text}</span>
+                    {activeCaption.ides && activeCaption.ides.length > 0 && (
+                      <span className="mc-subtitle-ides" aria-hidden="true">
+                        {activeCaption.ides.map((src) => (
+                          <img key={src} src={src} alt="" loading="lazy" />
+                        ))}
+                      </span>
+                    )}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>

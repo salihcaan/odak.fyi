@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Aurora } from "@/components/site/Aurora";
 import { Footer } from "@/components/site/Footer";
+import { HeroHeadline } from "@/components/site/HeroHeadline";
 import { HeroLauncher } from "@/components/site/HeroLauncher";
 import { IdeMarquee } from "@/components/site/IdeMarquee";
 import { MacbookCarousel } from "@/components/site/MacbookCarousel";
@@ -88,14 +89,7 @@ export function Index() {
             <span className="hero-eyebrow">Project launcher for developers</span>
           </motion.div>
 
-          <h1 className="hero-h">
-            <motion.span className="hero-line" {...enter(0.1)}>
-              Jump to any project
-            </motion.span>
-            <motion.span className="hero-line accent" {...enter(0.2)}>
-              in two keystrokes.
-            </motion.span>
-          </h1>
+          <HeroHeadline reduced={!!prefersReducedMotion} />
 
           <motion.p className="hero-sub" {...enter(0.3)}>
             Open or switch to any project from your keyboard. Hit ⌥ Space,
@@ -165,7 +159,7 @@ export function Index() {
           {/* The editors Odak works with — a strip below the hero, spanning
               the full width under both columns. */}
           <motion.div
-            className="hero-ide mt-9 sm:mt-12"
+            className="hero-ide mt-20 sm:mt-28"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.8 }}
