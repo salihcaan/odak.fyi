@@ -968,19 +968,39 @@ h1.hero-h.hero-type {
   }
 }
 
-/* Warm center bloom + vignette. The vignette is the second stop
-   that ramps to ~0 at the edges so the corners darken slightly,
-   focusing the eye on the center. */
-/* Ambient bloom removed — the grid pattern carries the background
-   on its own while we decide on a proper lighting treatment. */
-/* Cool counter-bloom — anchored bottom-left so the saffron up-top
-   has a complementary mass below. The two together create the
-   diagonal energy Bridgemind's hero has between its top-right
-   orange and lower-left green. */
-/* Cool counter-bloom intentionally removed — the macbook screen
-   carries enough cool mass on its own; adding a prod-blue wash
-   on the page created a third competing palette (saffron above
-   + blue corner + blue macbook). One color story is enough. */
+/* Hero-stage lighting — the "proper lighting treatment" the flat grid-only
+   background was a placeholder for. Two stacked layers give the charcoal fold
+   real tonal depth (top lit, corners falling off) without a centered glow
+   blob. Both are deliberately low-emission: a directional key light, not AI
+   ambient slop. (Engine guidance for dark-OLED dev tools: minimal glow,
+   dark→light transition, low white emission.)
+     ::before — warm key light raking down from top-center. The grid lines
+                catch the warmth so the texture reads as lit, not flat. A thin
+                white top-edge sheen sells "lit from above".
+     ::after  — floor vignette: the lower half sinks toward black so the key
+                light has somewhere to fall into, anchoring the hero's weight. */
+.hero-stage-combined::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(135% 70% at 50% -8%,
+      color-mix(in oklch, var(--accent) 12%, transparent) 0%,
+      color-mix(in oklch, var(--accent) 3%, transparent) 34%,
+      transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, .04) 0%, transparent 22%);
+}
+.hero-stage-combined::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 100% 80% at 50% 22%,
+      transparent 38%, rgba(0, 0, 0, .5) 100%);
+}
 .hero-stage-combined .stage-grid {
   position: absolute;
   inset: 0;
