@@ -643,5 +643,30 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.25/Odak-0.1.25.dmg" length="9401849" type="application/x-apple-diskimage" sparkle:edSignature="FkyahrKQ2THHd5dyHoz1cdfjPx7NkLctY/aSz4pdB6fGlNoMAtUHqXiGzPkT1GI6IcDeoQluuRcwt/M0p/TJBg=="/>
         </item>
+            <item>
+            <title>Version 0.1.26</title>
+            <pubDate>Thu, 25 Jun 2026 05:33:29 +0000</pubDate>
+            <sparkle:version>30</sparkle:version>
+            <sparkle:shortVersionString>0.1.26</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.26 — same-name projects, sorted out
+
+If you keep two projects with the same folder name in different places (say `~/work/api` and `~/personal/api`, or two clones of `abey`), Odak no longer mixes them up.
+
+### Fixed
+- **The right folder, every time.** When the same folder name was open in two places, Odak could point a result row — and the *Enter-to-jump* action — at the wrong checkout. It now resolves each open window to its true folder, and when two same-named folders genuinely can't be told apart (both open with no file focused), it opens the correct path instead of guessing wrong.
+- **Honest "open in editor" badges.** The open-editor indicator and idle-time badges are no longer shared between two same-named projects, so each row reflects its own window.
+
+### Improved
+- **Smarter path detection.** Editors that don't advertise their open folder (e.g. DataGrip) are now placed by the project they actually have open, so more of your open windows light up against the correct project.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.26/Odak-0.1.26.dmg" length="9413016" type="application/x-apple-diskimage" sparkle:edSignature="Z9Y6KNwZ+LJYisr+VA1/eqAbiIN31ovKtbpYtrJIKxd5MhmnQJhLkGYxcPGPg4DQw+SHdy/isEt3356JKWTaBw=="/>
+        </item>
     </channel>
 </rss>
