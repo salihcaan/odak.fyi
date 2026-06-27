@@ -668,5 +668,30 @@ Feedback welcome at support@odak.fyi.
             ]]></description>
             <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.26/Odak-0.1.26.dmg" length="9413016" type="application/x-apple-diskimage" sparkle:edSignature="Z9Y6KNwZ+LJYisr+VA1/eqAbiIN31ovKtbpYtrJIKxd5MhmnQJhLkGYxcPGPg4DQw+SHdy/isEt3356JKWTaBw=="/>
         </item>
+            <item>
+            <title>Version 0.1.27</title>
+            <pubDate>Sat, 27 Jun 2026 08:28:48 +0000</pubDate>
+            <sparkle:version>31</sparkle:version>
+            <sparkle:shortVersionString>0.1.27</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+## Odak 0.1.27 — a clearer way into a project
+
+When you act on a project, Odak now shows you exactly which one you're acting on.
+
+### New
+- **Selected-project pill.** Drilling into a project's actions — with Tab or ⌘K — now pins it as a pill in the search bar, Spotlight-style, so the project you're acting on is always clear. Press Esc, click the pill's ✕, or hit Backspace to step back to your search exactly where you left it.
+
+### Improved
+- **Tab still switches editors.** Tab keeps cycling through the open editor windows on a row (Enter jumps to the one you pick) — that didn't change. What's gone is the focus ring sitting on the first icon before you'd touched anything; rows read calmer until you actually Tab.
+- **Tidier popovers.** The actions and worktree popovers now keep their inner scroll corners in lockstep with the card's rounded edge.
+
+### Requirements
+- macOS 15 Sequoia or later · Apple Silicon.
+
+Feedback welcome at support@odak.fyi.
+            ]]></description>
+            <enclosure url="https://github.com/salihcaan/odak.fyi/releases/download/v0.1.27/Odak-0.1.27.dmg" length="9423546" type="application/x-apple-diskimage" sparkle:edSignature="KYJLkmqBMSfC1JFk/3k723vNkjBQV/jYlhKksPon5i1rnV5BiqMYZtHz+uNNzhRgD+0oZbM1hsmFwdA2M6wSCw=="/>
+        </item>
     </channel>
 </rss>
